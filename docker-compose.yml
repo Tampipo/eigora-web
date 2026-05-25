@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: .
+      target: dev
+    image: physense-web:dev
+    container_name: physense-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.physense.tampipo.fr}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-wss://api.physense.tampipo.fr}
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    # Reconcile node_modules against package.json on every start, then dev-serve.
+    # npm install is a no-op when the lockfile already matches.
+    command: sh -c "npm install --prefer-offline --no-audit --no-fund && npm run dev"

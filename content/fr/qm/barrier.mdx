@@ -1,0 +1,19 @@
+## Effet tunnel
+
+Une particule d'énergie $E$ inférieure à la hauteur $V_0$ d'une barrière a une probabilité non nulle de se trouver de l'autre côté — c'est l'effet tunnel.
+
+<EigenstateViewer potential="barrier" params={{ height: 5.0, width: 1.0 }} nStates={3} />
+
+### Coefficient de transmission
+
+Pour une barrière rectangulaire de largeur $a$ et de hauteur $V_0 > E$ :
+
+$$T \approx 16 \, \frac{E}{V_0}\left(1 - \frac{E}{V_0}\right) e^{-2\kappa a}, \quad \kappa = \sqrt{\frac{2m(V_0 - E)}{\hbar^2}}$$
+
+<WavepacketEvolution
+  potential="barrier"
+  params={{ height: 5.0, width: 1.0 }}
+  wavepacket={{ x0: -4.0, k0: 2.0, sigma: 1.0 }}
+  tMax={6}
+  nFrames={120}
+/>

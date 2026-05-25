@@ -1,0 +1,26 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+
+.env
+.env.local
+.env.*.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+.DS_Store
+*.pem
+*.log
+
+.vscode/
+.idea/
+
+next-env.d.ts
+
+# Uncomment if you prefer to regenerate the orval client on every build:
+# lib/api/

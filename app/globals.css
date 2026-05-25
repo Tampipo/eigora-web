@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 10 10 12;
+    --surface: 22 22 26;
+    --surface-2: 32 32 38;
+    --foreground: 236 237 240;
+    --muted: 132 138 150;
+    --border: 36 38 44;
+    --accent: 130 180 255;
+    --accent-soft: 90 130 200;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "cv11" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+
+  /* KaTeX display math centering — outside @layer so KaTeX's own unlayered
+     CSS doesn't outrank our rules. */
+  .katex-display {
+    display: block !important;
+    text-align: center !important;
+    margin: 1.25em 0 !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25em 0;
+  }
+  .katex-display > .katex {
+    display: inline-block !important;
+    text-align: center !important;
+    white-space: nowrap;
+  }
+  .katex {
+    font-size: 1.05em;
+  }
+
+  figure a {
+    border-bottom: none;
+  }
+}
+
+/* ── Slider (used by components/ui/Slider.tsx + the scrubber) ─────────── */
+
+.ui-slider {
+  appearance: none;
+  background: transparent;
+  height: 20px;
+  cursor: pointer;
+  margin: 0;
+}
+.ui-slider:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.ui-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    rgb(var(--accent)) 0%,
+    rgb(var(--accent)) var(--pct, 0%),
+    rgb(var(--border)) var(--pct, 0%),
+    rgb(var(--border)) 100%
+  );
+  transition: background 80ms linear;
+}
+.ui-slider::-moz-range-track {
+  height: 5px;
+  border-radius: 9999px;
+  background: rgb(var(--border));
+}
+.ui-slider::-moz-range-progress {
+  height: 5px;
+  border-radius: 9999px;
+  background: rgb(var(--accent));
+}
+.ui-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5.5px;
+  border-radius: 9999px;
+  background: rgb(var(--foreground));
+  border: 0;
+  box-shadow:
+    0 0 0 2px rgb(var(--background)),
+    0 0 0 3px rgb(var(--border)),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+.ui-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 2px rgb(var(--background)),
+    0 0 0 3px rgb(var(--accent) / 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.ui-slider:active::-webkit-slider-thumb {
+  transform: scale(0.95);
+}
+.ui-slider:focus-visible {
+  outline: none;
+}
+.ui-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 2px rgb(var(--background)),
+    0 0 0 4px rgb(var(--accent));
+}
+.ui-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(var(--foreground));
+  border: 0;
+  box-shadow:
+    0 0 0 2px rgb(var(--background)),
+    0 0 0 3px rgb(var(--border)),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* KaTeX inside slider/control labels: inherit font-size instead of KaTeX's
+   default 1.21em, so symbols sit on the same line as surrounding text. */
+.slider-label .katex {
+  font-size: 0.95em;
+  line-height: 1;
+}
+.slider-label .katex .mord,
+.slider-label .katex .mbin,
+.slider-label .katex .mrel {
+  color: inherit;
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────── */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--muted) / 0.6);
+}

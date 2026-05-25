@@ -1,0 +1,39 @@
+{
+  "site": {
+    "title": "Physense",
+    "tagline": "La physique interactive, écrite avec clarté."
+  },
+  "nav": {
+    "home": "Accueil",
+    "qm": "Mécanique quantique",
+    "about": "À propos"
+  },
+  "home": {
+    "heading": "Physense",
+    "intro": "Une plateforme pédagogique de physique mêlant cours écrits et simulations interactives.",
+    "exploreQm": "Explorer la mécanique quantique"
+  },
+  "qm": {
+    "index": {
+      "heading": "Mécanique quantique",
+      "intro": "États propres, paquets d'ondes et géométrie des solutions de l'équation de Schrödinger."
+    },
+    "modules": {
+      "harmonic": {
+        "title": "Oscillateur harmonique",
+        "summary": "Niveaux d'énergie quantifiés et énergie de point zéro."
+      },
+      "barrier": {
+        "title": "Effet tunnel",
+        "summary": "Transmission et réflexion sur une marche de potentiel finie."
+      },
+      "well": {
+        "title": "Puits carré fini",
+        "summary": "États liés dans un potentiel confinant."
+      }
+    }
+  },
+  "locale": {
+    "switchTo": "Changer de langue"
+  }
+}

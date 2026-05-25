@@ -1,0 +1,39 @@
+{
+  "site": {
+    "title": "Physense",
+    "tagline": "Interactive physics, written clearly."
+  },
+  "nav": {
+    "home": "Home",
+    "qm": "Quantum mechanics",
+    "about": "About"
+  },
+  "home": {
+    "heading": "Physense",
+    "intro": "A pedagogical platform for physics, blending written courses with interactive simulations.",
+    "exploreQm": "Explore quantum mechanics"
+  },
+  "qm": {
+    "index": {
+      "heading": "Quantum mechanics",
+      "intro": "Eigenstates, wavepackets, and the geometry of solutions to the Schrödinger equation."
+    },
+    "modules": {
+      "harmonic": {
+        "title": "Harmonic oscillator",
+        "summary": "Quantised energy levels and the zero-point energy."
+      },
+      "barrier": {
+        "title": "Tunneling through a barrier",
+        "summary": "Transmission and reflection at a finite potential step."
+      },
+      "well": {
+        "title": "Finite square well",
+        "summary": "Bound states in a confining potential."
+      }
+    }
+  },
+  "locale": {
+    "switchTo": "Switch language"
+  }
+}

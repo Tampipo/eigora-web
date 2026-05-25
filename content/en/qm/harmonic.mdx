@@ -1,0 +1,25 @@
+## The Harmonic Oscillator
+
+The quantum harmonic oscillator is the canonical bound-state problem: a particle in a quadratic potential
+
+$$V(x) = \tfrac{1}{2} m \omega^2 x^2$$
+
+The energy levels are quantised:
+
+$$E_n = \hbar\omega\left(n + \tfrac{1}{2}\right), \quad n = 0, 1, 2, \dots$$
+
+<EigenstateViewer potential="harmonic" params={{ omega: 1.0 }} nStates={5} />
+
+The ground state has energy $E_0 = \tfrac{1}{2}\hbar\omega$ — the zero-point energy, a purely quantum effect.
+
+### Time evolution
+
+A Gaussian wavepacket built from these eigenstates breathes coherently in the well:
+
+<WavepacketEvolution
+  potential="harmonic"
+  params={{ omega: 1.0 }}
+  wavepacket={{ x0: 1.0, k0: 0.0, sigma: 0.5 }}
+  tMax={10}
+  nFrames={120}
+/>

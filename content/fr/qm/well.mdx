@@ -1,0 +1,24 @@
+## Puits carré fini
+
+Une particule confinée dans un puits fini de profondeur $V_0$ et largeur $L$ possède un nombre fini d'états liés dont les fonctions d'onde débordent dans la région classiquement interdite.
+
+<EigenstateViewer potential="finite_well" params={{ depth: 10.0, width: 2.0 }} nStates={4} />
+
+### États liés
+
+Les énergies des états liés vérifient les équations transcendantes
+
+$$
+\tan\!\left(\tfrac{kL}{2}\right) = \frac{\kappa}{k} \quad (\text{pair}), \qquad
+\cot\!\left(\tfrac{kL}{2}\right) = -\frac{\kappa}{k} \quad (\text{impair})
+$$
+
+avec $k = \sqrt{2mE}/\hbar$ et $\kappa = \sqrt{2m(V_0 - E)}/\hbar$.
+
+<WavepacketEvolution
+  potential="finite_well"
+  params={{ depth: 10.0, width: 2.0 }}
+  wavepacket={{ x0: 0.0, k0: 1.0, sigma: 0.5 }}
+  tMax={8}
+  nFrames={120}
+/>

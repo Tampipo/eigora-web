@@ -1,0 +1,25 @@
+## L'oscillateur harmonique
+
+L'oscillateur harmonique quantique est le problème lié canonique : une particule dans un potentiel quadratique
+
+$$V(x) = \tfrac{1}{2} m \omega^2 x^2$$
+
+Les niveaux d'énergie sont quantifiés :
+
+$$E_n = \hbar\omega\left(n + \tfrac{1}{2}\right), \quad n = 0, 1, 2, \dots$$
+
+<EigenstateViewer potential="harmonic" params={{ omega: 1.0 }} nStates={5} />
+
+L'état fondamental a pour énergie $E_0 = \tfrac{1}{2}\hbar\omega$ — l'énergie de point zéro, effet purement quantique.
+
+### Évolution temporelle
+
+Un paquet d'ondes gaussien construit à partir de ces états propres respire de manière cohérente dans le puits :
+
+<WavepacketEvolution
+  potential="harmonic"
+  params={{ omega: 1.0 }}
+  wavepacket={{ x0: 1.0, k0: 0.0, sigma: 0.5 }}
+  tMax={10}
+  nFrames={120}
+/>
