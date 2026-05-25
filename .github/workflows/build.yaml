@@ -72,7 +72,7 @@ jobs:
         with:
           context: .
           target: runner
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: ${{ github.event_name == 'push' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
