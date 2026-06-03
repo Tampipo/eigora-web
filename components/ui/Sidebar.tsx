@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Tanguy Marsault - PhySense
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "./LocaleSwitcher";

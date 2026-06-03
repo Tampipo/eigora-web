@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Tanguy Marsault - PhySense
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GeistSans } from "geist/font/sans";

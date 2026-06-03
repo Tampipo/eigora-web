@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Tanguy Marsault - PhySense
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import createMDX from "@next/mdx";
