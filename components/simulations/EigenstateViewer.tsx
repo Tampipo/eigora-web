@@ -19,7 +19,6 @@ import type {
 } from "@/lib/api/schemas";
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
-import { useDebouncedValue } from "@/lib/use-debounced";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -51,21 +50,43 @@ export function EigenstateViewer({
     setNStates(initialNStates);
   }, [potential, initialParams, initialNStates]);
 
-  const debouncedParams = useDebouncedValue(params, 220);
-  const debouncedNStates = useDebouncedValue(nStates, 220);
-
+  // No debounce: we feed live params straight in. useEigenstates coalesces with
+  // an in-flight guard (latest-wins), so the plot chases the slider as fast as
+  // the server can answer instead of freezing until the drag ends.
   const schema = useMemo<PotentialSchema>(
-    () => ({ type: potential, params: debouncedParams }),
-    [potential, debouncedParams],
+    () => ({ type: potential, params }),
+    [potential, params],
   );
 
-  const { data, error, loading } = useEigenstates(
+  const { data, fetchedParams, error, loading } = useEigenstates(
     schema,
-    debouncedNStates,
+    nStates,
     grid,
   );
 
-  const traces = useMemo(() => (data ? buildTraces(data) : []), [data]);
+  // Optimistic translation: x0 only shifts V(x) and ψₙ(x) horizontally, so we
+  // apply the delta between the live x0 and the x0 the current data was solved
+  // at instantly on the client. The motion is exact, so the incoming server
+  // frame lands without a visible snap.
+  const liveX0 = (params as Record<string, number | undefined> | null)?.x0;
+  const fetchedX0 = (fetchedParams as Record<string, number | undefined> | null)
+    ?.x0;
+  const xShift =
+    typeof liveX0 === "number" && typeof fetchedX0 === "number"
+      ? liveX0 - fetchedX0
+      : 0;
+
+  const traces = useMemo(
+    () => (data ? buildTraces(data, xShift) : []),
+    [data, xShift],
+  );
+
+  // Fix the x-domain to the solver grid so the optimistic shift visibly slides
+  // the curve rather than being hidden by autoranging.
+  const xRange = useMemo<[number, number] | undefined>(
+    () => (data ? [data.x[0], data.x[data.x.length - 1]] : undefined),
+    [data],
+  );
 
   return (
     <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
@@ -97,6 +118,9 @@ export function EigenstateViewer({
                 },
                 height,
                 margin: { t: 20, r: 24, b: 46, l: 58 },
+                // Persist zoom/pan + suppress full relayout across param updates,
+                // keyed to the potential type so it resets on a genuine change.
+                uirevision: potential,
                 hoverlabel: {
                   bgcolor: "rgb(24 28 39)",
                   bordercolor: "rgb(52 60 77)",
@@ -108,6 +132,8 @@ export function EigenstateViewer({
                 },
                 xaxis: {
                   title: { text: "x", standoff: 12 },
+                  range: xRange,
+                  autorange: xRange ? false : true,
                   gridcolor: "rgba(255,255,255,0.045)",
                   zerolinecolor: "rgba(255,255,255,0.14)",
                   tickfont: { size: 11 },
@@ -430,10 +456,10 @@ function useEigenstates(
   grid: GridSchema | undefined,
 ) {
   const [data, setData] = useState<EigenstatesResponse | null>(null);
+  const [fetchedParams, setFetchedParams] =
+    useState<PotentialSchemaParams>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const seq = useRef(0);
 
   const requestKey = JSON.stringify({
     potential,
@@ -441,42 +467,79 @@ function useEigenstates(
     ...(grid ? { grid } : {}),
   });
 
-  useEffect(() => {
-    const id = ++seq.current;
-    setLoading(true);
-    setError(null);
+  // Latest-wins scheduler: at most one request in flight. New parameter values
+  // that arrive while a solve is running are stored as "pending" (only the most
+  // recent is kept) and fired the instant the current one resolves. This lets
+  // the plot track a dragging slider smoothly without ever flooding the API.
+  const inFlight = useRef(false);
+  const pending = useRef<string | null>(null);
+  const alive = useRef(true);
 
-    eigenstatesQmEigenstatesPost(JSON.parse(requestKey))
-      .then((res: eigenstatesQmEigenstatesPostResponse) => {
-        if (id !== seq.current) return;
-        if (res.status === 200) {
-          setData(res.data as EigenstatesResponse);
-        } else {
-          setError(
-            new Error(
-              `API returned ${res.status}: ${JSON.stringify(res.data)}`,
-            ),
-          );
-        }
-      })
-      .catch((e: unknown) => {
-        if (id !== seq.current) return;
-        setError(e instanceof Error ? e : new Error(String(e)));
-      })
-      .finally(() => {
-        if (id !== seq.current) return;
-        setLoading(false);
-      });
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const fire = (key: string) => {
+      inFlight.current = true;
+      setLoading(true);
+      setError(null);
+      const body = JSON.parse(key);
+
+      eigenstatesQmEigenstatesPost(body)
+        .then((res: eigenstatesQmEigenstatesPostResponse) => {
+          if (!alive.current) return;
+          if (res.status === 200) {
+            setData(res.data as EigenstatesResponse);
+            setFetchedParams(
+              (body.potential?.params ?? null) as PotentialSchemaParams,
+            );
+          } else {
+            setError(
+              new Error(
+                `API returned ${res.status}: ${JSON.stringify(res.data)}`,
+              ),
+            );
+          }
+        })
+        .catch((e: unknown) => {
+          if (!alive.current) return;
+          setError(e instanceof Error ? e : new Error(String(e)));
+        })
+        .finally(() => {
+          inFlight.current = false;
+          if (!alive.current) return;
+          const next = pending.current;
+          if (next && next !== key) {
+            pending.current = null;
+            fire(next);
+          } else {
+            pending.current = null;
+            setLoading(false);
+          }
+        });
+    };
+
+    if (inFlight.current) {
+      pending.current = requestKey;
+    } else {
+      fire(requestKey);
+    }
   }, [requestKey]);
 
-  return { data, error, loading };
+  return { data, fetchedParams, error, loading };
 }
 
-function buildTraces(res: EigenstatesResponse) {
+function buildTraces(res: EigenstatesResponse, xShift = 0) {
   const traces: Array<Record<string, unknown>> = [];
+  // Optimistic horizontal translation applied while the server catches up.
+  const xs = xShift ? res.x.map((v) => v + xShift) : res.x;
 
   traces.push({
-    x: res.x,
+    x: xs,
     y: res.potential,
     mode: "lines",
     line: { color: "rgba(190, 197, 210, 0.65)", width: 1.5, dash: "dot" },
@@ -490,10 +553,10 @@ function buildTraces(res: EigenstatesResponse) {
     const psi = res.wavefunctions[n];
     const color = stateColor(n, res.energies.length);
     const shifted = psi.map((v) => v * amplitude + E);
-    const baseline = res.x.map(() => E);
+    const baseline = xs.map(() => E);
 
     traces.push({
-      x: res.x,
+      x: xs,
       y: baseline,
       mode: "lines",
       line: { color: "rgba(255, 200, 120, 0.35)", width: 1, dash: "dot" },
@@ -502,7 +565,7 @@ function buildTraces(res: EigenstatesResponse) {
     });
 
     traces.push({
-      x: res.x,
+      x: xs,
       y: shifted,
       mode: "lines",
       line: { color, width: 1.75 },
