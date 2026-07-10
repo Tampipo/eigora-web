@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { ModuleCard } from "@/components/ui/ModuleCard";
 
 const MODULES = ["harmonic", "barrier", "well"] as const;
 
@@ -16,39 +16,28 @@ export default async function QmIndexPage({
   const t = await getTranslations("qm");
 
   return (
-    <section className="space-y-10">
-      <header className="space-y-3">
-        <h1 className="font-serif text-4xl tracking-tight">
+    <section className="animate-rise space-y-10">
+      <header className="max-w-2xl space-y-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+          Quantum mechanics
+        </p>
+        <h1 className="font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl">
           {t("index.heading")}
         </h1>
-        <p className="max-w-prose text-muted">{t("index.intro")}</p>
+        <p className="text-lg leading-relaxed text-muted">{t("index.intro")}</p>
       </header>
 
-      <ul className="divide-y divide-border border-y border-border">
-        {MODULES.map((slug) => (
-          <li key={slug}>
-            <Link
-              href={`/qm/${slug}`}
-              className="group flex items-baseline justify-between gap-6 py-5 transition-colors"
-            >
-              <span className="space-y-1">
-                <span className="block font-serif text-xl text-foreground group-hover:text-accent">
-                  {t(`modules.${slug}.title`)}
-                </span>
-                <span className="block text-sm text-muted">
-                  {t(`modules.${slug}.summary`)}
-                </span>
-              </span>
-              <span
-                aria-hidden
-                className="shrink-0 text-muted transition-colors group-hover:text-accent"
-              >
-                →
-              </span>
-            </Link>
-          </li>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {MODULES.map((slug, i) => (
+          <ModuleCard
+            key={slug}
+            href={`/qm/${slug}`}
+            index={i + 1}
+            title={t(`modules.${slug}.title`)}
+            summary={t(`modules.${slug}.summary`)}
+          />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

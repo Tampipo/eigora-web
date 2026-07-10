@@ -176,7 +176,7 @@ export function WavepacketEvolution({
   };
 
   return (
-    <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/30">
+    <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px]">
         <div className="flex flex-col">
           <div className="relative" style={{ height }}>
@@ -757,7 +757,7 @@ function drawFrame(
   };
 
   // Separator
-  ctx.strokeStyle = "rgba(255,255,255,0.06)";
+  ctx.strokeStyle = "rgba(255,255,255,0.07)";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(0, padTop + probArea);
@@ -765,7 +765,7 @@ function drawFrame(
   ctx.stroke();
 
   // V(x) — dotted
-  ctx.strokeStyle = "rgba(200,205,215,0.5)";
+  ctx.strokeStyle = "rgba(190,197,210,0.5)";
   ctx.setLineDash([3, 3]);
   ctx.lineWidth = 1.25;
   ctx.beginPath();
@@ -784,8 +784,8 @@ function drawFrame(
     const probToY = (p: number) => padTop + probArea - (p / pMax) * probArea;
 
     const gradient = ctx.createLinearGradient(0, padTop, 0, padTop + probArea);
-    gradient.addColorStop(0, "rgba(130, 180, 255, 0.55)");
-    gradient.addColorStop(1, "rgba(130, 180, 255, 0.04)");
+    gradient.addColorStop(0, "rgba(124, 160, 255, 0.55)");
+    gradient.addColorStop(1, "rgba(124, 160, 255, 0.03)");
     ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.moveTo(xToPx(xs[0]), padTop + probArea);
@@ -796,8 +796,9 @@ function drawFrame(
     ctx.closePath();
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(130, 180, 255, 0.95)";
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "rgba(140, 172, 255, 0.98)";
+    ctx.lineWidth = 1.75;
+    ctx.lineJoin = "round";
     ctx.beginPath();
     for (let k = 0; k < xs.length; k++) {
       const px = xToPx(xs[k]);
@@ -808,8 +809,8 @@ function drawFrame(
     ctx.stroke();
   }
 
-  ctx.fillStyle = "rgba(132,138,150,0.9)";
-  ctx.font = '11px var(--font-geist-sans), system-ui, sans-serif';
+  ctx.fillStyle = "rgba(143,152,169,0.9)";
+  ctx.font = '600 11px var(--font-geist-mono), ui-monospace, monospace';
   ctx.textAlign = "left";
   ctx.fillText("|ψ|²", 10, padTop + 12);
   ctx.fillText("V(x)", 10, padTop + probArea + 14);

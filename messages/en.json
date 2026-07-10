@@ -9,9 +9,26 @@
     "about": "About"
   },
   "home": {
-    "heading": "Physense",
-    "intro": "A pedagogical platform for physics, blending written courses with interactive simulations.",
-    "exploreQm": "Explore quantum mechanics"
+    "eyebrow": "Live physics simulations",
+    "heading": "The Schrödinger equation, made visible.",
+    "intro": "A pedagogical platform for physics, blending clearly written course notes with simulations you can tune and watch evolve in real time.",
+    "exploreQm": "Explore quantum mechanics",
+    "ctaSecondary": "Start with the harmonic oscillator",
+    "modulesKicker": "Modules",
+    "steps": {
+      "read": {
+        "title": "Read the theory",
+        "desc": "Typeset course notes with real LaTeX — the physics stays front and center."
+      },
+      "tune": {
+        "title": "Tune the parameters",
+        "desc": "Drag sliders and watch the potential and its eigenstates reshape instantly."
+      },
+      "watch": {
+        "title": "Watch it evolve",
+        "desc": "Stream a wavepacket in real time and scrub through its evolution frame by frame."
+      }
+    }
   },
   "qm": {
     "index": {

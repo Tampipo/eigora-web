@@ -1,8 +1,17 @@
 // Copyright (C) 2026 Tanguy Marsault - PhySense
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { ArrowRight, BookOpen, SlidersHorizontal, Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { ModuleCard } from "@/components/ui/ModuleCard";
+
+const MODULES = ["harmonic", "barrier", "well"] as const;
+const STEPS = [
+  { key: "read", Icon: BookOpen },
+  { key: "tune", Icon: SlidersHorizontal },
+  { key: "watch", Icon: Play },
+] as const;
 
 export default async function HomePage({
   params,
@@ -12,25 +21,92 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("home");
+  const qm = await getTranslations("qm.modules");
 
   return (
-    <section className="space-y-8">
-      <header className="space-y-4">
-        <h1 className="font-serif text-5xl tracking-tight">{t("heading")}</h1>
-        <p className="max-w-prose text-lg leading-relaxed text-muted">
+    <div className="space-y-24">
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="animate-rise space-y-7">
+        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 text-xs font-medium text-muted">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/70" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+          </span>
+          {t("eyebrow")}
+        </span>
+
+        <h1 className="max-w-3xl font-serif text-4xl font-medium leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <span className="text-gradient">{t("heading")}</span>
+        </h1>
+
+        <p className="max-w-xl text-lg leading-relaxed text-muted">
           {t("intro")}
         </p>
-      </header>
 
-      <div className="pt-2">
-        <Link
-          href="/qm"
-          className="inline-flex items-center gap-2 rounded border border-border px-4 py-2 text-sm text-foreground transition-colors hover:border-accent hover:text-accent"
-        >
-          {t("exploreQm")}
-          <span aria-hidden>→</span>
-        </Link>
-      </div>
-    </section>
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+          <Link
+            href="/qm"
+            className="group inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-background shadow-glow transition duration-200 hover:bg-accent/90"
+          >
+            {t("exploreQm")}
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2} />
+          </Link>
+          <Link
+            href="/qm/harmonic"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors duration-200 hover:border-border-strong hover:bg-surface-2/60"
+          >
+            {t("ctaSecondary")}
+          </Link>
+        </div>
+      </section>
+
+      {/* ── How it works ─────────────────────────────────────────────── */}
+      <section className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3">
+        {STEPS.map(({ key, Icon }, i) => (
+          <div key={key} className="flex flex-col gap-3 bg-surface/40 p-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-2 text-accent">
+                <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </span>
+              <span className="font-mono text-xs tabular-nums text-faint">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <h3 className="text-sm font-semibold text-foreground">
+              {t(`steps.${key}.title`)}
+            </h3>
+            <p className="text-sm leading-relaxed text-muted">
+              {t(`steps.${key}.desc`)}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      {/* ── Modules ──────────────────────────────────────────────────── */}
+      <section className="space-y-6">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-faint">
+            {t("modulesKicker")}
+          </h2>
+          <Link
+            href="/qm"
+            className="text-sm text-muted transition-colors hover:text-accent"
+          >
+            {t("exploreQm")} →
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {MODULES.map((slug, i) => (
+            <ModuleCard
+              key={slug}
+              href={`/qm/${slug}`}
+              index={i + 1}
+              title={qm(`${slug}.title`)}
+              summary={qm(`${slug}.summary`)}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

@@ -9,9 +9,26 @@
     "about": "À propos"
   },
   "home": {
-    "heading": "Physense",
-    "intro": "Une plateforme pédagogique de physique mêlant cours écrits et simulations interactives.",
-    "exploreQm": "Explorer la mécanique quantique"
+    "eyebrow": "Simulations de physique en direct",
+    "heading": "L'équation de Schrödinger, rendue visible.",
+    "intro": "Une plateforme pédagogique de physique mêlant des cours clairement rédigés à des simulations que l'on peut régler et regarder évoluer en temps réel.",
+    "exploreQm": "Explorer la mécanique quantique",
+    "ctaSecondary": "Commencer par l'oscillateur harmonique",
+    "modulesKicker": "Modules",
+    "steps": {
+      "read": {
+        "title": "Lire la théorie",
+        "desc": "Des cours composés avec du vrai LaTeX — la physique reste au premier plan."
+      },
+      "tune": {
+        "title": "Régler les paramètres",
+        "desc": "Déplacez les curseurs et voyez le potentiel et ses états propres se reformer aussitôt."
+      },
+      "watch": {
+        "title": "Observer l'évolution",
+        "desc": "Diffusez un paquet d'ondes en temps réel et parcourez son évolution image par image."
+      }
+    }
   },
   "qm": {
     "index": {

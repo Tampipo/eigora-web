@@ -3,6 +3,7 @@
 
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
 
@@ -14,16 +15,14 @@ export async function Sidebar() {
   const qm = await getTranslations("qm.modules");
 
   return (
-    <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col border-r border-border bg-surface/30 px-5 py-6">
-      <Link
-        href="/"
-        className="block text-foreground"
-      >
-        <span className="block font-semibold tracking-tight text-lg leading-none">
-          {site("title")}
-        </span>
-        <span className="mt-1.5 block text-xs text-muted">
-          {site("tagline")}
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface/40 px-5 py-6 backdrop-blur-sm lg:flex">
+      <Link href="/" className="group flex items-center gap-2.5">
+        <Logo size={30} className="transition-transform duration-300 ease-out-expo group-hover:scale-105" />
+        <span className="leading-none">
+          <span className="block font-serif text-lg font-medium tracking-tight text-foreground">
+            {site("title")}
+          </span>
+          <span className="mt-1 block text-[11px] text-muted">{site("tagline")}</span>
         </span>
       </Link>
 
@@ -33,11 +32,11 @@ export async function Sidebar() {
         </div>
 
         <div className="space-y-1">
-          <p className="px-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+          <p className="px-2 text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
             {t("qm")}
           </p>
           <div className="space-y-0.5">
-            <SidebarNavItem href="/qm" label="Overview" />
+            <SidebarNavItem href="/qm" label="Overview" exact />
             {QM_MODULES.map((slug) => (
               <SidebarNavItem
                 key={slug}
@@ -51,7 +50,7 @@ export async function Sidebar() {
       </nav>
 
       <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+        <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
           Locale
         </span>
         <LocaleSwitcher />

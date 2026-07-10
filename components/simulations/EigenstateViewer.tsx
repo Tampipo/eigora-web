@@ -68,7 +68,7 @@ export function EigenstateViewer({
   const traces = useMemo(() => (data ? buildTraces(data) : []), [data]);
 
   return (
-    <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/30">
+    <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px]">
         <div className="relative" style={{ minHeight: height }}>
           {loading && !data && (
@@ -90,32 +90,43 @@ export function EigenstateViewer({
                 paper_bgcolor: "rgba(0,0,0,0)",
                 plot_bgcolor: "rgba(0,0,0,0)",
                 font: {
-                  color: "rgb(180 186 196)",
+                  color: "rgb(160 168 184)",
                   family:
                     "var(--font-geist-sans), system-ui, sans-serif",
                   size: 12,
                 },
                 height,
-                margin: { t: 16, r: 24, b: 44, l: 56 },
+                margin: { t: 20, r: 24, b: 46, l: 58 },
+                hoverlabel: {
+                  bgcolor: "rgb(24 28 39)",
+                  bordercolor: "rgb(52 60 77)",
+                  font: {
+                    family: "var(--font-geist-mono), ui-monospace, monospace",
+                    color: "rgb(232 235 242)",
+                    size: 11,
+                  },
+                },
                 xaxis: {
                   title: { text: "x", standoff: 12 },
-                  gridcolor: "rgba(255,255,255,0.04)",
-                  zerolinecolor: "rgba(255,255,255,0.12)",
+                  gridcolor: "rgba(255,255,255,0.045)",
+                  zerolinecolor: "rgba(255,255,255,0.14)",
                   tickfont: { size: 11 },
-                  linecolor: "rgba(255,255,255,0.15)",
+                  linecolor: "rgba(255,255,255,0.14)",
                   showline: true,
                   ticks: "outside",
-                  tickcolor: "rgba(255,255,255,0.2)",
+                  ticklen: 4,
+                  tickcolor: "rgba(255,255,255,0.18)",
                 },
                 yaxis: {
                   title: { text: "Energy", standoff: 16 },
-                  gridcolor: "rgba(255,255,255,0.04)",
-                  zerolinecolor: "rgba(255,255,255,0.12)",
+                  gridcolor: "rgba(255,255,255,0.045)",
+                  zerolinecolor: "rgba(255,255,255,0.14)",
                   tickfont: { size: 11 },
-                  linecolor: "rgba(255,255,255,0.15)",
+                  linecolor: "rgba(255,255,255,0.14)",
                   showline: true,
                   ticks: "outside",
-                  tickcolor: "rgba(255,255,255,0.2)",
+                  ticklen: 4,
+                  tickcolor: "rgba(255,255,255,0.18)",
                 },
                 showlegend: false,
                 hovermode: "closest",
@@ -380,9 +391,9 @@ function Spinner() {
 
 function Legend() {
   return (
-    <div className="flex items-center gap-4">
-      <LegendKey color="rgb(200 205 215)" label="V(x)" dashed />
-      <LegendKey color="rgb(130 180 255)" label="ψₙ(x) shifted by Eₙ" />
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+      <LegendKey color="rgb(190 197 210)" label="V(x)" dashed />
+      <LegendKey color="rgb(124 160 255)" label="ψₙ(x) shifted by Eₙ" />
       <LegendKey color="rgb(255 200 120)" label="Eₙ" dashed />
     </div>
   );
@@ -468,7 +479,7 @@ function buildTraces(res: EigenstatesResponse) {
     x: res.x,
     y: res.potential,
     mode: "lines",
-    line: { color: "rgba(200, 205, 215, 0.7)", width: 1.5, dash: "dot" },
+    line: { color: "rgba(190, 197, 210, 0.65)", width: 1.5, dash: "dot" },
     name: "V(x)",
     hovertemplate: "V(%{x:.2f}) = %{y:.2f}<extra></extra>",
   });
@@ -511,14 +522,15 @@ function computeAmplitude(energies: number[]) {
   return Math.max(spacing * 0.4, 0.1);
 }
 
+// Perceptual cool→warm ramp keyed to the eigenstate index n (low energy = cool).
 const STATE_PALETTE = [
-  "rgb(140, 180, 255)",
-  "rgb(120, 200, 240)",
-  "rgb(140, 220, 200)",
-  "rgb(200, 220, 140)",
-  "rgb(240, 200, 130)",
-  "rgb(240, 170, 130)",
-  "rgb(240, 140, 140)",
+  "rgb(124, 160, 255)",
+  "rgb(108, 190, 240)",
+  "rgb(96, 214, 208)",
+  "rgb(150, 220, 156)",
+  "rgb(224, 208, 132)",
+  "rgb(240, 168, 128)",
+  "rgb(240, 138, 150)",
 ];
 
 function stateColor(n: number, total: number) {
