@@ -109,7 +109,6 @@ jobs:
           echo "TAG=$TAG" >> "$GITHUB_ENV"
           cd "gitops/apps/physense-web" \
             && kustomize edit set image "ghcr.io/$OWNER/physense-web=ghcr.io/$OWNER/physense-web:$TAG"
-          done
 
       - name: Commit and push changes
         run: |
