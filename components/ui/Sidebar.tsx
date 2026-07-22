@@ -3,11 +3,10 @@
 
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { QM_MODULES } from "@/lib/qm-modules";
 import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
-
-const QM_MODULES = ["harmonic", "barrier", "well"] as const;
 
 export async function Sidebar() {
   const t = await getTranslations("nav");

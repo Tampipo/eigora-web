@@ -3,8 +3,7 @@
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ModuleCard } from "@/components/ui/ModuleCard";
-
-const MODULES = ["harmonic", "barrier", "well"] as const;
+import { QM_MODULES } from "@/lib/qm-modules";
 
 export default async function QmIndexPage({
   params,
@@ -28,7 +27,7 @@ export default async function QmIndexPage({
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {MODULES.map((slug, i) => (
+        {QM_MODULES.map((slug, i) => (
           <ModuleCard
             key={slug}
             href={`/qm/${slug}`}

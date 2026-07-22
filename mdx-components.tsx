@@ -4,6 +4,7 @@
 import type { MDXComponents } from "mdx/types";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
+import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -11,6 +12,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ...components,
     EigenstateViewer,
     WavepacketEvolution,
+    OrbitalViewer,
     FormulaBlock,
   };
 }
