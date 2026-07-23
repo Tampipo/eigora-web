@@ -22,10 +22,14 @@ import type {
   SingleAtomStateResponse,
 } from "@/lib/api/schemas";
 import { useDebouncedValue } from "@/lib/use-debounced";
-import { Slider } from "@/components/ui/Slider";
+import { decodeOrbitalMesh } from "@/lib/orbital-mesh";
 import { Tex } from "@/components/ui/Tex";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+// three.js touches `window` at import, so the WebGL scene is client-only.
+const OrbitalScene = dynamic(
+  () => import("./OrbitalScene").then((m) => m.OrbitalScene),
+  { ssr: false },
+);
 
 // Spectroscopic notation skips "j" by convention (avoids confusion with total
 // angular momentum quantum number j). Covers l = 0..9, the API's full range.
@@ -39,7 +43,10 @@ const ORBITAL_LETTERS = ["s", "p", "d", "f", "g", "h", "i", "k", "l", "m"];
 const PSI_POSITIVE_COLOR = "#3987e5";
 const PSI_NEGATIVE_COLOR = "#e66767";
 
-const PLOT_CONFIG = { displayModeBar: false, responsive: true };
+// Grid points per axis the server samples ψ on. Fixed (no user control): the
+// server blurs proportionally and returns a small mesh, so this trades only
+// server compute for smoothness, not payload — not something worth exposing.
+const GRID_RESOLUTION = 96;
 
 export interface OrbitalViewerProps {
   Z?: number;
@@ -52,26 +59,29 @@ export interface OrbitalViewerProps {
 }
 
 export function OrbitalViewer({
-  Z: initialZ = 1,
   n: initialN = 2,
   l: initialL = 1,
   m: initialM = 0,
-  resolution: initialResolution = 112,
   height = 460,
   caption,
 }: OrbitalViewerProps) {
-  const [Z, setZ] = useState(initialZ);
+  // Z (atomic number) only rescales the orbital's size, which the auto-framing
+  // immediately cancels out — so it had no visible effect and the slider was
+  // dropped. Fixed at hydrogen.
+  const Z = 1;
   const [n, setN] = useState(initialN);
   const [l, setL] = useState(initialL);
   const [m, setM] = useState(initialM);
-  const [resolution, setResolution] = useState(initialResolution);
-  const [isoFraction, setIsoFraction] = useState(0.12);
   // The 3D scene grabs the mouse wheel for camera zoom the instant the
   // cursor crosses it, which hijacks page scrolling for anyone just reading
   // past the figure. Require a click to arm it first — same pattern as an
   // embedded Google Map — so scroll passes through until you deliberately
   // engage with the plot.
   const [armed, setArmed] = useState(false);
+  // The hint pill fades on its own a few seconds after the scene first
+  // renders, so it doesn't sit permanently over the orbital — clicking
+  // anywhere in the scene still arms it whether or not the pill is showing.
+  const [hintVisible, setHintVisible] = useState(true);
 
   // n, l, m are coupled (0 <= l < n, -l <= m <= l) — clamp downstream values
   // on every change instead of round-tripping an invalid combo to the API.
@@ -89,29 +99,20 @@ export function OrbitalViewer({
     setM((prevM) => Math.max(-nextL, Math.min(nextL, prevM)));
   };
 
-  // Every one of these sliders drives an expensive round-trip: a new API
-  // request over a ≤160³-point grid, then a full client-side rebuild of the
-  // WebGL isosurface mesh. Doing that synchronously on every drag tick starves
-  // the browser's own pointer-tracking for the <input type="range"> and makes
-  // it feel like the slider "freezes" mid-drag. The slider itself must stay
-  // driven by the raw, instant state (below) so it always tracks the pointer
-  // smoothly — only the heavy downstream work waits for a short pause.
-  const dZ = useDebouncedValue(Z, 200);
+  // Each quantum-number change drives a fresh API round-trip (the server
+  // extracts the isosurface and returns a small mesh). The controls stay driven
+  // by the raw, instant state below so they never lag; only the debounced value
+  // triggers the request after a short pause.
   const dN = useDebouncedValue(n, 200);
   const dL = useDebouncedValue(l, 200);
   const dM = useDebouncedValue(m, 200);
-  const dResolution = useDebouncedValue(resolution, 200);
-  const dIsoFraction = useDebouncedValue(isoFraction, 150);
 
-  // Characteristic radius of a hydrogen-like state scales like n²/Z (Bohr
-  // radii). Kept tight (not just "padded generously") because every point
-  // spent on near-empty outer space is a point *not* resolving the nodal
-  // structure — an over-wide domain at fixed resolution is what turns the
-  // isosurface into a coarse, faceted mess for higher n.
-  const extent = useMemo(
-    () => Math.min(45, Math.max(8, (2.5 * dN * dN) / dZ + 3 * dN)),
-    [dN, dZ],
-  );
+  // Box half-width, sized to contain the 80%-probability shell. Measured, that
+  // radius grows like ~2n²/Z Bohr (r80 ≈ 2.05·n² for l=0, the most diffuse);
+  // 2.5·n² leaves ~15% air so edge blur doesn't distort the outer shell. A
+  // floor keeps the compact low-n states framed. Deliberately *no* upper cap —
+  // the old min(45) clipped every state n≥5.
+  const extent = useMemo(() => Math.max(9, (2.5 * dN * dN) / Z), [dN]);
 
   const request = useMemo<SingleAtomStateRequest>(
     () => ({
@@ -122,65 +123,35 @@ export function OrbitalViewer({
         y_max: extent,
         z_min: -extent,
         z_max: extent,
-        nx: dResolution,
-        ny: dResolution,
-        nz: dResolution,
+        nx: GRID_RESOLUTION,
+        ny: GRID_RESOLUTION,
+        nz: GRID_RESOLUTION,
       },
-      Z: dZ,
+      Z,
       n: dN,
       l: dL,
       m: dM,
     }),
-    [extent, dResolution, dZ, dN, dL, dM],
+    [extent, dN, dL, dM],
   );
 
   const { data, error, loading } = useSingleAtomState(request);
 
-  const { traces, boundRadius } = useMemo(
-    () =>
-      data
-        ? buildOrbitalTraces(data, dIsoFraction)
-        : { traces: [], boundRadius: extent },
-    [data, dIsoFraction, extent],
+  const mesh = useMemo(
+    () => (data ? decodeOrbitalMesh(data) : null),
+    [data],
   );
 
-  const layout = useMemo(
-    () => ({
-      paper_bgcolor: "rgba(0,0,0,0)",
-      plot_bgcolor: "rgba(0,0,0,0)",
-      font: {
-        color: "rgb(160 168 184)",
-        family: "var(--font-geist-sans), system-ui, sans-serif",
-        size: 12,
-      },
-      height,
-      margin: { t: 8, r: 0, b: 0, l: 0 },
-      // Persist camera position across param updates so exploring quantum
-      // numbers doesn't reset the view you rotated to.
-      uirevision: "orbital-viewer",
-      hoverlabel: {
-        bgcolor: "rgb(24 28 39)",
-        bordercolor: "rgb(52 60 77)",
-        font: {
-          family: "var(--font-geist-mono), ui-monospace, monospace",
-          color: "rgb(232 235 242)",
-          size: 11,
-        },
-      },
-      scene: {
-        aspectmode: "cube" as const,
-        dragmode: "orbit" as const,
-        camera: { eye: { x: 1.35, y: 1.35, z: 1.05 } },
-        // No wireframe box, ticks, or axis lines — just the shape. Ranges
-        // still sized to its own bounding box (not the much larger
-        // computational grid), or it'd float shrunken in a huge empty cube.
-        xaxis: sceneAxis(boundRadius),
-        yaxis: sceneAxis(boundRadius),
-        zaxis: sceneAxis(boundRadius),
-      },
-    }),
-    [height, boundRadius],
-  );
+  const triangleCount =
+    (data?.positive?.triangle_count ?? 0) +
+    (data?.negative?.triangle_count ?? 0);
+
+  // Fade the hint pill 4s after the scene first has something to show.
+  useEffect(() => {
+    if (!data || armed) return;
+    const id = setTimeout(() => setHintVisible(false), 4000);
+    return () => clearTimeout(id);
+  }, [data, armed]);
 
   const label = `${dN}${ORBITAL_LETTERS[dL] ?? "?"}`;
 
@@ -192,19 +163,19 @@ export function OrbitalViewer({
             {label} orbital
           </p>
           <p className="mt-0.5 font-mono text-xs text-muted">
-            Z={dZ} · n={dN} · l={dL} · m={dM} · Re(ψ)
+            n={dN} · l={dL} · m={dM} · Re(ψ)
           </p>
         </div>
         <div className="hidden items-center gap-4 text-xs text-muted sm:flex">
-          <LegendDot color={PSI_POSITIVE_COLOR} label="+ψ" />
-          <LegendDot color={PSI_NEGATIVE_COLOR} label="−ψ" />
+          <LegendDot color={PSI_POSITIVE_COLOR} label={<Tex>{"+\\psi"}</Tex>} />
+          <LegendDot color={PSI_NEGATIVE_COLOR} label={<Tex>{"-\\psi"}</Tex>} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px]">
         <div
           className="relative"
-          style={{ minHeight: height }}
+          style={{ height }}
           onMouseLeave={() => setArmed(false)}
         >
           {loading && !data && (
@@ -219,23 +190,26 @@ export function OrbitalViewer({
               {error.message}
             </div>
           )}
-          {data && (
-            <Plot
-              data={traces}
-              layout={layout}
-              config={PLOT_CONFIG}
-              useResizeHandler
-              style={{ width: "100%", height: "100%" }}
+          {data && mesh && (
+            <OrbitalScene
+              mesh={mesh}
+              positiveColor={PSI_POSITIVE_COLOR}
+              negativeColor={PSI_NEGATIVE_COLOR}
+              armed={armed}
             />
           )}
           {data && !armed && (
             <button
               type="button"
               onClick={() => setArmed(true)}
-              className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-transparent"
+              className="group absolute inset-0 z-10 flex cursor-pointer items-end justify-center bg-transparent pb-4"
               aria-label="Click to enable rotate and zoom"
             >
-              <span className="rounded-full border border-border-strong bg-surface-2/90 px-3 py-1.5 text-xs text-muted shadow-card">
+              <span
+                className={`rounded-full border border-border-strong bg-surface-2/90 px-3 py-1.5 text-xs text-muted shadow-card transition-opacity duration-700 group-hover:opacity-100 ${
+                  hintVisible ? "opacity-100" : "opacity-0"
+                }`}
+              >
                 Click to rotate · scroll to zoom
               </span>
             </button>
@@ -250,16 +224,7 @@ export function OrbitalViewer({
         <div className="space-y-6 border-t border-border p-5 lg:border-l lg:border-t-0">
           <div className="space-y-3.5">
             <SectionLabel>Quantum numbers</SectionLabel>
-            <Slider
-              label={<Tex>{"Z"}</Tex>}
-              hint="atomic number"
-              value={Z}
-              onChange={(v) => setZ(Math.round(v))}
-              min={1}
-              max={20}
-              step={1}
-            />
-            <div className="space-y-2.5 pt-1">
+            <div className="space-y-2.5">
               <Stepper
                 label={<Tex>{"n"}</Tex>}
                 hint="principal"
@@ -288,41 +253,17 @@ export function OrbitalViewer({
               />
             </div>
           </div>
-
-          <div className="space-y-3.5 border-t border-border pt-5">
-            <SectionLabel>Rendering</SectionLabel>
-            <Slider
-              label="Iso level"
-              hint="% of peak |ψ|"
-              value={isoFraction}
-              onChange={setIsoFraction}
-              min={0.02}
-              max={0.6}
-              step={0.01}
-              format={(v) => `${Math.round(v * 100)}%`}
-            />
-            <Slider
-              label="Resolution"
-              hint="grid pts / axis"
-              value={resolution}
-              onChange={(v) => setResolution(Math.round(v))}
-              min={32}
-              max={160}
-              step={4}
-              format={(v) => `${v}³`}
-            />
-          </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3 border-t border-border bg-surface/40 px-4 py-2 text-xs text-muted">
         <div className="flex items-center gap-4 sm:hidden">
-          <LegendDot color={PSI_POSITIVE_COLOR} label="+ψ" />
-          <LegendDot color={PSI_NEGATIVE_COLOR} label="−ψ" />
+          <LegendDot color={PSI_POSITIVE_COLOR} label={<Tex>{"+\\psi"}</Tex>} />
+          <LegendDot color={PSI_NEGATIVE_COLOR} label={<Tex>{"-\\psi"}</Tex>} />
         </div>
         {data && (
           <span className="ml-auto font-mono tabular-nums">
-            {data.x.length}×{data.y.length}×{data.z.length} pts
+            {triangleCount.toLocaleString()} tris
           </span>
         )}
       </div>
@@ -344,7 +285,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-function LegendDot({ color, label }: { color: string; label: string }) {
+function LegendDot({ color, label }: { color: string; label: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
@@ -413,14 +354,6 @@ function Stepper({
   );
 }
 
-function sceneAxis(boundRadius: number) {
-  return {
-    visible: false,
-    range: [-boundRadius, boundRadius],
-    autorange: false,
-  };
-}
-
 function Spinner() {
   return (
     <span
@@ -480,102 +413,4 @@ function useSingleAtomState(request: SingleAtomStateRequest) {
   }, [requestKey]);
 
   return { data, error, loading };
-}
-
-// The API returns axis-aligned coordinates (x, y, z each length n·) plus a
-// dense (nx, ny, nz) array of the signed wavefunction ψ; Plotly's isosurface
-// trace wants flat, per-point x/y/z/value arrays instead, in matching order.
-function flattenField(data: SingleAtomStateResponse) {
-  const { x, y, z, psi } = data;
-  const nx = x.length;
-  const ny = y.length;
-  const nz = z.length;
-  const total = nx * ny * nz;
-
-  const xs = new Float64Array(total);
-  const ys = new Float64Array(total);
-  const zs = new Float64Array(total);
-  const vs = new Float64Array(total);
-
-  let maxAbs = 0;
-  let idx = 0;
-  for (let i = 0; i < nx; i++) {
-    const xi = x[i];
-    const plane = psi[i];
-    for (let j = 0; j < ny; j++) {
-      const yj = y[j];
-      const row = plane[j];
-      for (let k = 0; k < nz; k++) {
-        const v = row[k];
-        xs[idx] = xi;
-        ys[idx] = yj;
-        zs[idx] = z[k];
-        vs[idx] = v;
-        const a = Math.abs(v);
-        if (a > maxAbs) maxAbs = a;
-        idx++;
-      }
-    }
-  }
-
-  return { xs, ys, zs, vs, maxAbs };
-}
-
-// One solid, opaque shell per sign of ψ — not a stack of translucent shells
-// (a wide isomin..isomax band with a partial `fill` produced a perforated,
-// layered look; two near-duplicate isovalues with count:2 produced a
-// speckled, seamed one). A single exact isovalue with count:1 is the
-// standard, well-behaved Plotly invocation. Also returns a tight bounding
-// radius around the points that actually cross the threshold, so the scene
-// can be framed on the visible shape instead of the much larger
-// computational grid.
-function buildOrbitalTraces(
-  data: SingleAtomStateResponse,
-  isoFraction: number,
-): { traces: Record<string, unknown>[]; boundRadius: number } {
-  const { xs, ys, zs, vs, maxAbs } = flattenField(data);
-  const safeMaxAbs = maxAbs > 0 ? maxAbs : 1;
-  const threshold = isoFraction * safeMaxAbs;
-
-  let boundRadius = 0;
-  const total = vs.length;
-  for (let idx = 0; idx < total; idx++) {
-    if (Math.abs(vs[idx]) < threshold) continue;
-    const r = Math.max(Math.abs(xs[idx]), Math.abs(ys[idx]), Math.abs(zs[idx]));
-    if (r > boundRadius) boundRadius = r;
-  }
-  boundRadius = boundRadius > 0 ? boundRadius * 1.25 : 8;
-
-  const shell = (sign: 1 | -1, color: string): Record<string, unknown> => ({
-    type: "isosurface",
-    x: xs,
-    y: ys,
-    z: zs,
-    value: vs,
-    isomin: sign > 0 ? threshold : -threshold,
-    isomax: sign > 0 ? threshold : -threshold,
-    surface: { count: 1, fill: 1 },
-    caps: { x: { show: false }, y: { show: false }, z: { show: false } },
-    colorscale: [
-      [0, color],
-      [1, color],
-    ],
-    opacity: 1,
-    showscale: false,
-    lighting: {
-      ambient: 0.35,
-      diffuse: 0.9,
-      specular: 0.9,
-      roughness: 0.35,
-      fresnel: 0.2,
-    },
-    lightposition: { x: 2000, y: 1000, z: 1500 },
-    flatshading: false,
-    hovertemplate: `x=%{x:.2f}, y=%{y:.2f}, z=%{z:.2f}<br>${sign > 0 ? "+" : "−"}ψ=%{value:.3e}<extra></extra>`,
-  });
-
-  return {
-    traces: [shell(1, PSI_POSITIVE_COLOR), shell(-1, PSI_NEGATIVE_COLOR)],
-    boundRadius,
-  };
 }
