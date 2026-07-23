@@ -8,7 +8,9 @@
 import type {
   EigenstatesRequest,
   EigenstatesResponse,
-  HTTPValidationError
+  HTTPValidationError,
+  SingleAtomStateRequest,
+  SingleAtomStateResponse
 } from '.././schemas';
 
 import { customFetch } from '../../http';
@@ -55,6 +57,52 @@ export const eigenstatesQmEigenstatesPost = async (eigenstatesRequest: Eigenstat
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       eigenstatesRequest,)
+  }
+);}
+
+
+/**
+ * Compute the single-atom state for a given potential and quantum numbers.
+
+Accepts either a named potential (Option A) or a custom V(x) array (Option B).
+ * @summary Single Atom State
+ */
+export type singleAtomStateQmSingleAtomStatePostResponse200 = {
+  data: SingleAtomStateResponse
+  status: 200
+}
+
+export type singleAtomStateQmSingleAtomStatePostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+    
+export type singleAtomStateQmSingleAtomStatePostResponseSuccess = (singleAtomStateQmSingleAtomStatePostResponse200) & {
+  headers: Headers;
+};
+export type singleAtomStateQmSingleAtomStatePostResponseError = (singleAtomStateQmSingleAtomStatePostResponse422) & {
+  headers: Headers;
+};
+
+export type singleAtomStateQmSingleAtomStatePostResponse = (singleAtomStateQmSingleAtomStatePostResponseSuccess | singleAtomStateQmSingleAtomStatePostResponseError)
+
+export const getSingleAtomStateQmSingleAtomStatePostUrl = () => {
+
+
+  
+
+  return `/qm/single-atom-state`
+}
+
+export const singleAtomStateQmSingleAtomStatePost = async (singleAtomStateRequest: SingleAtomStateRequest, options?: RequestInit): Promise<singleAtomStateQmSingleAtomStatePostResponse> => {
+  
+  return customFetch<singleAtomStateQmSingleAtomStatePostResponse>(getSingleAtomStateQmSingleAtomStatePostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      singleAtomStateRequest,)
   }
 );}
 

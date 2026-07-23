@@ -1,0 +1,27 @@
+## L'atome hydrogénoïde
+
+Un électron unique lié à un noyau de charge $Z$ subit un potentiel coulombien
+
+$$
+V(r) = -\frac{Ze^2}{4\pi\varepsilon_0 r}
+$$
+
+Comme $V$ ne dépend que de $r$, l'équation de Schrödinger indépendante du temps se sépare en coordonnées sphériques en une partie radiale et une partie angulaire :
+
+$$
+\psi_{nlm}(r,\theta,\phi) = R_{nl}(r)\, Y_l^m(\theta,\phi)
+$$
+
+Les trois nombres quantiques sont couplés : le nombre principal $n = 1, 2, 3, \dots$ fixe l'énergie, le moment cinétique orbital $l$ vérifie $0 \le l < n$, et le nombre magnétique $m$ vérifie $-l \le m \le l$. La partie radiale
+
+$$
+R_{nl}(\rho) \propto e^{-\rho/2}\, \rho^{\,l}\, L_{n-l-1}^{2l+1}(\rho), \qquad \rho = \frac{2Zr}{n}
+$$
+
+fait intervenir un polynôme de Laguerre associé, tandis que $Y_l^m$ est l'harmonique sphérique bien connue qui donne à chaque orbitale sa forme lobée caractéristique.
+
+<OrbitalViewer Z={1} n={2} l={1} m={0} caption="Partie réelle de ψ pour une orbitale hydrogénoïde — bleu où ψ > 0, rouge où ψ < 0. Glissez pour faire pivoter, molette pour zoomer." />
+
+### Lire la forme
+
+Les surfaces affichées délimitent la région où $|\psi_{nlm}|$ dépasse une fraction choisie de sa valeur maximale — le curseur « iso level » — colorée selon le *signe* de $\psi_{nlm}$ lui-même plutôt que selon $|\psi_{nlm}|^2$ : bleu où la fonction d'onde est positive, rouge où elle est négative. La frontière entre les deux couleurs est exactement un nœud, une surface où $\psi_{nlm} = 0$. Augmentez $n$ pour voir croître le nombre de nœuds radiaux, chacun formant une nouvelle frontière rouge/bleu le long du rayon ; augmentez $l$ à $n$ fixé pour voir la forme passer d'une sphère ($s$) à l'haltère bicolore familière ($p$) puis au trèfle à quatre lobes ($d$) ; balayez $m$ pour voir les lobes tourner autour de l'axe $z$, l'axe selon lequel le moment cinétique est quantifié.

@@ -47,6 +47,10 @@
       "well": {
         "title": "Finite square well",
         "summary": "Bound states in a confining potential."
+      },
+      "orbitals": {
+        "title": "Atomic orbitals",
+        "summary": "3D electron density of hydrogen-like states, in spherical coordinates."
       }
     }
   },

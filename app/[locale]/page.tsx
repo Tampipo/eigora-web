@@ -5,8 +5,8 @@ import { ArrowRight, BookOpen, SlidersHorizontal, Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ModuleCard } from "@/components/ui/ModuleCard";
+import { QM_MODULES } from "@/lib/qm-modules";
 
-const MODULES = ["harmonic", "barrier", "well"] as const;
 const STEPS = [
   { key: "read", Icon: BookOpen },
   { key: "tune", Icon: SlidersHorizontal },
@@ -96,7 +96,7 @@ export default async function HomePage({
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MODULES.map((slug, i) => (
+          {QM_MODULES.map((slug, i) => (
             <ModuleCard
               key={slug}
               href={`/qm/${slug}`}

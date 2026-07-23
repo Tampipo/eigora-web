@@ -47,6 +47,10 @@
       "well": {
         "title": "Puits carré fini",
         "summary": "États liés dans un potentiel confinant."
+      },
+      "orbitals": {
+        "title": "Orbitales atomiques",
+        "summary": "Densité électronique 3D des états hydrogénoïdes, en coordonnées sphériques."
       }
     }
   },
