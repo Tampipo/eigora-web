@@ -5,12 +5,13 @@
  * Physics simulation backend for the Physense platform.
  * OpenAPI spec version: 0.1.0
  */
+import type { SingleAtomStateResponsePositive } from './singleAtomStateResponsePositive';
+import type { SingleAtomStateResponseNegative } from './singleAtomStateResponseNegative';
 
 export interface SingleAtomStateResponse {
-  x: number[];
-  y: number[];
-  z: number[];
-  psi: number[][][];
+  positive: SingleAtomStateResponsePositive;
+  negative: SingleAtomStateResponseNegative;
+  bound_radius: number;
   Z: number;
   n: number;
   l: number;
