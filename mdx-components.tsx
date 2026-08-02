@@ -4,15 +4,19 @@
 import type { MDXComponents } from "mdx/types";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
+import { BarrierScattering } from "@/components/simulations/BarrierScattering";
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
+import { Video } from "@/components/ui/Video";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
     EigenstateViewer,
     WavepacketEvolution,
+    BarrierScattering,
     OrbitalViewer,
     FormulaBlock,
+    Video,
   };
 }

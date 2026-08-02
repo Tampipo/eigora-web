@@ -37,6 +37,8 @@ export interface EvolveMetadataMessage {
   potential: number[];
   t_max: number;
   n_frames: number;
+  predicted_transmission: number | null;
+  mean_energy_transmission: number | null;
 }
 
 export interface EvolveFrameMessage {

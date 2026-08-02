@@ -2,20 +2,56 @@
 
 A particle with energy $E$ below a barrier of height $V_0$ has a non-zero probability of being found on the other side — quantum tunneling.
 
-<EigenstateViewer potential="barrier" params={{ height: 5.0, width: 1.0 }} nStates={3} />
+### Why a wavepacket?
 
-### Transmission coefficient
+The plane wave $e^{ikx}$ normally used to derive a transmission coefficient carries a single, perfectly sharp energy $E = \hbar^2k^2/2m$ — but it also extends over all of space for all time. Nothing "arrives" at the barrier and nothing is ever "detected" on the other side; it's a steady-state idealization, not a particle.
 
-For a rectangular barrier of width $a$ and height $V_0 > E$:
+A real particle is localized: it starts somewhere, travels toward the barrier, and eventually gets found on one side or the other. But localizing it in position forces its momentum — and therefore its energy — to spread out, by the uncertainty principle. So a real wavepacket isn't at energy $E$; it's a superposition of many energies, each with its own transmission probability $T(E)$.
+
+That means the fraction of a real wavepacket that tunnels through isn't $T$ evaluated at some single "mean" energy — it's the **energy-averaged transmission**
+
+$$
+T_{\text{eff}} = \int |\varphi(k)|^2\, T\big(E(k)\big)\, dk, \qquad E(k) = \frac{\hbar^2 k^2}{2m}
+$$
+
+where $|\varphi(k)|^2$ is the wavepacket's momentum distribution. The simulation further down checks this directly: it evolves a genuine wavepacket in time, measures how much ends up transmitted, and compares it to $T_{\text{eff}}$ computed from this formula.
+
+### Exact transmission coefficient
+
+For a rectangular barrier of width $a$ and height $V_0$, with $\varepsilon = E/V_0$ and $\sigma = 2mV_0a^2/\hbar^2$:
+
+$$
+T(\varepsilon) = \left[1 + \frac{\sinh^2\!\left(\sqrt{\sigma(1-\varepsilon)}\right)}{4\varepsilon(1-\varepsilon)}\right]^{-1}, \qquad R(\varepsilon) = 1 - T(\varepsilon)
+$$
+
+for $\varepsilon < 1$ (tunneling below the barrier). For $\varepsilon > 1$ (above the barrier) the same formula holds with $\sinh \to \sin$. This is the exact result — valid at any energy, not just deep in the tunneling regime.
+
+For the barrier used in the simulation below ($V_0 = 5$, $a = 1$) and a particle at the wavepacket's mean energy ($E = 2$, so $\varepsilon = 0.4$, $\sigma = 10$): $T(0.4) \approx 0.028$. Watch for this number further down — it's *not* what the simulation measures.
+
+### The deep-tunneling approximation
+
+When the barrier is opaque ($\sqrt{\sigma(1-\varepsilon)} \gg 1$), $\sinh(x) \approx \tfrac{1}{2} e^{x}$ and the exact formula above reduces to the familiar
 
 $$
 T \approx 16 \, \frac{E}{V_0}\left(1 - \frac{E}{V_0}\right) e^{-2\kappa a}, \quad \kappa = \sqrt{\frac{2m(V_0 - E)}{\hbar^2}}
 $$
 
-<WavepacketEvolution
-  potential="barrier"
+— the approximation usually quoted for tunneling, and a good one once the barrier is thick or high enough. It breaks down as $E \to V_0$, where the exact formula must be used instead.
+
+### Watching it happen
+
+<BarrierScattering
   params={{ height: 5.0, width: 1.0 }}
-  wavepacket={{ x0: -4.0, k0: 2.0, sigma: 1.0 }}
-  tMax={6}
-  nFrames={120}
+  wavepacket={{ x0: -8.0, k0: 2.0, sigma: 1.0 }}
+  grid={{ x_min: -30, x_max: 30, n_points: 2048 }}
+  tMax={9}
+  dt={0.005}
+  nFrames={110}
+  caption="A wavepacket with ⟨k⟩ = 2 and spread Δk ≈ 0.5 scattering off the barrier above. The measured transmitted fraction converges to the energy-averaged prediction, well above T(mean energy) ≈ 0.028."
 />
+
+### Scanning tunneling microscopy
+
+The exponential sensitivity of $T$ to the gap width $a$ — not just to its existence — is what gives the scanning tunneling microscope its atomic resolution: changing the tip-sample distance by about one atomic radius changes the tunneling current by an order of magnitude. A real sample is a surface, not a line: the gap is a function of two coordinates, $a(x, y)$, and the current is highest wherever that gap is smallest — typically directly over an atom.
+
+<Video src="/videos/STMSurfaceZoom.mp4" caption="A tip scans a bumpy sample surface — the faint flux of electrons tunneling from sample to tip brightens over the bumps, where the gap is smallest. Zooming in on the tallest point flattens into the same constant-height scan seen from directly side-on: the tunneling current traces the transmission coefficient, sharply peaked wherever the gap narrows." />
