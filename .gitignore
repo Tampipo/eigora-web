@@ -24,3 +24,5 @@ next-env.d.ts
 
 # Uncomment if you prefer to regenerate the orval client on every build:
 # lib/api/
+
+.next**

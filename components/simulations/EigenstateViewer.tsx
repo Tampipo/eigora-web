@@ -111,13 +111,13 @@ export function EigenstateViewer({
                 paper_bgcolor: "rgba(0,0,0,0)",
                 plot_bgcolor: "rgba(0,0,0,0)",
                 font: {
-                  color: "rgb(160 168 184)",
+                  color: "rgb(143 152 169)",
                   family:
                     "var(--font-geist-sans), system-ui, sans-serif",
                   size: 12,
                 },
                 height,
-                margin: { t: 20, r: 24, b: 46, l: 58 },
+                margin: { t: 28, r: 28, b: 52, l: 60 },
                 // Persist zoom/pan + suppress full relayout across param updates,
                 // keyed to the potential type so it resets on a genuine change.
                 uirevision: potential,
@@ -131,28 +131,57 @@ export function EigenstateViewer({
                   },
                 },
                 xaxis: {
-                  title: { text: "x", standoff: 12 },
+                  title: {
+                    text: "x",
+                    standoff: 16,
+                    font: {
+                      family: "var(--font-serif), Georgia, serif",
+                      size: 15,
+                      color: "rgb(143 152 169)",
+                    },
+                  },
                   range: xRange,
                   autorange: xRange ? false : true,
-                  gridcolor: "rgba(255,255,255,0.045)",
-                  zerolinecolor: "rgba(255,255,255,0.14)",
-                  tickfont: { size: 11 },
-                  linecolor: "rgba(255,255,255,0.14)",
-                  showline: true,
-                  ticks: "outside",
-                  ticklen: 4,
-                  tickcolor: "rgba(255,255,255,0.18)",
+                  // Clean chart: no vertical grid, no spine, no tick marks —
+                  // just floating labels. Vertical rules and outward ticks are
+                  // what make a plot read like a spreadsheet.
+                  showgrid: false,
+                  zeroline: false,
+                  showline: false,
+                  ticks: "",
+                  nticks: 7,
+                  tickfont: {
+                    family: "var(--font-geist-mono), ui-monospace, monospace",
+                    size: 10.5,
+                    color: "rgb(99 108 126)",
+                  },
                 },
                 yaxis: {
-                  title: { text: "Energy", standoff: 16 },
-                  gridcolor: "rgba(255,255,255,0.045)",
-                  zerolinecolor: "rgba(255,255,255,0.14)",
-                  tickfont: { size: 11 },
-                  linecolor: "rgba(255,255,255,0.14)",
-                  showline: true,
-                  ticks: "outside",
-                  ticklen: 4,
-                  tickcolor: "rgba(255,255,255,0.18)",
+                  title: {
+                    text: "Energy",
+                    standoff: 20,
+                    font: {
+                      family: "var(--font-serif), Georgia, serif",
+                      size: 15,
+                      color: "rgb(143 152 169)",
+                    },
+                  },
+                  // A few very faint horizontal rules only — enough to read a
+                  // level off, not enough to compete with the curves.
+                  showgrid: true,
+                  gridcolor: "rgba(255,255,255,0.05)",
+                  gridwidth: 1,
+                  zeroline: true,
+                  zerolinecolor: "rgba(255,255,255,0.12)",
+                  zerolinewidth: 1,
+                  showline: false,
+                  ticks: "",
+                  nticks: 6,
+                  tickfont: {
+                    family: "var(--font-geist-mono), ui-monospace, monospace",
+                    size: 10.5,
+                    color: "rgb(99 108 126)",
+                  },
                 },
                 showlegend: false,
                 hovermode: "closest",
