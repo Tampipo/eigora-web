@@ -48,6 +48,10 @@
         "title": "Puits carré fini",
         "summary": "États liés dans un potentiel confinant."
       },
+      "well-2d": {
+        "title": "Particule dans un puits 2D",
+        "summary": "États séparables, et la dégénérescence comme points du réseau sur une ellipse."
+      },
       "orbitals": {
         "title": "Orbitales atomiques",
         "summary": "Densité électronique 3D des états hydrogénoïdes, en coordonnées sphériques."

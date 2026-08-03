@@ -1,0 +1,30 @@
+## A Particle in a Two-Dimensional Well
+
+Confine a particle in a rectangular box of sides $L_x$ and $L_y$ — infinite walls, nothing inside. The Hamiltonian is a sum of two independent one-dimensional problems, one per direction, so the solution is a product of the two:
+
+$$
+\psi_{n_1 n_2}(x, y) = \psi_{n_1}(x)\,\psi_{n_2}(y), \qquad
+E_{n_1 n_2} = \frac{\pi^2}{2}\left(\frac{n_1^2}{L_x^2} + \frac{n_2^2}{L_y^2}\right)
+$$
+
+with $n_1, n_2 = 1, 2, 3, \dots$ — one quantum number per direction. Separability is the whole story here: energies add, wavefunctions multiply.
+
+<SeparableStateViewer n1={3} n2={4} ratio={2} />
+
+Each quantum number counts lobes along its own axis, and the sign alternates like a checkerboard — red where $\psi > 0$, blue where $\psi < 0$. Stretching the box with $r = L_x/L_y$ leaves the pattern intact and only moves the energy.
+
+### Degeneracy
+
+Measuring energies in units of $\pi^2 / 2L_x^2$ and writing $r = L_x / L_y$ for the aspect ratio, the spectrum collapses to a single expression:
+
+$$
+E_{n_1, n_2} = n_1^2 + r^2 n_2^2
+$$
+
+This defines an ellipse in the $(n_1, n_2)$ plane. Every state is a point of the integer lattice, and the states of a given energy are exactly the lattice points that the ellipse passes through — so **degeneracy is a counting problem in the plane**.
+
+<DegeneracyLattice ratio={1.0} energy={25} />
+
+On a square box, $r = 1$: the ellipse is a circle, and $(n_1, n_2)$ and $(n_2, n_1)$ always land together. That pairing is forced by the symmetry of the square — reflecting the box across its diagonal maps one state onto the other.
+
+Tune $r$ away from $1$ and those pairs split apart, as the circle stretches into an ellipse that no longer passes through both points. But at certain commensurate ratios the ellipse hits a new pair. At $r = 2$ the energy is $n_1^2 + 4n_2^2$, and $(4,1)$ and $(2,2)$ both give $20$ — a coincidence of arithmetic, with no symmetry of the box relating the two states. Degeneracies of this kind are called **accidental**.

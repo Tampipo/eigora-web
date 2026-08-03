@@ -1,0 +1,30 @@
+## Une particule dans un puits bidimensionnel
+
+Confinons une particule dans une boîte rectangulaire de côtés $L_x$ et $L_y$ — murs infinis, rien à l'intérieur. Le hamiltonien est une somme de deux problèmes unidimensionnels indépendants, un par direction, si bien que la solution est un produit des deux :
+
+$$
+\psi_{n_1 n_2}(x, y) = \psi_{n_1}(x)\,\psi_{n_2}(y), \qquad
+E_{n_1 n_2} = \frac{\pi^2}{2}\left(\frac{n_1^2}{L_x^2} + \frac{n_2^2}{L_y^2}\right)
+$$
+
+avec $n_1, n_2 = 1, 2, 3, \dots$ — un nombre quantique par direction. Tout tient dans la séparabilité : les énergies s'additionnent, les fonctions d'onde se multiplient.
+
+<SeparableStateViewer n1={3} n2={4} ratio={2} />
+
+Chaque nombre quantique compte les lobes le long de son propre axe, et le signe alterne comme un damier — en rouge là où $\psi > 0$, en bleu là où $\psi < 0$. Étirer la boîte via $r = L_x/L_y$ laisse le motif intact et ne déplace que l'énergie.
+
+### Dégénérescence
+
+En mesurant les énergies en unités de $\pi^2 / 2L_x^2$ et en notant $r = L_x / L_y$ le rapport d'aspect, le spectre se réduit à une seule expression :
+
+$$
+E_{n_1, n_2} = n_1^2 + r^2 n_2^2
+$$
+
+C'est l'équation d'une ellipse dans le plan $(n_1, n_2)$. Chaque état est un point du réseau entier, et les états d'une énergie donnée sont exactement les points du réseau par lesquels passe l'ellipse — la **dégénérescence devient un problème de comptage dans le plan**.
+
+<DegeneracyLattice ratio={1.0} energy={25} />
+
+Pour une boîte carrée, $r = 1$ : l'ellipse est un cercle, et $(n_1, n_2)$ et $(n_2, n_1)$ tombent toujours ensemble. Cet appariement est imposé par la symétrie du carré — la réflexion de la boîte par rapport à sa diagonale envoie un état sur l'autre.
+
+Éloignons $r$ de $1$ et ces paires se séparent, le cercle s'étirant en une ellipse qui ne passe plus par les deux points. Mais pour certains rapports commensurables, l'ellipse atteint une nouvelle paire. À $r = 2$ l'énergie vaut $n_1^2 + 4n_2^2$, et $(4,1)$ comme $(2,2)$ donnent $20$ — une coïncidence arithmétique, sans qu'aucune symétrie de la boîte ne relie les deux états. On parle alors de dégénérescence **accidentelle**.
