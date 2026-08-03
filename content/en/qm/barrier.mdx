@@ -26,7 +26,7 @@ $$
 
 for $\varepsilon < 1$ (tunneling below the barrier). For $\varepsilon > 1$ (above the barrier) the same formula holds with $\sinh \to \sin$. This is the exact result — valid at any energy, not just deep in the tunneling regime.
 
-For the barrier used in the simulation below ($V_0 = 5$, $a = 1$) and a particle at the wavepacket's mean energy ($E = 2$, so $\varepsilon = 0.4$, $\sigma = 10$): $T(0.4) \approx 0.028$. Watch for this number further down — it's *not* what the simulation measures.
+For the barrier used in the simulation below ($V_0 = 3$, $a = 1$) and a particle at the wavepacket's mean energy ($E = 2$, so $\varepsilon = 2/3$, $\sigma = 6$): $T \approx 0.192$. Watch for this number further down — it's *not* what the simulation measures.
 
 ### The deep-tunneling approximation
 
@@ -41,13 +41,13 @@ $$
 ### Watching it happen
 
 <BarrierScattering
-  params={{ height: 5.0, width: 1.0 }}
+  params={{ height: 3.0, width: 1.0 }}
   wavepacket={{ x0: -8.0, k0: 2.0, sigma: 1.0 }}
   grid={{ x_min: -30, x_max: 30, n_points: 2048 }}
   tMax={9}
   dt={0.005}
   nFrames={110}
-  caption="A wavepacket with ⟨k⟩ = 2 and spread Δk ≈ 0.5 scattering off the barrier above. The measured transmitted fraction converges to the energy-averaged prediction, well above T(mean energy) ≈ 0.028."
+  caption="A wavepacket with ⟨k⟩ = 2 and spread Δk ≈ 0.5 scattering off the barrier above. Both sides share one vertical scale, so the transmitted lobe really is about a quarter of the incident packet. The measured fraction converges to the energy-averaged prediction, well above T(mean energy) ≈ 0.192."
 />
 
 ### Scanning tunneling microscopy

@@ -2,20 +2,56 @@
 
 Une particule d'énergie $E$ inférieure à la hauteur $V_0$ d'une barrière a une probabilité non nulle de se trouver de l'autre côté — c'est l'effet tunnel.
 
-<EigenstateViewer potential="barrier" params={{ height: 5.0, width: 1.0 }} nStates={3} />
+### Pourquoi un paquet d'ondes ?
 
-### Coefficient de transmission
+L'onde plane $e^{ikx}$ habituellement utilisée pour dériver un coefficient de transmission porte une énergie unique et parfaitement définie, $E = \hbar^2k^2/2m$ — mais elle s'étend aussi sur tout l'espace et pour tout temps. Rien n'« arrive » sur la barrière et rien n'est jamais « détecté » de l'autre côté : c'est une idéalisation stationnaire, pas une particule.
 
-Pour une barrière rectangulaire de largeur $a$ et de hauteur $V_0 > E$ :
+Une vraie particule est localisée : elle part de quelque part, se dirige vers la barrière, et finit par être trouvée d'un côté ou de l'autre. Mais la localiser en position impose à son impulsion — et donc à son énergie — de s'étaler, en vertu du principe d'incertitude. Un vrai paquet d'ondes n'est donc pas à l'énergie $E$ ; c'est une superposition de nombreuses énergies, chacune avec sa propre probabilité de transmission $T(E)$.
+
+Autrement dit, la fraction d'un vrai paquet d'ondes qui traverse par effet tunnel n'est pas $T$ évaluée à une unique énergie « moyenne » — c'est la **transmission moyennée en énergie**
+
+$$
+T_{\text{eff}} = \int |\varphi(k)|^2\, T\big(E(k)\big)\, dk, \qquad E(k) = \frac{\hbar^2 k^2}{2m}
+$$
+
+où $|\varphi(k)|^2$ est la distribution en impulsion du paquet d'ondes. La simulation plus bas le vérifie directement : elle fait évoluer un vrai paquet d'ondes dans le temps, mesure la fraction transmise, et la compare au $T_{\text{eff}}$ calculé par cette formule.
+
+### Coefficient de transmission exact
+
+Pour une barrière rectangulaire de largeur $a$ et de hauteur $V_0$, en posant $\varepsilon = E/V_0$ et $\sigma = 2mV_0a^2/\hbar^2$ :
+
+$$
+T(\varepsilon) = \left[1 + \frac{\sinh^2\!\left(\sqrt{\sigma(1-\varepsilon)}\right)}{4\varepsilon(1-\varepsilon)}\right]^{-1}, \qquad R(\varepsilon) = 1 - T(\varepsilon)
+$$
+
+pour $\varepsilon < 1$ (effet tunnel sous la barrière). Pour $\varepsilon > 1$ (au-dessus de la barrière), la même formule s'applique avec $\sinh \to \sin$. C'est le résultat exact — valable à toute énergie, et pas seulement au cœur du régime tunnel.
+
+Pour la barrière utilisée dans la simulation ci-dessous ($V_0 = 3$, $a = 1$) et une particule à l'énergie moyenne du paquet ($E = 2$, soit $\varepsilon = 2/3$, $\sigma = 6$) : $T \approx 0{,}192$. Retenez ce nombre — ce n'est *pas* ce que mesure la simulation.
+
+### L'approximation en régime tunnel profond
+
+Lorsque la barrière est opaque ($\sqrt{\sigma(1-\varepsilon)} \gg 1$), $\sinh(x) \approx \tfrac{1}{2} e^{x}$ et la formule exacte ci-dessus se réduit à la forme familière
 
 $$
 T \approx 16 \, \frac{E}{V_0}\left(1 - \frac{E}{V_0}\right) e^{-2\kappa a}, \quad \kappa = \sqrt{\frac{2m(V_0 - E)}{\hbar^2}}
 $$
 
-<WavepacketEvolution
-  potential="barrier"
-  params={{ height: 5.0, width: 1.0 }}
-  wavepacket={{ x0: -4.0, k0: 2.0, sigma: 1.0 }}
-  tMax={6}
-  nFrames={120}
+— l'approximation habituellement citée pour l'effet tunnel, et une bonne approximation dès que la barrière est suffisamment épaisse ou haute. Elle cesse d'être valable quand $E \to V_0$, où il faut utiliser la formule exacte.
+
+### En pratique
+
+<BarrierScattering
+  params={{ height: 3.0, width: 1.0 }}
+  wavepacket={{ x0: -8.0, k0: 2.0, sigma: 1.0 }}
+  grid={{ x_min: -30, x_max: 30, n_points: 2048 }}
+  tMax={9}
+  dt={0.005}
+  nFrames={110}
+  caption="Un paquet d'ondes de ⟨k⟩ = 2 et d'étalement Δk ≈ 0,5 diffusé par la barrière ci-dessus. Les deux côtés partagent la même échelle verticale : le lobe transmis représente donc réellement environ un quart du paquet incident. La fraction mesurée converge vers la prédiction moyennée en énergie, bien au-dessus de T(énergie moyenne) ≈ 0,192."
 />
+
+### Microscope à effet tunnel
+
+La sensibilité exponentielle de $T$ à la largeur $a$ de la barrière — et pas seulement à son existence — est ce qui donne au microscope à effet tunnel sa résolution atomique : faire varier la distance pointe-échantillon d'environ un rayon atomique change le courant tunnel d'un ordre de grandeur. Un échantillon réel est une surface, pas une ligne : l'espace est une fonction de deux coordonnées, $a(x, y)$, et le courant est maximal là où cet espace est minimal — typiquement juste au-dessus d'un atome.
+
+<Video src="/videos/STMSurfaceZoom.mp4" caption="Une pointe balaie une surface d'échantillon accidentée — le faible flux d'électrons passant par effet tunnel de l'échantillon vers la pointe s'intensifie au-dessus des bosses, là où l'espace est le plus faible. Le zoom sur le point le plus haut aplatit la vue en ce même balayage à hauteur constante vu de profil : le courant tunnel suit le coefficient de transmission, fortement piqué là où l'espace se resserre." />
