@@ -48,6 +48,10 @@
         "title": "Finite square well",
         "summary": "Bound states in a confining potential."
       },
+      "well-2d": {
+        "title": "Particle in a 2D well",
+        "summary": "Separable states, and degeneracy as lattice points on an ellipse."
+      },
       "orbitals": {
         "title": "Atomic orbitals",
         "summary": "3D electron density of hydrogen-like states, in spherical coordinates."

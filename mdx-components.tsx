@@ -6,6 +6,8 @@ import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
 import { BarrierScattering } from "@/components/simulations/BarrierScattering";
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
+import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
+import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
 import { Video } from "@/components/ui/Video";
 
@@ -16,6 +18,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     WavepacketEvolution,
     BarrierScattering,
     OrbitalViewer,
+    DegeneracyLattice,
+    SeparableStateViewer,
     FormulaBlock,
     Video,
   };

@@ -5,4 +5,10 @@
 // (app/[locale]/qm/page.tsx) and the sidebar nav (components/ui/Sidebar.tsx).
 // Each slug must have a matching content/{locale}/qm/{slug}.mdx and a
 // qm.modules.{slug}.{title,summary} entry in messages/{locale}.json.
-export const QM_MODULES = ["harmonic", "barrier", "well", "orbitals"] as const;
+export const QM_MODULES = [
+  "harmonic",
+  "barrier",
+  "well",
+  "well-2d",
+  "orbitals",
+] as const;
