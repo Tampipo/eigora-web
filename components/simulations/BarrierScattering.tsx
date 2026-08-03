@@ -301,11 +301,14 @@ function draw(
   const padTop = 24;
   const probArea = h - padTop - 10;
 
-  // Reflected and transmitted are drawn as two independently-scaled curves,
-  // each stretched to fill the same height. Transmitted probability is
-  // typically a small fraction of reflected (that's the whole point of
-  // tunnelling), so a single shared scale would render it as a flat, near-
-  // invisible line -- the readouts below already carry the true magnitudes.
+  // One shared vertical scale across the whole grid, so the two sides are
+  // directly comparable: the transmitted lobe really is a fraction of the
+  // reflected one. (The barrier is chosen thin enough that this fraction is
+  // clearly visible -- scaling each side independently would be a lie.)
+  let pMax = 0;
+  for (const p of prob) if (p > pMax) pMax = p;
+  const toY = (p: number) => padTop + probArea - (p / (pMax || 1)) * probArea;
+
   const drawSegment = (
     startIdx: number,
     endIdx: number,
@@ -314,9 +317,6 @@ function draw(
     fillFar: string,
   ) => {
     if (endIdx <= startIdx) return;
-    let segMax = 0;
-    for (let k = startIdx; k <= endIdx; k++) if (prob[k] > segMax) segMax = prob[k];
-    const toY = (p: number) => padTop + probArea - (p / (segMax || 1)) * probArea;
 
     const gradient = ctx.createLinearGradient(0, padTop, 0, padTop + probArea);
     gradient.addColorStop(0, fillNear);
