@@ -59,6 +59,10 @@
       "orbitals": {
         "title": "Orbitales atomiques",
         "summary": "Densité électronique 3D des états hydrogénoïdes, en coordonnées sphériques."
+      },
+      "spin": {
+        "title": "Mesure du spin",
+        "summary": "Mesures successives, réduction, et la sphère de Bloch."
       }
     }
   },

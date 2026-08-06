@@ -1,0 +1,66 @@
+## Measuring a Spin
+
+A spin-½ has only two possible outcomes along any axis you choose: $+1$ or $-1$. Not a projection, not a magnitude — two values, whichever direction you point the apparatus. Everything strange about quantum measurement is already visible in that one fact.
+
+### A state is a direction
+
+Every pure state of a two-level system can be written
+
+$$
+|\psi\rangle = \cos\tfrac{\theta}{2}\,|u\rangle + e^{i\varphi}\sin\tfrac{\theta}{2}\,|d\rangle
+$$
+
+and conversely every $(\theta, \varphi)$ is a state. The correspondence runs both ways, so a spin state *is* a direction in space — which is what licenses drawing one as an arrow at all.
+
+<Video
+  src="/videos/BlochSphere.mp4"
+  caption="The Bloch sphere. |u⟩ and |d⟩ are mutually exclusive outcomes, yet they sit at opposite poles rather than at right angles — 180° apart in space for states that are orthogonal in Hilbert space."
+/>
+
+Note where $|u\rangle$ and $|d\rangle$ ended up. They are orthogonal — they exclude each other absolutely — and they sit **antipodal** on the sphere, not perpendicular. Angles in Hilbert space are half angles in real space, and that factor of two is the whole reason a half-angle appears in the formula above.
+
+The equator is $\theta = 90°$: every state there is an equal superposition of $|u\rangle$ and $|d\rangle$, differing only by the phase $\varphi$.
+
+### What a measurement returns
+
+Point an apparatus along some axis $\hat{n}$, at angle $\theta$ from where the spin points. Rewriting the state in that apparatus's own basis costs nothing but a relabelling,
+
+$$
+|\psi\rangle = \cos\tfrac{\theta}{2}\,|{+}n\rangle + \sin\tfrac{\theta}{2}\,|{-}n\rangle
+$$
+
+so a single reading is $+1$ with probability $\cos^2(\theta/2)$ and $-1$ with probability $\sin^2(\theta/2)$. At $\theta = 0$ that is certainty; at $\theta = 180°$, certainty of the opposite sign; at $\theta = 90°$ both are $\tfrac{1}{2}$ — a fair coin, from an apparatus working perfectly.
+
+### One electron, four apparatuses
+
+Send a single electron through a line of them, each measuring along its own axis, without disturbing the spin in between.
+
+<Video
+  src="/videos/ConsecutiveMeasurements.mp4"
+  caption="One electron crossing four apparatuses. The blue arrow on each dial is the spin's direction, the yellow needle is the axis being measured, and θ is the angle between them — the same θ that appears in the algebra below each device."
+/>
+
+Read the dials in order: $+1$, $+1$, $-1$, $+1$.
+
+The first takes an arbitrary incoming state and returns $+1$; the spin is left pointing along $+z$, in the state $|u\rangle$. **Measuring the same thing again returns the same answer** — that is the second apparatus, and it is why measurement can be used to *prepare* a state. Point the apparatus along $+z$, keep only the electrons that read $+1$, and you have a source of $|u\rangle$.
+
+The third is the interesting one. Its needle points along $-z$, and the dial reads $-1$ — but the spin comes out still pointing up, still $|u\rangle$. **The reading reversed; the state did not.** Reversing the apparatus reverses what counts as positive, nothing more.
+
+The fourth turns the needle to $+x$, where $\theta = 90°$, and for the first time the outcome is not forced.
+
+### The average, not the reading
+
+$\langle \sigma_n \rangle = \cos\theta$ is a statement about an ensemble, not about any electron. To see it you have to prepare, measure once, and discard — over and over.
+
+<Video
+  src="/videos/ElectronFlux.mp4"
+  caption="Ninety electrons, each prepared fresh in |u⟩ and measured once at θ = 60°. Individual readings are only ever ±1; the running fraction settles on cos²(θ/2) = 0.75 and the mean on cos θ = 0.50."
+/>
+
+The re-preparation is the experiment, not stage dressing. Reuse the electron that just came out and it is already an eigenstate of $\sigma_n$: every subsequent press returns the same value, and the average runs to $\pm 1$ instead of $\cos\theta$.
+
+$$
+\langle \sigma_n \rangle = (+1)\cos^2\tfrac{\theta}{2} + (-1)\sin^2\tfrac{\theta}{2} = \cos\theta
+$$
+
+Which closes the loop with the sphere: $\cos\theta$ is the projection of the measured axis onto $z$ — the vertical component of the needle drawn on each dial. The apparatus never displays it. No single electron ever displays it. It exists only in the average of many, each of which said nothing but $+1$ or $-1$.

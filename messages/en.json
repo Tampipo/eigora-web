@@ -59,6 +59,10 @@
       "orbitals": {
         "title": "Atomic orbitals",
         "summary": "3D electron density of hydrogen-like states, in spherical coordinates."
+      },
+      "spin": {
+        "title": "Spin measurement",
+        "summary": "Successive measurements, collapse, and the Bloch sphere."
       }
     }
   },
