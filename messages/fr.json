@@ -48,6 +48,10 @@
         "title": "Puits carré fini",
         "summary": "États liés dans un potentiel confinant."
       },
+      "well-bound-states": {
+        "title": "États liés du puits fini",
+        "summary": "Parité, construction graphique, et combien d'états un puits peut contenir."
+      },
       "well-2d": {
         "title": "Particule dans un puits 2D",
         "summary": "États séparables, et la dégénérescence comme points du réseau sur une ellipse."

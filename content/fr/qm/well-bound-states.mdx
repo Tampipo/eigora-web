@@ -1,0 +1,80 @@
+## Compter les états liés
+
+Le puits infini se résout par une règle : faire tenir un nombre demi-entier de longueurs d'onde entre les parois, et tous les états sont liés. Donnez aux parois une hauteur finie $V_0$ et aucune des deux moitiés ne survit. La fonction d'onde n'est plus contrainte de s'annuler au bord, donc les énergies permises cessent de former une suite arithmétique nette — et comme une particule assez énergétique s'échappe tout simplement, seul un nombre *fini* d'états reste lié.
+
+Il n'existe pas de formule fermée pour ces énergies. Il existe en revanche une construction qui transforme le problème en une image, et cette image répond d'un coup d'œil à la question « combien d'états ? ».
+
+### Deux familles, pas une
+
+Prenons le puits $V(x) = -V_0$ pour $|x| < a$ et $0$ ailleurs, et cherchons un état lié, $-V_0 < E < 0$. À l'intérieur, la particule dispose d'énergie cinétique et oscille ; à l'extérieur, elle est dans la région classiquement interdite et décroît :
+
+$$
+k = \frac{\sqrt{2m(E + V_0)}}{\hbar} \quad (\text{intérieur}), \qquad
+\beta = \frac{\sqrt{-2mE}}{\hbar} \quad (\text{extérieur})
+$$
+
+Le puits est symétrique par rapport à l'origine, donc $V(-x) = V(x)$ et le hamiltonien commute avec l'opérateur de parité. On peut les diagonaliser simultanément : tout état lié peut donc être choisi **pair** ou **impair** — il n'y a pas de troisième possibilité, ni d'état mélangeant les deux. À l'intérieur du puits, cela fixe entièrement la forme : $\cos kx$ pour les états pairs, $\sin kx$ pour les impairs.
+
+Imposer que $\psi$ et $\psi'$ se raccordent en $x = a$ — de façon équivalente, que $\psi'/\psi$ se raccorde, ce qui élimine les amplitudes inconnues — donne une condition par famille :
+
+$$
+\beta = k\tan(ka) \quad (\text{pair}), \qquad \beta = -k\cot(ka) \quad (\text{impair})
+$$
+
+### Un cercle pour les contenir tous
+
+Ces équations sont transcendantes : aucune manipulation ne les résout en $E$. Mais poser $X = ka$ et $Y = \beta a$ les rend traçables, et fournit une relation supplémentaire gratuitement. Les définitions de $k$ et $\beta$ ci-dessus donnent $k^2 + \beta^2 = 2mV_0/\hbar^2$ indépendamment de $E$, donc
+
+$$
+X^2 + Y^2 = R^2, \qquad R^2 = \frac{2mV_0a^2}{\hbar^2}
+$$
+
+Tout état lié du puits se trouve sur un cercle de rayon $R$ — et $R$ est la *seule* caractéristique du puits qui compte. La profondeur et la largeur n'interviennent que par la combinaison $V_0a^2$. Les deux conditions de raccordement deviennent des courbes dans le même plan :
+
+$$
+Y = X\tan X \quad (\text{pair}), \qquad Y = -X\cot X \quad (\text{impair})
+$$
+
+Un état lié est une intersection. Faites varier $R$ ci-dessous et regardez le cercle grandir à travers les branches.
+
+<FiniteWellGraphical
+  radius={5}
+  caption="Les conditions de raccordement (courbes pleines) face au cercle X² + Y² = R². Les courbes sont la prédiction ; les points sont les états renvoyés par le solveur numérique, placés en X = ka et Y = βa à partir de leurs énergies résolues. Les branches bleues sont paires, les oranges impaires — elles alternent, chacune quittant l'axe en X = nπ/2."
+/>
+
+### D'où vient le compte
+
+Ce sont les branches qui permettent à l'image de répondre à la question du dénombrement. La branche $n$ quitte l'axe $X$ en $X = n\pi/2$ et monte jusqu'à l'infini avant que la suivante ne commence : le quart de cercle de rayon $R$ la croise donc exactement une fois — s'il va jusque-là. C'est le cas précisément lorsque $R > n\pi/2$, d'où
+
+$$
+N = \left\lfloor \frac{2R}{\pi} \right\rfloor + 1
+$$
+
+Deux conséquences méritent d'être énoncées clairement.
+
+**Un puits à une dimension lie toujours au moins un état.** La branche paire part de l'origine : aussi petit que soit $R$ — aussi peu profond ou étroit que soit le puits — le cercle la croise. Il n'y a pas de profondeur minimale. (C'est propre à une dimension ; en trois dimensions, un puits assez faible ne lie rien.)
+
+**Le premier état impair exige $R > \pi/2$.** Les états impairs ne naissent pas en même temps que les pairs. Une fonction d'onde impaire doit s'annuler au centre, ce qui coûte de la courbure donc de l'énergie, et un puits trop faible ne peut pas payer. C'est pourquoi la parité alterne strictement à mesure que les états apparaissent : pair, impair, pair, impair.
+
+Placez $R$ juste au-dessus d'un seuil et la figure annoncera parfois un état de moins que $N$. Ce n'est pas une erreur d'arrondi. Un état qui naît à un seuil a $Y \to 0$, donc sa longueur de décroissance $1/\beta = a/Y$ diverge : il est lié, mais étalé sur des centaines de largeurs de puits. Le solveur numérique travaille dans une boîte finie, et dès que la queue dépasse la boîte, l'état n'y tient plus. La construction et le solveur divergent précisément là où « lié » cesse d'être une description utile.
+
+### Les états eux-mêmes
+
+La construction donne les énergies ; les fonctions d'onde en découlent. Chaque état est tracé ci-dessous sur son propre niveau d'énergie — trait plein pour les pairs, tireté pour les impairs.
+
+<FiniteWellStates
+  radius={5}
+  caption="Tous les états liés du puits à la fois, issus du solveur numérique, chacun tracé sur son propre niveau d'énergie. Les courbes pleines sont paires, les tiretées impaires, et les traits verticaux marquent les bords du puits — chaque état se prolonge visiblement au-delà, dans la région interdite."
+/>
+
+Deux traits n'ont aucun équivalent dans le puits infini. Les fonctions d'onde ne s'arrêtent pas aux parois : chacune décroît à l'extérieur en $e^{-\beta|x|}$, sur une longueur $1/\beta = a/Y$. Et cette fuite n'est pas uniforme le long de l'échelle — plus un état est *bas*, plus son $Y$ est grand et plus il est retenu, tandis que l'état le plus haut, à peine lié, peut avoir une fraction substantielle de sa probabilité entièrement hors du puits. Abaissez $R$ vers un seuil et regardez l'état le plus haut s'étaler puis se détacher.
+
+### Retrouver le puits infini
+
+Faisons $R \to \infty$. Le cercle devient énorme et rencontre chaque branche très haut, là où la courbe est quasi verticale — c'est-à-dire près de l'asymptote $X \to (n+1)\pi/2$. Alors $ka \to (n+1)\pi/2$, et avec $L = 2a$,
+
+$$
+E_n + V_0 = \frac{\hbar^2k^2}{2m} \longrightarrow \frac{\hbar^2\pi^2(n+1)^2}{2mL^2}
+$$
+
+le spectre du puits infini, mesuré depuis le fond du puits. Les états du puits fini sont ceux du puits infini, tirés vers le bas et repoussés vers l'extérieur par la paroi finie — et $R$ mesure ce qui subsiste de cette idéalisation.

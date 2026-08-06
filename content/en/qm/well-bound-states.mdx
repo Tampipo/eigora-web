@@ -1,0 +1,80 @@
+## Counting the Bound States
+
+The infinite well is solved by a rule: fit a half-integer number of wavelengths between the walls, and every state is bound. Give the walls a finite height $V_0$ and neither half survives. The wavefunction no longer has to vanish at the edge, so the allowed energies stop being a clean arithmetic sequence — and because a particle with enough energy simply escapes, only *finitely many* states remain bound at all.
+
+There is no closed-form formula for those energies. What there is instead is a construction that turns the problem into a picture, and the picture answers "how many states?" at a glance.
+
+### Two families, not one
+
+Take the well to be $V(x) = -V_0$ for $|x| < a$ and $0$ outside, and look for a bound state, $-V_0 < E < 0$. Inside, the particle has kinetic energy to spare and oscillates; outside, it is in the classically forbidden region and decays:
+
+$$
+k = \frac{\sqrt{2m(E + V_0)}}{\hbar} \quad (\text{inside}), \qquad
+\beta = \frac{\sqrt{-2mE}}{\hbar} \quad (\text{outside})
+$$
+
+The well is symmetric about the origin, so $V(-x) = V(x)$ and the Hamiltonian commutes with the parity operator. The two can be diagonalized together, which means every bound state can be chosen either **even** or **odd** — there is no third possibility, and no state that mixes the two. Inside the well that fixes the form completely: $\cos kx$ for the even states, $\sin kx$ for the odd ones.
+
+Requiring $\psi$ and $\psi'$ to join smoothly at $x = a$ — equivalently, requiring $\psi'/\psi$ to match, which drops the unknown amplitudes — gives one condition per family:
+
+$$
+\beta = k\tan(ka) \quad (\text{even}), \qquad \beta = -k\cot(ka) \quad (\text{odd})
+$$
+
+### One circle to hold them all
+
+Those are transcendental: no rearrangement solves them for $E$. But writing $X = ka$ and $Y = \beta a$ makes them plottable, and adds one more relation for free. The definitions of $k$ and $\beta$ above give $k^2 + \beta^2 = 2mV_0/\hbar^2$ regardless of $E$, so
+
+$$
+X^2 + Y^2 = R^2, \qquad R^2 = \frac{2mV_0a^2}{\hbar^2}
+$$
+
+Every bound state of the well lies on a circle of radius $R$ — and $R$ is the *only* thing about the well that matters. Depth and width enter solely through the combination $V_0a^2$. The two matching conditions become curves in the same plane:
+
+$$
+Y = X\tan X \quad (\text{even}), \qquad Y = -X\cot X \quad (\text{odd})
+$$
+
+A bound state is an intersection. Drag $R$ below and watch the circle grow through the branches.
+
+<FiniteWellGraphical
+  radius={5}
+  caption="The matching conditions (solid curves) against the circle X² + Y² = R². The curves are the prediction; the dots are states returned by the numerical eigensolver, placed at X = ka and Y = βa from their solved energies. Blue branches are even, orange odd — they alternate, each leaving the axis at X = nπ/2."
+/>
+
+### Why the count is what it is
+
+The branches are what make the picture answer the counting question. Branch $n$ leaves the $X$ axis at $X = n\pi/2$ and climbs to infinity before the next one starts, so the quarter-circle of radius $R$ crosses it exactly once — if it reaches that far at all. It does precisely when $R > n\pi/2$, giving
+
+$$
+N = \left\lfloor \frac{2R}{\pi} \right\rfloor + 1
+$$
+
+Two consequences are worth stating plainly.
+
+**A 1D well always binds at least one state.** The even branch starts at the origin, so however small $R$ — however shallow or narrow the well — the circle crosses it. There is no minimum depth. (This is special to one dimension; in three dimensions a shallow enough well binds nothing.)
+
+**The first odd state needs $R > \pi/2$.** Odd states are not born alongside even ones. An odd wavefunction must pass through zero at the centre, which costs curvature and therefore energy, and a weak well cannot pay. This is why parity strictly alternates as states appear: even, odd, even, odd.
+
+Nudge $R$ to just above a threshold and the figure will sometimes report one state fewer than $N$. That is not a rounding slip. A state born at a threshold has $Y \to 0$, so its decay length $1/\beta = a/Y$ diverges: it is bound, but spread over hundreds of well widths. The numerical solver works in a finite box, and once the tail is longer than the box the state no longer fits inside it. The construction and the solver disagree exactly where "bound" stops being a practical description.
+
+### The states themselves
+
+The construction gives the energies; the wavefunctions follow from them. Each state is drawn on its own energy level below — solid for even, dashed for odd.
+
+<FiniteWellStates
+  radius={5}
+  caption="Every bound state of the well at once, from the numerical solver, each drawn on its own energy level. Solid curves are even, dashed odd, and the vertical lines mark the well edges — every state visibly continues past them into the forbidden region."
+/>
+
+Two features have no counterpart in the infinite well. The wavefunctions do not stop at the walls: each decays outside as $e^{-\beta|x|}$, over a length $1/\beta = a/Y$. And that leakage is not uniform across the ladder — the *lower* a state sits, the larger its $Y$ and the tighter it is held, while the topmost state, barely bound, can have a substantial fraction of its probability outside the well entirely. Push $R$ down toward a threshold and watch the highest state spread out and let go.
+
+### Recovering the infinite well
+
+Let $R \to \infty$. The circle becomes enormous, and it meets each branch far up where the curve is nearly vertical — that is, close to the asymptote $X \to (n+1)\pi/2$. Then $ka \to (n+1)\pi/2$, and with $L = 2a$,
+
+$$
+E_n + V_0 = \frac{\hbar^2k^2}{2m} \longrightarrow \frac{\hbar^2\pi^2(n+1)^2}{2mL^2}
+$$
+
+the infinite-well spectrum, measured from the bottom of the well. The finite well's states are the infinite well's, pulled down and pushed out by the finite wall — and $R$ measures how much of that idealization survives.
