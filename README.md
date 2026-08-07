@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img alt="Eigora" src="assets/logo-light.svg" width="240">
+  </picture>
+</p>
+
 # eigora-web
 
 Next.js frontend for the Eigora platform.
