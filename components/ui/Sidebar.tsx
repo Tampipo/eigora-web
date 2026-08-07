@@ -4,7 +4,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { QM_MODULES } from "@/lib/qm-modules";
-import { Logo } from "./Logo";
+import { Wordmark } from "./Wordmark";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
 
@@ -15,14 +15,9 @@ export async function Sidebar() {
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface/40 px-5 py-6 backdrop-blur-sm lg:flex">
-      <Link href="/" className="group flex items-center gap-2.5">
-        <Logo size={30} className="transition-transform duration-300 ease-out-expo group-hover:scale-105" />
-        <span className="leading-none">
-          <span className="block font-serif text-lg font-medium tracking-tight text-foreground">
-            {site("title")}
-          </span>
-          <span className="mt-1 block text-[11px] text-muted">{site("tagline")}</span>
-        </span>
+      <Link href="/" className="group flex flex-col gap-1.5">
+        <Wordmark size={30} />
+        <span className="text-[11px] text-muted">{site("tagline")}</span>
       </Link>
 
       <nav className="mt-10 flex-1 space-y-7 text-sm">

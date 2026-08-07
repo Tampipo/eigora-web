@@ -5,6 +5,7 @@ import { ArrowRight, BookOpen, SlidersHorizontal, Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ModuleCard } from "@/components/ui/ModuleCard";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { QM_MODULES } from "@/lib/qm-modules";
 
 const STEPS = [
@@ -27,6 +28,10 @@ export default async function HomePage({
     <div className="space-y-24">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="animate-rise space-y-7">
+        <div className="flex justify-center">
+          <Wordmark size={96} />
+        </div>
+
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 text-xs font-medium text-muted">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/70" />
