@@ -1,0 +1,66 @@
+## Mesurer un spin
+
+Un spin ½ n'a que deux résultats possibles selon l'axe qu'on choisit : $+1$ ou $-1$. Pas une projection, pas une amplitude — deux valeurs, quelle que soit la direction où l'on pointe l'appareil. Tout ce qu'il y a d'étrange dans la mesure quantique est déjà contenu dans ce seul fait.
+
+### Un état est une direction
+
+Tout état pur d'un système à deux niveaux s'écrit
+
+$$
+|\psi\rangle = \cos\tfrac{\theta}{2}\,|u\rangle + e^{i\varphi}\sin\tfrac{\theta}{2}\,|d\rangle
+$$
+
+et réciproquement tout couple $(\theta, \varphi)$ est un état. La correspondance va dans les deux sens : un état de spin *est* donc une direction de l'espace — ce qui autorise à le dessiner comme une flèche.
+
+<Video
+  src="/videos/BlochSphere.mp4"
+  caption="La sphère de Bloch. |u⟩ et |d⟩ sont des résultats mutuellement exclusifs, et pourtant ils occupent des pôles opposés plutôt que des directions perpendiculaires — 180° d'écart dans l'espace pour des états orthogonaux dans l'espace de Hilbert."
+/>
+
+Observons où se placent $|u\rangle$ et $|d\rangle$. Ils sont orthogonaux — ils s'excluent absolument — et ils sont **antipodaux** sur la sphère, non perpendiculaires. Les angles de l'espace de Hilbert sont des demi-angles de l'espace réel, et ce facteur deux est toute la raison d'être du demi-angle dans la formule ci-dessus.
+
+L'équateur, c'est $\theta = 90°$ : tout état qui s'y trouve est une superposition équilibrée de $|u\rangle$ et $|d\rangle$, à la phase $\varphi$ près.
+
+### Ce que renvoie une mesure
+
+Orientons un appareil selon un axe $\hat{n}$, faisant un angle $\theta$ avec la direction du spin. Réécrire l'état dans la base propre de cet appareil ne coûte qu'un changement de nom,
+
+$$
+|\psi\rangle = \cos\tfrac{\theta}{2}\,|{+}n\rangle + \sin\tfrac{\theta}{2}\,|{-}n\rangle
+$$
+
+une mesure isolée vaut donc $+1$ avec la probabilité $\cos^2(\theta/2)$ et $-1$ avec $\sin^2(\theta/2)$. À $\theta = 0$ c'est une certitude ; à $\theta = 180°$, une certitude de signe opposé ; à $\theta = 90°$ les deux valent $\tfrac{1}{2}$ — une pièce équilibrée, produite par un appareil qui fonctionne parfaitement.
+
+### Un électron, quatre appareils
+
+Envoyons un unique électron à travers une série d'appareils, chacun mesurant selon son propre axe, sans perturber le spin entre les mesures.
+
+<Video
+  src="/videos/ConsecutiveMeasurements.mp4"
+  caption="Un électron traversant quatre appareils. La flèche bleue sur chaque cadran est la direction du spin, l'aiguille jaune l'axe mesuré, et θ l'angle entre les deux — le même θ qui apparaît dans l'algèbre sous chaque appareil."
+/>
+
+Lisons les cadrans dans l'ordre : $+1$, $+1$, $-1$, $+1$.
+
+Le premier prend un état initial quelconque et renvoie $+1$ ; le spin ressort orienté selon $+z$, dans l'état $|u\rangle$. **Remesurer la même chose redonne la même réponse** — c'est le deuxième appareil, et c'est pourquoi une mesure peut servir à *préparer* un état. On oriente l'appareil selon $+z$, on ne garde que les électrons affichant $+1$, et l'on dispose d'une source de $|u\rangle$.
+
+Le troisième est le plus instructif. Son aiguille pointe selon $-z$, et le cadran affiche $-1$ — mais le spin en ressort toujours orienté vers le haut, toujours $|u\rangle$. **L'affichage s'est inversé, pas l'état.** Retourner l'appareil ne fait qu'inverser ce qui compte comme positif.
+
+Le quatrième tourne l'aiguille vers $+x$, où $\theta = 90°$, et pour la première fois le résultat n'est plus imposé.
+
+### La moyenne, pas la mesure
+
+$\langle \sigma_n \rangle = \cos\theta$ est un énoncé sur un ensemble, pas sur un électron. Pour l'observer, il faut préparer, mesurer une fois, jeter — encore et encore.
+
+<Video
+  src="/videos/ElectronFlux.mp4"
+  caption="Quatre-vingt-dix électrons, chacun préparé à neuf dans |u⟩ et mesuré une seule fois à θ = 60°. Les mesures individuelles ne valent jamais que ±1 ; la fraction cumulée se stabilise sur cos²(θ/2) = 0,75 et la moyenne sur cos θ = 0,50."
+/>
+
+La repréparation est l'expérience elle-même, pas un décor. Si l'on réutilise l'électron qui vient de sortir, il est déjà état propre de $\sigma_n$ : chaque mesure suivante redonne la même valeur, et la moyenne tend vers $\pm 1$ au lieu de $\cos\theta$.
+
+$$
+\langle \sigma_n \rangle = (+1)\cos^2\tfrac{\theta}{2} + (-1)\sin^2\tfrac{\theta}{2} = \cos\theta
+$$
+
+La boucle se referme sur la sphère : $\cos\theta$ est la projection de l'axe mesuré sur $z$ — la composante verticale de l'aiguille dessinée sur chaque cadran. L'appareil ne l'affiche jamais. Aucun électron ne l'affiche jamais. Elle n'existe que dans la moyenne d'un grand nombre, dont chacun n'a rien dit d'autre que $+1$ ou $-1$.

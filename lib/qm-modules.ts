@@ -12,4 +12,5 @@ export const QM_MODULES = [
   "well-bound-states",
   "well-2d",
   "orbitals",
+  "spin",
 ] as const;
