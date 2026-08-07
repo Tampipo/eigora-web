@@ -1,9 +1,9 @@
-// Copyright (C) 2026 Tanguy Marsault - PhySense
+// Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { GridSchema, PotentialSchema } from "./api/schemas";
 
-const DEFAULT_WS_URL = "wss://api.physense.tampipo.fr";
+const DEFAULT_WS_URL = "wss://api.eigora.tampipo.fr";
 
 function getWsBaseUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_WS_URL;
@@ -14,7 +14,7 @@ function getWsBaseUrl(): string {
 }
 
 // ── WS message contracts (not in OpenAPI) ───────────────────────────────────
-// Source of truth: physense-api src/physense_api/schemas/qm.py
+// Source of truth: eigora-api src/eigora_api/schemas/qm.py
 
 export interface Wavepacket {
   x0: number;

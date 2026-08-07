@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Tanguy Marsault - PhySense
+# Copyright (C) 2026 Tanguy Marsault - Eigora
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 services:
@@ -6,8 +6,8 @@ services:
     build:
       context: .
       target: dev
-    image: physense-web:dev
-    container_name: physense-web
+    image: eigora-web:dev
+    container_name: eigora-web
     ports:
       - "3000:3000"
     environment:
@@ -15,8 +15,8 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.physense.tampipo.fr}
-      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-wss://api.physense.tampipo.fr}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.eigora.tampipo.fr}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-wss://api.eigora.tampipo.fr}
     volumes:
       - .:/app
       - /app/node_modules
