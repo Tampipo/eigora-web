@@ -1,9 +1,9 @@
 {
-  "name": "physense-web",
+  "name": "eigora-web",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "author": "Tanguy Marsault - PhySense",
+  "author": "Tanguy Marsault - Eigora",
   "scripts": {
     "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",

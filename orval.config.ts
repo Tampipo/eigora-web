@@ -1,13 +1,13 @@
-// Copyright (C) 2026 Tanguy Marsault - PhySense
+// Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { defineConfig } from "orval";
 
 export default defineConfig({
-  physense: {
+  eigora: {
     input: {
       target:
-        "https://raw.githubusercontent.com/Tampipo/physense-api/main/openapi.yaml",
+        "https://raw.githubusercontent.com/Tampipo/eigora-api/main/openapi.yaml",
     },
     output: {
       mode: "tags-split",

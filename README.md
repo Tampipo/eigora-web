@@ -1,6 +1,6 @@
-# physense-web
+# eigora-web
 
-Next.js frontend for the Physense platform.
+Next.js frontend for the Eigora platform.
 
 ## Quickstart (Docker)
 
@@ -24,7 +24,7 @@ docker compose run --rm web npm run typecheck
 docker compose run --rm web npm run lint
 
 # Build the production image
-docker build --target runner -t physense-web:latest .
+docker build --target runner -t eigora-web:latest .
 ```
 
 ## Layout

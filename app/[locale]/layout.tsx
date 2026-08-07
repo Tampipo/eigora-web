@@ -1,4 +1,4 @@
-// Copyright (C) 2026 Tanguy Marsault - PhySense
+// Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { Metadata } from "next";
@@ -23,8 +23,8 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: {
-    default: "Physense — Interactive physics, written clearly",
-    template: "%s · Physense",
+    default: "Eigora — Interactive physics, written clearly",
+    template: "%s · Eigora",
   },
   description:
     "A pedagogical physics platform blending written courses with live, interactive simulations of the Schrödinger equation.",
@@ -63,7 +63,7 @@ export default async function LocaleLayout({
             </div>
             <footer className="mx-auto max-w-5xl px-6 pb-12 sm:px-8 lg:px-14">
               <div className="flex flex-col gap-2 border-t border-border pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
-                <span>© {new Date().getFullYear()} Physense · AGPL-3.0</span>
+                <span>© {new Date().getFullYear()} Eigora · AGPL-3.0</span>
                 <span className="font-mono">Interactive physics, written clearly.</span>
               </div>
             </footer>

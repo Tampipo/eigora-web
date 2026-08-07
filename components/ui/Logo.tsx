@@ -1,10 +1,10 @@
-// Copyright (C) 2026 Tanguy Marsault - PhySense
+// Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { cn } from "@/lib/cn";
 
 /**
- * Physense brand mark — a Gaussian wavepacket riding a baseline, echoing the
+ * Eigora brand mark — a Gaussian wavepacket riding a baseline, echoing the
  * |ψ(x)|² curves the platform renders. Uses the accent gradient; scales with
  * `size`. Purely decorative (aria-hidden); pair with a text wordmark.
  */
