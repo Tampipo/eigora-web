@@ -4,12 +4,15 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Eigora brand mark — a Gaussian wavepacket riding a baseline, echoing the
- * |ψ(x)|² curves the platform renders. Uses the accent gradient; scales with
- * `size`. Purely decorative (aria-hidden); pair with a text wordmark.
+ * The Eigora mark on its own — two crossed orbits around a temple, one electron
+ * on the outer path. The same glyph stands in for the o in `Wordmark`; use this
+ * where there is no room for the full word.
+ *
+ * Colours come from the theme tokens. Decorative by default (aria-hidden);
+ * pass a label through `title` when it carries meaning on its own.
  */
 export function Logo({
-  size = 28,
+  size = 30,
   className,
 }: {
   size?: number;
@@ -19,39 +22,34 @@ export function Logo({
     <svg
       width={size}
       height={size}
-      viewBox="0 0 32 32"
+      viewBox="0 0 150 150"
       fill="none"
       aria-hidden
       className={cn("shrink-0", className)}
     >
       <defs>
-        <linearGradient id="ps-mark" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+        <linearGradient id="eigora-mark-a" x1="9" y1="75" x2="141" y2="75" gradientUnits="userSpaceOnUse">
+          <stop stopColor="rgb(var(--accent-2))" />
+          <stop offset="1" stopColor="rgb(var(--accent))" />
+        </linearGradient>
+        <linearGradient id="eigora-mark-b" x1="9" y1="75" x2="141" y2="75" gradientUnits="userSpaceOnUse">
           <stop stopColor="rgb(var(--accent))" />
-          <stop offset="1" stopColor="rgb(var(--accent-2))" />
+          <stop offset="1" stopColor="rgb(var(--accent-soft))" />
         </linearGradient>
       </defs>
-      <rect
-        x="1.25"
-        y="1.25"
-        width="29.5"
-        height="29.5"
-        rx="8.5"
-        fill="rgb(var(--surface-2))"
-        stroke="url(#ps-mark)"
-        strokeOpacity="0.6"
-        strokeWidth="1.25"
-      />
-      {/* baseline */}
-      <path d="M5 20.5H27" stroke="rgb(var(--muted))" strokeOpacity="0.35" strokeWidth="1.25" strokeLinecap="round" />
-      {/* wavepacket */}
-      <path
-        d="M5 20.5 C 9 20.5, 10.5 8, 16 8 C 21.5 8, 23 20.5, 27 20.5"
-        stroke="url(#ps-mark)"
-        strokeWidth="2.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+
+      <ellipse cx="75" cy="75" rx="66" ry="27" fill="none" stroke="url(#eigora-mark-a)" strokeWidth="4" transform="rotate(32 75 75)" />
+      <ellipse cx="75" cy="75" rx="66" ry="27" fill="none" stroke="url(#eigora-mark-b)" strokeWidth="4" transform="rotate(-32 75 75)" />
+      <circle cx="129" cy="46" r="5" fill="rgb(var(--accent))" />
+
+      {/* Temple, nudged 2u up so it reads optically centred inside the orbits */}
+      <g transform="translate(75,73)">
+        <path d="M-15 -5 L0 -15 L15 -5" fill="none" stroke="rgb(var(--foreground))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="-9.5" y1="-1" x2="-9.5" y2="11" stroke="rgb(var(--accent))" strokeWidth="4" strokeLinecap="round" />
+        <line x1="0" y1="-1" x2="0" y2="11" stroke="rgb(var(--accent-soft))" strokeWidth="4" strokeLinecap="round" />
+        <line x1="9.5" y1="-1" x2="9.5" y2="11" stroke="rgb(var(--accent-2))" strokeWidth="4" strokeLinecap="round" />
+        <line x1="-13" y1="15" x2="13" y2="15" stroke="rgb(var(--foreground))" strokeWidth="3" strokeLinecap="round" />
+      </g>
     </svg>
   );
 }
