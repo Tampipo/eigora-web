@@ -275,8 +275,7 @@
 }
 
 .eigora-mark {
-  /* The mark is drawn around its own origin, so 0 0 is already its centre. */
-  transform-origin: 0 0;
+  transform-origin: center;
   transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 

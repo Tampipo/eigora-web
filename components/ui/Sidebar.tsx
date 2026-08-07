@@ -16,7 +16,7 @@ export async function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface/40 px-5 py-6 backdrop-blur-sm lg:flex">
       <Link href="/" className="group flex flex-col gap-1.5">
-        <Wordmark height={30} />
+        <Wordmark size={30} />
         <span className="text-[11px] text-muted">{site("tagline")}</span>
       </Link>
 

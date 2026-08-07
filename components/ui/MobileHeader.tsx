@@ -14,7 +14,7 @@ export async function MobileHeader() {
     <header className="glass sticky top-0 z-30 lg:hidden">
       <div className="flex items-center justify-between px-4 py-2.5">
         <Link href="/" className="group flex items-center">
-          <Wordmark height={24} />
+          <Wordmark size={24} />
         </Link>
         <div className="flex items-center gap-1">
           <Link

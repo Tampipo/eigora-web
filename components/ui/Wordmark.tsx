@@ -2,79 +2,41 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { cn } from "@/lib/cn";
+import { Logo } from "./Logo";
 
 /**
- * The full Eigora wordmark — "Eig○ra", where the mark itself stands in for the
- * letter o: two crossed orbits around a temple, the platform's two halves
- * (physics and teaching) sharing one centre.
+ * The full Eigora wordmark — "Eig○ra", with the mark standing in for the o.
  *
- * Place inside an element carrying Tailwind's `group` class and the letters
- * converge into the mark on hover, leaving the symbol alone; see
- * `.eigora-letter` / `.eigora-mark` in globals.css. Honours
+ * Laid out as real text with the mark inline rather than as SVG `<text>`, so
+ * the browser kerns it in the site font instead of relying on hardcoded glyph
+ * positions that only hold for one typeface.
+ *
+ * Carries its own `group`, so the hover animation works wherever it is placed:
+ * the letters slide inward and dissolve into the mark, and re-emerge on leave.
+ * See `.eigora-letter` / `.eigora-mark` in globals.css. Honours
  * `prefers-reduced-motion`.
- *
- * Colours come from the theme tokens, so the same component works on light and
- * dark without a second asset.
  */
 export function Wordmark({
-  height = 34,
+  size = 34,
   className,
 }: {
-  height?: number;
+  size?: number;
   className?: string;
 }) {
   return (
-    <svg
-      height={height}
-      viewBox="0 0 232 96"
-      fill="none"
+    <span
       role="img"
       aria-label="Eigora"
-      className={cn("shrink-0 overflow-visible", className)}
+      style={{ fontSize: size }}
+      className={cn(
+        "group inline-flex select-none items-center font-sans font-bold leading-none tracking-tight",
+        className,
+      )}
     >
-      <defs>
-        <linearGradient id="eigora-orbit-a" x1="-33" y1="0" x2="33" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="rgb(var(--accent-2))" />
-          <stop offset="1" stopColor="rgb(var(--accent))" />
-        </linearGradient>
-        <linearGradient id="eigora-orbit-b" x1="-33" y1="0" x2="33" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="rgb(var(--accent))" />
-          <stop offset="1" stopColor="rgb(var(--accent-soft))" />
-        </linearGradient>
-      </defs>
-
-      {/* Letters left of the mark */}
-      <g className="eigora-letter eigora-letter--left">
-        <text x="0" y="64" className="font-sans" fontSize="56" fontWeight="700" letterSpacing="-2" fill="rgb(var(--accent))">
-          Ei
-        </text>
-        <text x="50" y="64" className="font-sans" fontSize="56" fontWeight="700" letterSpacing="-2" fill="rgb(var(--foreground))">
-          g
-        </text>
-      </g>
-
-      {/* The mark, standing in for the o */}
-      <g transform="translate(122,46)">
-        <g className="eigora-mark">
-          <ellipse cx="0" cy="0" rx="33" ry="13.5" fill="none" stroke="url(#eigora-orbit-a)" strokeWidth="3" transform="rotate(32)" />
-          <ellipse cx="0" cy="0" rx="33" ry="13.5" fill="none" stroke="url(#eigora-orbit-b)" strokeWidth="3" transform="rotate(-32)" />
-          <circle cx="27" cy="-15" r="3.4" fill="rgb(var(--accent))" />
-          <g transform="translate(0,-1) scale(0.5)">
-            <path d="M-15 -5 L0 -15 L15 -5" fill="none" stroke="rgb(var(--foreground))" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="-9.5" y1="-1" x2="-9.5" y2="11" stroke="rgb(var(--accent))" strokeWidth="6" strokeLinecap="round" />
-            <line x1="0" y1="-1" x2="0" y2="11" stroke="rgb(var(--accent-soft))" strokeWidth="6" strokeLinecap="round" />
-            <line x1="9.5" y1="-1" x2="9.5" y2="11" stroke="rgb(var(--accent-2))" strokeWidth="6" strokeLinecap="round" />
-            <line x1="-13" y1="15" x2="13" y2="15" stroke="rgb(var(--foreground))" strokeWidth="4.5" strokeLinecap="round" />
-          </g>
-        </g>
-      </g>
-
-      {/* Letters right of the mark */}
-      <g className="eigora-letter eigora-letter--right">
-        <text x="165" y="64" className="font-sans" fontSize="56" fontWeight="700" letterSpacing="-2" fill="rgb(var(--foreground))">
-          ra
-        </text>
-      </g>
-    </svg>
+      <span className="eigora-letter eigora-letter--left text-accent">Ei</span>
+      <span className="eigora-letter eigora-letter--left text-foreground">g</span>
+      <Logo size={size * 1.12} className="eigora-mark -mx-[0.06em]" />
+      <span className="eigora-letter eigora-letter--right text-foreground">ra</span>
+    </span>
   );
 }
