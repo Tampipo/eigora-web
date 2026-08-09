@@ -9,6 +9,7 @@ import { Newsreader } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/metadata";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { MobileHeader } from "@/components/ui/MobileHeader";
 import "katex/dist/katex.min.css";
@@ -22,12 +23,23 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
+  // Required so relative OG image and canonical URLs resolve to absolute ones;
+  // scrapers fetch from their own servers and cannot resolve a bare path.
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Eigora — Interactive physics, written clearly",
     template: "%s · Eigora",
   },
   description:
-    "A pedagogical physics platform blending written courses with live, interactive simulations of the Schrödinger equation.",
+    "A pedagogical platform blending written courses with live, interactive simulations. Learn and understand physics at your own pace, with clarity and interactivity.",
+  openGraph: {
+    type: "website",
+    siteName: "Eigora",
+    title: "Eigora — Interactive physics, written clearly",
+    description:
+      "A pedagogical platform blending written courses with live, interactive simulations. Learn and understand physics at your own pace, with clarity and interactivity.",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export function generateStaticParams() {
