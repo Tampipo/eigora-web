@@ -4,6 +4,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { moduleMetadata } from "@/lib/metadata";
 
 export default async function SpinPage({
   params,
@@ -29,4 +30,13 @@ export default async function SpinPage({
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return moduleMetadata(locale, "spin");
 }
