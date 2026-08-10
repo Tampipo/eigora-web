@@ -11,6 +11,7 @@ import { InfiniteLeftWellStates } from "@/components/simulations/InfiniteLeftWel
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
+import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
 import { Video } from "@/components/ui/Video";
 
@@ -26,6 +27,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     OrbitalViewer,
     DegeneracyLattice,
     SeparableStateViewer,
+    SpinMeasurement,
     FormulaBlock,
     Video,
   };
