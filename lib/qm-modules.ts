@@ -8,7 +8,6 @@
 export const QM_MODULES = [
   "harmonic",
   "barrier",
-  "well",
   "well-bound-states",
   "well-2d",
   "orbitals",

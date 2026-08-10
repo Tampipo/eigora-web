@@ -110,7 +110,7 @@ export function statesFromEigenstates(
       X,
       Y,
       energy: E / depth,
-      outsideFraction: outsideFraction(x, psi, a),
+      outsideFraction: fractionOutside(x, psi, -a, a),
       psi: toUnitPeak(x, psi),
     });
   });
@@ -139,9 +139,14 @@ function nearestIndex(x: number[], target: number): number {
   return Math.min(x.length - 1, Math.max(0, idx));
 }
 
-// Trapezoidal |psi|^2 outside the well, over the returned grid. The solver
+// Trapezoidal |psi|^2 outside [left, right], over the returned grid. The solver
 // normalises psi, but renormalising here makes the ratio independent of that.
-function outsideFraction(x: number[], psi: number[], a: number): number {
+function fractionOutside(
+  x: number[],
+  psi: number[],
+  left: number,
+  right: number,
+): number {
   let total = 0;
   let outside = 0;
   for (let i = 0; i < x.length - 1; i++) {
@@ -149,7 +154,7 @@ function outsideFraction(x: number[], psi: number[], a: number): number {
     const density = (psi[i] ** 2 + psi[i + 1] ** 2) / 2;
     const midpoint = (x[i] + x[i + 1]) / 2;
     total += density * dx;
-    if (Math.abs(midpoint) > a) outside += density * dx;
+    if (midpoint < left || midpoint > right) outside += density * dx;
   }
   return total > 0 ? outside / total : 0;
 }
@@ -172,4 +177,103 @@ function toUnitPeak(x: number[], psi: number[]): number[] {
   }
   if (peak === 0) return psi;
   return psi.map((v) => (v * rightSign) / peak);
+}
+
+// ── The same well against an infinite wall ───────────────────────────────────
+//
+// Stand an infinite wall at x = 0 in the well above and keep only x > 0. The
+// wall demands psi(0) = 0, which is what the odd states already do — they pass
+// through the origin — while every even state is nonzero there and cannot
+// survive. So the well 0 < x < a against a wall has exactly the odd states of
+// the symmetric well of half-width a, at the same energies, and the one R
+// describes both.
+//
+// The visible consequence is that the ground state stops being free. The odd
+// branches start at R = pi/2, so a well shallower than that binds nothing at
+// all, where the symmetric well always holds at least one state.
+
+export interface HalfWellState {
+  /** 0-indexed, so n = 0 is the ground state of the walled well. */
+  n: number;
+  /** Which branch of the symmetric well this state is: 1, 3, 5, ... */
+  branch: number;
+  /** X = ka, the interior wavenumber in units of 1/a. */
+  X: number;
+  /** Y = Ba, the exterior decay rate in units of 1/a. */
+  Y: number;
+  /** Energy in units of V0, measured from the top of the well (so negative). */
+  energy: number;
+  /** Probability of finding the particle beyond the well, at x > a. */
+  outsideFraction: number;
+  /** The state's wavefunction on the solver grid, scaled to unit peak. */
+  psi: number[];
+}
+
+/** How many states the construction predicts against a wall — zero below pi/2. */
+export function halfPredictedCount(R: number): number {
+  return Math.floor(R / Math.PI + 0.5);
+}
+
+/**
+ * The walled well a given R corresponds to: the depth of the symmetric well of
+ * the same R, occupying 0 < x < a instead of |x| < a. The solver takes a centre
+ * and a width, so the segment is given that way.
+ */
+export function halfWellForRadius(R: number): {
+  depth: number;
+  width: number;
+  x0: number;
+} {
+  return {
+    depth: wellForRadius(R).depth,
+    width: HALF_WIDTH,
+    x0: HALF_WIDTH / 2,
+  };
+}
+
+/**
+ * Turn an eigensolver response into the bound states of the walled well. The
+ * grid must start at the wall, so parity is meaningless here — every state is
+ * an odd state of the symmetric well, and `branch` says which.
+ */
+export function halfWellStatesFromEigenstates(
+  x: number[],
+  energies: number[],
+  wavefunctions: number[][],
+  depth: number,
+  a: number = HALF_WIDTH,
+): HalfWellState[] {
+  const states: HalfWellState[] = [];
+
+  energies.forEach((E, i) => {
+    if (E >= 0) return;
+    const psi = wavefunctions[i];
+    if (!psi) return;
+
+    const n = states.length;
+    states.push({
+      n,
+      branch: 2 * n + 1,
+      X: (Math.sqrt(2 * MASS * (E + depth)) / HBAR) * a,
+      Y: (Math.sqrt(-2 * MASS * E) / HBAR) * a,
+      energy: E / depth,
+      outsideFraction: fractionOutside(x, psi, 0, a),
+      psi: toUnitPeakFromWall(psi),
+    });
+  });
+
+  return states;
+}
+
+// Scale to unit peak, with the sign taken from the lobe against the wall rather
+// than from the tallest one. psi climbs from zero at the origin, so that first
+// lobe is always the same lobe; which one is tallest changes with R, and keying
+// off it flips excited states over mid-drag.
+function toUnitPeakFromWall(psi: number[]): number[] {
+  let peak = 0;
+  for (const v of psi) peak = Math.max(peak, Math.abs(v));
+  if (peak === 0) return psi;
+  const firstLobe = psi.find((v) => Math.abs(v) >= 0.05 * peak) ?? 1;
+  const sign = firstLobe >= 0 ? 1 : -1;
+  return psi.map((v) => (v * sign) / peak);
 }

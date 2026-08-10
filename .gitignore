@@ -26,3 +26,5 @@ next-env.d.ts
 # lib/api/
 
 .next**
+
+tsconfig.tsbuildinfo

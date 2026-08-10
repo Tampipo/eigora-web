@@ -78,3 +78,22 @@ E_n + V_0 = \frac{\hbar^2k^2}{2m} \longrightarrow \frac{\hbar^2\pi^2(n+1)^2}{2mL
 $$
 
 le spectre du puits infini, mesuré depuis le fond du puits. Les états du puits fini sont ceux du puits infini, tirés vers le bas et repoussés vers l'extérieur par la paroi finie — et $R$ mesure ce qui subsiste de cette idéalisation.
+
+
+### Puits infini à gauche
+
+On suppose maintenant que le puits est infini à gauche, c'est à dire $V(x) = -V_0$ pour $0 < x < a$ et $V(x) = \infty$ pour $x < 0$. Ce potentiel modélise par exemple l'intéraction entre deux atomes d'hélium. L'impossibilité pour la particule de pénétrer dans la région $x < 0$ matérialise les interactions répulsives à courte distance entre les deux atomes. La parité n'est plus un bon nombre quantique. La paroi à gauche impose $\psi(0) = 0$ et l'équation différentielle à l'intérieur du puits est la même que précédemment. La condition au bord sélectionne uniquement les modes impairs du puits fini symétrique. Les modes sont donc les branches impaires de la figure précédente. On remarque désormais qu'il n'y a pas nécessairement d'état lié pour un puits peu profond, le cerle de rayon $R$ peut ne pas croiser la première branche impaire. Pour qu'il y ait au moins un état lié, il faut que
+$$
+R > \frac{\pi}{2} \quad \Longleftrightarrow \quad V_0 a^2 > \frac{\pi^2\hbar^2}{8m}.
+$$
+
+C'est aussi la raison pour laquelle un puits tridimensionnel trop faible ne lie rien : l'équation radiale pour $\ell = 0$ est exactement ce problème sur la demi-droite, avec $u(0) = 0$ pour paroi.
+
+On représente ci-dessous les états liés du puits bordé à gauche. Le puits est celui d'avant ; seule la paroi a changé.
+
+<InfiniteLeftWellStates
+  radius={5}
+  caption="Les états liés du puits fermé par une paroi infinie en x = 0, issus du solveur numérique. Ce sont exactement les états impairs du puits symétrique : chacun s'annule à la paroi, la région hachurée leur est interdite, et sous R = π/2 il n'en reste aucun."
+/>
+
+Descendez $R$ sous $\pi/2$ et la figure se vide : le puits ne retient plus rien. Le trait vertical à $x = a$ marque le seul bord ouvert — c'est de ce côté-là, et de ce côté seulement, que les états fuient.

@@ -44,10 +44,6 @@
         "title": "Tunneling through a barrier",
         "summary": "Transmission and reflection at a finite potential step."
       },
-      "well": {
-        "title": "Finite square well",
-        "summary": "Bound states in a confining potential."
-      },
       "well-bound-states": {
         "title": "Bound states of the finite well",
         "summary": "Parity, the graphical construction, and how many states a well holds."
