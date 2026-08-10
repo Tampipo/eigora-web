@@ -9,6 +9,10 @@ import type {
   EigenstatesRequest,
   EigenstatesResponse,
   HTTPValidationError,
+  MeasurementRequest,
+  MeasurementResponse,
+  SeparableStateRequest,
+  SeparableStateResponse,
   SingleAtomStateRequest,
   SingleAtomStateResponse
 } from '.././schemas';
@@ -62,6 +66,55 @@ export const eigenstatesQmEigenstatesPost = async (eigenstatesRequest: Eigenstat
 
 
 /**
+ * One eigenstate of a system that separates along x and y.
+
+The potential is given per axis, so `infinite_well` on both axes is a
+particle in a 2D box, `harmonic` on both is a 2D trap, and the axes may
+differ. Each axis is solved analytically when its potential has a known
+solution and numerically otherwise; the state is the product of the two.
+ * @summary Separable State
+ */
+export type separableStateQmSeparableStatePostResponse200 = {
+  data: SeparableStateResponse
+  status: 200
+}
+
+export type separableStateQmSeparableStatePostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+    
+export type separableStateQmSeparableStatePostResponseSuccess = (separableStateQmSeparableStatePostResponse200) & {
+  headers: Headers;
+};
+export type separableStateQmSeparableStatePostResponseError = (separableStateQmSeparableStatePostResponse422) & {
+  headers: Headers;
+};
+
+export type separableStateQmSeparableStatePostResponse = (separableStateQmSeparableStatePostResponseSuccess | separableStateQmSeparableStatePostResponseError)
+
+export const getSeparableStateQmSeparableStatePostUrl = () => {
+
+
+  
+
+  return `/qm/separable-state`
+}
+
+export const separableStateQmSeparableStatePost = async (separableStateRequest: SeparableStateRequest, options?: RequestInit): Promise<separableStateQmSeparableStatePostResponse> => {
+  
+  return customFetch<separableStateQmSeparableStatePostResponse>(getSeparableStateQmSeparableStatePostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      separableStateRequest,)
+  }
+);}
+
+
+/**
  * Compute the single-atom state for a given potential and quantum numbers.
 
 Accepts either a named potential (Option A) or a custom V(x) array (Option B).
@@ -103,6 +156,56 @@ export const singleAtomStateQmSingleAtomStatePost = async (singleAtomStateReques
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       singleAtomStateRequest,)
+  }
+);}
+
+
+/**
+ * Measure a Hermitian observable on a state of a discrete Hilbert space.
+
+Returns one entry per *distinct* eigenvalue — its Born probability and the
+state the measurement collapses to — so a degenerate eigenvalue appears
+once, with its probability summed over the whole eigenspace. Those
+probabilities are exact; `n_draws` additionally samples that distribution
+and reports how many draws landed on each outcome.
+ * @summary Discrete Measurement
+ */
+export type discreteMeasurementQmDiscreteMeasurementPostResponse200 = {
+  data: MeasurementResponse
+  status: 200
+}
+
+export type discreteMeasurementQmDiscreteMeasurementPostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+    
+export type discreteMeasurementQmDiscreteMeasurementPostResponseSuccess = (discreteMeasurementQmDiscreteMeasurementPostResponse200) & {
+  headers: Headers;
+};
+export type discreteMeasurementQmDiscreteMeasurementPostResponseError = (discreteMeasurementQmDiscreteMeasurementPostResponse422) & {
+  headers: Headers;
+};
+
+export type discreteMeasurementQmDiscreteMeasurementPostResponse = (discreteMeasurementQmDiscreteMeasurementPostResponseSuccess | discreteMeasurementQmDiscreteMeasurementPostResponseError)
+
+export const getDiscreteMeasurementQmDiscreteMeasurementPostUrl = () => {
+
+
+  
+
+  return `/qm/discrete-measurement`
+}
+
+export const discreteMeasurementQmDiscreteMeasurementPost = async (measurementRequest: MeasurementRequest, options?: RequestInit): Promise<discreteMeasurementQmDiscreteMeasurementPostResponse> => {
+  
+  return customFetch<discreteMeasurementQmDiscreteMeasurementPostResponse>(getDiscreteMeasurementQmDiscreteMeasurementPostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      measurementRequest,)
   }
 );}
 
