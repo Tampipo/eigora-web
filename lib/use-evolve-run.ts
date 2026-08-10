@@ -20,6 +20,12 @@ export interface UseEvolveRunArgs {
   dt: number;
   nFrames: number;
   grid?: GridSchema;
+  /**
+   * Sub-range of the grid to stream. The grid must be wide enough that the
+   * packet never reaches its edge (the FFT wraps whatever does), which leaves
+   * a lot of empty space not worth sending. Omit to stream the whole grid.
+   */
+  viewWindow?: [number, number];
 }
 
 export type RunStatus = "idle" | "connecting" | "streaming" | "ready" | "error";
@@ -40,6 +46,7 @@ export function useEvolveRun(args: UseEvolveRunArgs) {
     dt: args.dt,
     n_frames: args.nFrames,
     ...(args.grid ? { grid: args.grid } : {}),
+    ...(args.viewWindow ? { view_window: args.viewWindow } : {}),
   });
 
   useEffect(() => {

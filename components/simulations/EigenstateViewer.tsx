@@ -5,6 +5,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
+import type { Annotations } from "plotly.js";
 
 import type {
   EigenstatesResponse,
@@ -28,6 +29,8 @@ export interface EigenstateViewerProps {
   caption?: string;
 }
 
+type DisplayMode = "psi" | "prob";
+
 export function EigenstateViewer({
   potential,
   params: initialParams,
@@ -40,6 +43,7 @@ export function EigenstateViewer({
     initialParams ?? defaultParamsFor(potential),
   );
   const [nStates, setNStates] = useState<number>(initialNStates);
+  const [mode, setMode] = useState<DisplayMode>("psi");
 
   // Reset when the underlying potential type prop changes
   useEffect(() => {
@@ -73,17 +77,33 @@ export function EigenstateViewer({
       ? liveX0 - fetchedX0
       : 0;
 
+  // The solver grid is much wider than the physics: for ω = 1 the walls reach
+  // V = 50 at x = ±10 while the plotted levels sit below 5, so autoranging
+  // buries every state in the bottom tenth of the frame. Frame the window on
+  // the levels themselves instead.
+  const view = useMemo(() => (data ? computeView(data) : null), [data]);
+
   const traces = useMemo(
-    () => (data ? buildTraces(data, xShift) : []),
-    [data, xShift],
+    () => (data && view ? buildTraces(data, view, mode, xShift) : []),
+    [data, view, mode, xShift],
   );
 
-  // Fix the x-domain to the solver grid so the optimistic shift visibly slides
-  // the curve rather than being hidden by autoranging.
-  const xRange = useMemo<[number, number] | undefined>(
-    () => (data ? [data.x[0], data.x[data.x.length - 1]] : undefined),
-    [data],
-  );
+  const annotations = useMemo<Partial<Annotations>[]>(() => {
+    if (!data || !view) return [];
+    return data.energies.map((E, n) => ({
+      x: view.xRange[1],
+      y: E,
+      xanchor: "right" as const,
+      yanchor: "bottom" as const,
+      text: `n = ${n}`,
+      showarrow: false,
+      font: {
+        family: "var(--font-geist-mono), ui-monospace, monospace",
+        size: 10,
+        color: stateColor(n, data.energies.length),
+      },
+    }));
+  }, [data, view]);
 
   return (
     <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
@@ -118,6 +138,7 @@ export function EigenstateViewer({
                 // Persist zoom/pan + suppress full relayout across param updates,
                 // keyed to the potential type so it resets on a genuine change.
                 uirevision: potential,
+                annotations,
                 hoverlabel: {
                   bgcolor: "rgb(24 28 39)",
                   bordercolor: "rgb(52 60 77)",
@@ -137,8 +158,8 @@ export function EigenstateViewer({
                       color: "rgb(143 152 169)",
                     },
                   },
-                  range: xRange,
-                  autorange: xRange ? false : true,
+                  range: view?.xRange,
+                  autorange: view ? false : true,
                   // Clean chart: no vertical grid, no spine, no tick marks —
                   // just floating labels. Vertical rules and outward ticks are
                   // what make a plot read like a spreadsheet.
@@ -163,6 +184,8 @@ export function EigenstateViewer({
                       color: "rgb(143 152 169)",
                     },
                   },
+                  range: view?.yRange,
+                  autorange: view ? false : true,
                   // A few very faint horizontal rules only — enough to read a
                   // level off, not enough to compete with the curves.
                   showgrid: true,
@@ -215,11 +238,15 @@ export function EigenstateViewer({
               step={1}
             />
           </div>
+          <div className="mt-4">
+            <ModeToggle value={mode} onChange={setMode} />
+          </div>
+          {data && <EnergyList energies={data.energies} />}
         </div>
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-border bg-surface/40 px-4 py-2 text-xs text-muted">
-        <Legend />
+        <Legend mode={mode} />
         {data && (
           <span className="font-mono tabular-nums">
             {data.n_states} states · {data.x.length} pts
@@ -254,6 +281,8 @@ function ParamSliders({
   const p = (params ?? {}) as Record<string, number | undefined>;
 
   switch (potential) {
+    // No x₀ here: for a parabola centred anywhere, x₀ only slides the whole
+    // figure sideways — it changes nothing about the spectrum or the states.
     case "harmonic":
       return (
         <div className="space-y-3.5">
@@ -265,15 +294,6 @@ function ParamSliders({
             min={0.2}
             max={3}
             step={0.05}
-          />
-          <Slider
-            label={<Tex>{`x_0`}</Tex>}
-            hint="center"
-            value={p.x0 ?? 0}
-            onChange={(v) => set("x0", v)}
-            min={-5}
-            max={5}
-            step={0.1}
           />
         </div>
       );
@@ -413,10 +433,71 @@ function ParamSliders({
   }
 }
 
+function ModeToggle({
+  value,
+  onChange,
+}: {
+  value: DisplayMode;
+  onChange: (m: DisplayMode) => void;
+}) {
+  const options: Array<{ id: DisplayMode; label: string }> = [
+    { id: "psi", label: "ψₙ" },
+    { id: "prob", label: "|ψₙ|²" },
+  ];
+  return (
+    <div>
+      <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+        Display
+      </p>
+      <div className="flex gap-0.5 rounded-md bg-surface-2/60 p-0.5">
+        {options.map((o) => (
+          <button
+            key={o.id}
+            type="button"
+            onClick={() => onChange(o.id)}
+            aria-pressed={value === o.id}
+            className={
+              "flex-1 rounded px-2 py-1 text-[11px] transition-colors " +
+              (value === o.id
+                ? "bg-surface-3 text-foreground"
+                : "text-muted hover:text-foreground")
+            }
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EnergyList({ energies }: { energies: number[] }) {
+  return (
+    <div className="mt-4">
+      <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+        Levels
+      </p>
+      <ul className="space-y-1 font-mono text-[11px] tabular-nums">
+        {energies.map((E, n) => (
+          <li key={n} className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-[2px] w-3 shrink-0 rounded-full"
+              style={{ backgroundColor: stateColor(n, energies.length) }}
+            />
+            <span className="text-muted">E{subscript(n)}</span>
+            <span className="ml-auto text-foreground">{E.toFixed(3)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function defaultParamsFor(p: PotentialType): PotentialSchemaParams {
   switch (p) {
     case "harmonic":
-      return { omega: 1.0, x0: 0.0 };
+      return { omega: 1.0 };
     case "barrier":
       return { height: 2.0, width: 1.0, x0: 0.0 };
     case "finite_well":
@@ -441,11 +522,18 @@ function Spinner() {
   );
 }
 
-function Legend() {
+function Legend({ mode }: { mode: DisplayMode }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
       <LegendKey color="rgb(190 197 210)" label="V(x)" dashed />
-      <LegendKey color="rgb(124 160 255)" label="ψₙ(x) shifted by Eₙ" />
+      <LegendKey
+        gradient
+        label={
+          mode === "psi"
+            ? "ψₙ(x), drawn on its level Eₙ"
+            : "|ψₙ(x)|², drawn on its level Eₙ"
+        }
+      />
       <LegendKey color="rgb(255 200 120)" label="Eₙ" dashed />
     </div>
   );
@@ -455,28 +543,89 @@ function LegendKey({
   color,
   label,
   dashed,
+  gradient,
 }: {
-  color: string;
+  color?: string;
   label: string;
   dashed?: boolean;
+  gradient?: boolean;
 }) {
+  // The ψ key stands for a whole family of curves, one colour per n, so it
+  // shows the palette ramp rather than pretending they are all one blue.
+  const background = gradient
+    ? `linear-gradient(to right, ${STATE_PALETTE[0]}, ${
+        STATE_PALETTE[Math.floor(STATE_PALETTE.length / 2)]
+      }, ${STATE_PALETTE[STATE_PALETTE.length - 1]})`
+    : dashed
+      ? `repeating-linear-gradient(to right, ${color} 0 4px, transparent 4px 7px)`
+      : color;
+
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
         aria-hidden
         className="inline-block h-[2px] w-5"
-        style={{
-          background: dashed
-            ? `repeating-linear-gradient(to right, ${color} 0 4px, transparent 4px 7px)`
-            : color,
-        }}
+        style={{ background }}
       />
       <span>{label}</span>
     </span>
   );
 }
 
-function buildTraces(res: EigenstatesResponse, xShift = 0) {
+interface View {
+  xRange: [number, number];
+  yRange: [number, number];
+  /** Vertical size, in energy units, of the tallest plotted state. */
+  amplitude: number;
+}
+
+/**
+ * Frame the plot on the states rather than on the solver grid.
+ *
+ * The grid is deliberately wide so the boundary never clips a wavefunction,
+ * which for a rising potential means the *plotted* value range is dominated by
+ * the walls: at ω = 1 on x ∈ [-10, 10] the parabola reaches V = 50 while the
+ * levels being drawn sit below 5. Autoranging on that squashes every state
+ * into the bottom tenth of the figure. So: choose the energy window from the
+ * levels, then keep only the x where the potential still fits inside it —
+ * which is the classically allowed region plus a little tunnelling tail.
+ */
+function computeView(res: EigenstatesResponse): View {
+  const { energies, potential, x } = res;
+  const amplitude = computeAmplitude(energies);
+  const eLow = energies[0];
+  const eTop = energies[energies.length - 1];
+
+  let vMin = Infinity;
+  for (const v of potential) if (v < vMin) vMin = v;
+
+  const yLow = Math.min(vMin, eLow - amplitude);
+  const yHigh = eTop + amplitude * 1.9;
+  const pad = (yHigh - yLow) * 0.06;
+
+  const yRange: [number, number] = [yLow - pad, yHigh + pad];
+
+  // Walk in from both edges while the potential is off the top of the frame.
+  let lo = 0;
+  let hi = x.length - 1;
+  while (lo < hi && potential[lo] > yRange[1]) lo++;
+  while (hi > lo && potential[hi] > yRange[1]) hi--;
+
+  const xPad = Math.max((x[hi] - x[lo]) * 0.1, 1e-6);
+  const xRange: [number, number] = [
+    Math.max(x[0], x[lo] - xPad),
+    Math.min(x[x.length - 1], x[hi] + xPad),
+  ];
+
+  return { xRange, yRange, amplitude };
+}
+
+function buildTraces(
+  res: EigenstatesResponse,
+  view: View,
+  mode: DisplayMode,
+  xShift = 0,
+) {
   const traces: Array<Record<string, unknown>> = [];
   // Optimistic horizontal translation applied while the server catches up.
   const xs = xShift ? res.x.map((v) => v + xShift) : res.x;
@@ -490,12 +639,29 @@ function buildTraces(res: EigenstatesResponse, xShift = 0) {
     hovertemplate: "V(%{x:.2f}) = %{y:.2f}<extra></extra>",
   });
 
-  const amplitude = computeAmplitude(res.energies);
+  const curves = res.wavefunctions.map((psi) =>
+    mode === "prob" ? psi.map((v) => v * v) : psi,
+  );
+
+  // One shared vertical scale for every state, sized so the tallest one is
+  // `amplitude` high. Scaling each state to its own peak would hide the fact
+  // that higher states spread out and flatten.
+  let peak = 0;
+  for (const curve of curves) {
+    for (const v of curve) {
+      const a = Math.abs(v);
+      if (a > peak) peak = a;
+    }
+  }
+  // |ψ|² only ever goes up, so it can use the full slot; ψ swings both ways
+  // and is kept smaller to stop its negative lobes reaching the level below.
+  const slot = view.amplitude * (mode === "prob" ? 1 : 0.72);
+  const scale = slot / (peak || 1);
+  const label = mode === "prob" ? "|ψ|²" : "ψ";
 
   res.energies.forEach((E, n) => {
-    const psi = res.wavefunctions[n];
     const color = stateColor(n, res.energies.length);
-    const shifted = psi.map((v) => v * amplitude + E);
+    const shifted = curves[n].map((v) => v * scale + E);
     const baseline = xs.map(() => E);
 
     traces.push({
@@ -514,8 +680,10 @@ function buildTraces(res: EigenstatesResponse, xShift = 0) {
       line: { color, width: 1.75 },
       fill: "tonexty",
       fillcolor: hexAlpha(color, 0.12),
-      name: `ψ${subscript(n)}, E${subscript(n)} = ${E.toFixed(3)}`,
-      hovertemplate: `ψ${subscript(n)}(x=%{x:.2f}) shifted = %{y:.3f}<extra></extra>`,
+      name: `${label}${subscript(n)}, E${subscript(n)} = ${E.toFixed(3)}`,
+      hovertemplate: `${label}${subscript(n)}(x=%{x:.2f}) on E${subscript(
+        n,
+      )} = ${E.toFixed(3)}<extra></extra>`,
     });
   });
 
@@ -525,7 +693,7 @@ function buildTraces(res: EigenstatesResponse, xShift = 0) {
 function computeAmplitude(energies: number[]) {
   if (energies.length < 2) return 1;
   const spacing = Math.abs(energies[1] - energies[0]);
-  return Math.max(spacing * 0.4, 0.1);
+  return Math.max(spacing * 0.75, 0.1);
 }
 
 // Perceptual cool→warm ramp keyed to the eigenstate index n (low energy = cool).

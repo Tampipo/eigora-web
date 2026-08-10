@@ -18,12 +18,61 @@ L'état fondamental a pour énergie $E_0 = \tfrac{1}{2}\hbar\omega$ — l'énerg
 
 ### Évolution temporelle
 
-Un paquet d'ondes gaussien construit à partir de ces états propres respire de manière cohérente dans le puits :
+Tous les états ci-dessus sont **stationnaires**. Un état propre évolue selon $\psi_n(x,t) = \psi_n(x)\,e^{-iE_n t/\hbar}$, si bien que $|\psi_n(x,t)|^2$ ne change jamais : rien ne bougerait dans cette figure si on l'animait.
+
+Le mouvement exige une superposition. Et comme les états propres forment une base complète, *tout* état en est une :
+
+$$
+\psi(x,0) = \sum_n c_n \psi_n(x)
+\qquad\Longrightarrow\qquad
+\psi(x,t) = \sum_n c_n \psi_n(x)\, e^{-iE_n t/\hbar}
+$$
+
+Le mouvement provient entièrement des phases relatives. Elles sont ici remarquablement dociles : les $E_n$ étant équidistants, chaque écart de phase est un multiple entier de $\omega$, de sorte que *n'importe quelle* superposition retrouve exactement sa forme initiale au bout d'une période $T = 2\pi/\omega$. L'oscillateur harmonique ne se déphase jamais.
+
+Un paquet d'ondes gaussien est une telle superposition,
+
+$$
+\psi(x,0) \;\propto\; e^{-(x-x_0)^2/4\sigma^2}\, e^{ik_0 x}
+$$
+
+une enveloppe de largeur $\sigma$ qui indique *où* se trouve la particule, multipliée par une onde plane qui indique *à quelle vitesse* elle se déplace. Ce n'est pas une alternative à la base propre : c'est un vecteur particulier de cette base, dont les $c_n$ sont fixés par $x_0$, $k_0$ et $\sigma$.
+
+### États cohérents
+
+Parmi toutes ces gaussiennes, une largeur se distingue :
+
+$$
+\sigma_0 = \sqrt{\frac{\hbar}{2m\omega}}
+$$
+
+qui est précisément celle de l'état fondamental. Un paquet préparé à $\sigma = \sigma_0$ puis déplacé en $x_0$ est un **état cohérent** : l'état fondamental, translaté. Ses coefficients suivent une loi de Poisson,
+
+$$
+|c_n|^2 = e^{-|\alpha|^2}\,\frac{|\alpha|^{2n}}{n!},
+\qquad
+\alpha = \sqrt{\frac{m\omega}{2\hbar}}\,x_0 + \frac{i\,k_0}{\sqrt{2m\omega\hbar}}
+$$
+
+de nombre d'occupation moyen $\bar n = |\alpha|^2$ et d'énergie $E = \hbar\omega\left(\bar n + \tfrac12\right)$ — la formule d'un niveau unique, l'entier étant remplacé par une moyenne. Pour $\omega = 1$ et $x_0 = 2{,}5$, on obtient $\bar n = 3{,}125$ et $E = 3{,}625$, le paquet se répartissant sur les états $n = 0$ à $7$ environ.
+
+Trois propriétés le rendent remarquable, et elles sont vérifiées simultanément :
+
+1. **Il ne s'étale pas.** $\Delta x = \sigma_0$ à tout instant. Toute autre gaussienne respire, sa largeur oscillant à $2\omega$ — deux fois la fréquence du va-et-vient.
+2. **Son centre obéit exactement à Newton.** $\langle x\rangle(t) = x_0\cos\omega t + \dfrac{k_0}{m\omega}\sin\omega t$. Le théorème d'Ehrenfest donne $m\,\mathrm{d}^2\langle x\rangle/\mathrm{d}t^2 = -\langle V'(x)\rangle$, et la force étant ici *linéaire*, $\langle V'(x)\rangle = V'(\langle x\rangle)$ : la position moyenne suit la trajectoire classique sans la moindre approximation.
+3. **Il sature la borne de Heisenberg.** $\Delta x\,\Delta p = \hbar/2$ à chaque instant, le minimum autorisé.
+
+En somme : un paquet de probabilité qui conserve sa forme, suit la trajectoire classique et reste aussi bien défini que le principe d'indétermination l'autorise. C'est ce que la mécanique quantique offre de plus proche d'une bille roulant dans une cuvette, et c'est pourquoi les états cohérents constituent le pont naturel entre descriptions quantique et classique.
+
+Leur portée dépasse le manuel. Un mode du champ électromagnétique *est* un oscillateur harmonique, et ses états cohérents sont ce qu'émet un laser idéal : $|\alpha|^2$ devient le nombre moyen de photons, et la statistique de Poisson ci-dessus devient le bruit de grenaille du faisceau. Glauber a reçu le prix Nobel 2005 pour l'avoir établi.
 
 <WavepacketEvolution
   potential="harmonic"
   params={{ omega: 1.0 }}
-  wavepacket={{ x0: 1.0, k0: 0.0, sigma: 0.5 }}
-  tMax={10}
+  wavepacket={{ x0: 2.5, k0: 0.0, sigma: 0.7071 }}
+  tMax={12.57}
   nFrames={120}
+  caption="Un état cohérent : déplacé de x₀ = 2,5 avec σ = 1/√2, sur deux périodes complètes. Écartez σ de 0,707 et le paquet se met à respirer."
 />
+
+Tout ceci est propre à la parabole. Les états cohérents existent parce que les niveaux sont équidistants ; dans un puits anharmonique les écarts de phase ne sont plus commensurables, les termes de la somme se désynchronisent, et le paquet s'étale sans jamais se reformer à l'identique. Là, l'écart entre $\langle x\rangle(t)$ et la trajectoire classique mesure exactement la part du mouvement qui n'a pas d'équivalent classique.
