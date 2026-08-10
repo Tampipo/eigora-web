@@ -7,6 +7,7 @@ import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolutio
 import { BarrierScattering } from "@/components/simulations/BarrierScattering";
 import { FiniteWellGraphical } from "@/components/simulations/FiniteWellGraphical";
 import { FiniteWellStates } from "@/components/simulations/FiniteWellStates";
+import { InfiniteLeftWellStates } from "@/components/simulations/InfiniteLeftWellStates";
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
@@ -21,6 +22,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     BarrierScattering,
     FiniteWellGraphical,
     FiniteWellStates,
+    InfiniteLeftWellStates,
     OrbitalViewer,
     DegeneracyLattice,
     SeparableStateViewer,

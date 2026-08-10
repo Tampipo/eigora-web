@@ -78,3 +78,24 @@ E_n + V_0 = \frac{\hbar^2k^2}{2m} \longrightarrow \frac{\hbar^2\pi^2(n+1)^2}{2mL
 $$
 
 the infinite-well spectrum, measured from the bottom of the well. The finite well's states are the infinite well's, pulled down and pushed out by the finite wall — and $R$ measures how much of that idealization survives.
+
+### A wall on the left
+
+Suppose now the well is closed off on the left: $V(x) = -V_0$ for $0 < x < a$, and $V(x) = \infty$ for $x < 0$. This models the interaction between two helium atoms, among other things — the particle's inability to enter $x < 0$ standing in for the short-range repulsion that keeps the two apart.
+
+Parity is no longer a good quantum number: there is no point the potential is symmetric about. But the differential equation inside the well is the one we already solved, and the wall adds a single boundary condition, $\psi(0) = 0$ — which is exactly what the odd states of the symmetric well already do at the origin. The even states are nonzero there and cannot survive it. So the bound states here are the odd branches of the earlier figure, and nothing else.
+
+That costs the well the guarantee it had before. The circle of radius $R$ may now fail to reach even the first odd branch, and a shallow enough well binds nothing at all. One bound state requires
+
+$$
+R > \frac{\pi}{2} \quad \Longleftrightarrow \quad V_0 a^2 > \frac{\pi^2\hbar^2}{8m}
+$$
+
+This is also why a weak enough well in three dimensions binds nothing: the radial equation for $\ell = 0$ is exactly this half-line problem, with $u(0) = 0$ for a wall.
+
+<InfiniteLeftWellStates
+  radius={5}
+  caption="The bound states of the well closed by an infinite wall at x = 0, from the numerical solver. They are exactly the odd states of the symmetric well: each vanishes at the wall, the hatched region is forbidden to all of them, and below R = π/2 none is left."
+/>
+
+Drag $R$ below $\pi/2$ and the figure empties out — the well holds nothing. The vertical line at $x = a$ marks the one open edge: that is the only side the states can leak from, and the only side they do.
