@@ -14,7 +14,9 @@ import type {
   SeparableStateRequest,
   SeparableStateResponse,
   SingleAtomStateRequest,
-  SingleAtomStateResponse
+  SingleAtomStateResponse,
+  TrajectoryRequest,
+  TrajectoryResponse
 } from '.././schemas';
 
 import { customFetch } from '../../http';
@@ -206,6 +208,56 @@ export const discreteMeasurementQmDiscreteMeasurementPost = async (measurementRe
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       measurementRequest,)
+  }
+);}
+
+
+/**
+ * Track where a wavepacket is over time.
+
+Returns <x>(t) and <p>(t) with their spreads, alongside the path a
+classical point particle would take from the same starting conditions.
+In a harmonic well the two positions coincide exactly (Ehrenfest's
+theorem, the force being linear); anywhere else the gap between them is
+the part of the motion that has no classical counterpart.
+ * @summary Trajectory
+ */
+export type trajectoryQmTrajectoryPostResponse200 = {
+  data: TrajectoryResponse
+  status: 200
+}
+
+export type trajectoryQmTrajectoryPostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+    
+export type trajectoryQmTrajectoryPostResponseSuccess = (trajectoryQmTrajectoryPostResponse200) & {
+  headers: Headers;
+};
+export type trajectoryQmTrajectoryPostResponseError = (trajectoryQmTrajectoryPostResponse422) & {
+  headers: Headers;
+};
+
+export type trajectoryQmTrajectoryPostResponse = (trajectoryQmTrajectoryPostResponseSuccess | trajectoryQmTrajectoryPostResponseError)
+
+export const getTrajectoryQmTrajectoryPostUrl = () => {
+
+
+  
+
+  return `/qm/trajectory`
+}
+
+export const trajectoryQmTrajectoryPost = async (trajectoryRequest: TrajectoryRequest, options?: RequestInit): Promise<trajectoryQmTrajectoryPostResponse> => {
+  
+  return customFetch<trajectoryQmTrajectoryPostResponse>(getTrajectoryQmTrajectoryPostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      trajectoryRequest,)
   }
 );}
 

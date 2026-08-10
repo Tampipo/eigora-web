@@ -18,12 +18,61 @@ The ground state has energy $E_0 = \tfrac{1}{2}\hbar\omega$ — the zero-point e
 
 ### Time evolution
 
-A Gaussian wavepacket built from these eigenstates breathes coherently in the well:
+Every state above is **stationary**. An eigenstate evolves as $\psi_n(x,t) = \psi_n(x)\,e^{-iE_n t/\hbar}$, so $|\psi_n(x,t)|^2$ never changes: nothing in that figure would move if we animated it.
+
+Motion requires a superposition. And since the eigenstates form a complete basis, *every* state is one:
+
+$$
+\psi(x,0) = \sum_n c_n \psi_n(x)
+\qquad\Longrightarrow\qquad
+\psi(x,t) = \sum_n c_n \psi_n(x)\, e^{-iE_n t/\hbar}
+$$
+
+The motion comes entirely from the relative phases. Here they are unusually well behaved: since $E_n$ is evenly spaced, every phase difference is a whole multiple of $\omega$, so *any* superposition returns exactly to its initial shape after one period $T = 2\pi/\omega$. The harmonic oscillator never dephases.
+
+A Gaussian wavepacket is one such superposition,
+
+$$
+\psi(x,0) \;\propto\; e^{-(x-x_0)^2/4\sigma^2}\, e^{ik_0 x}
+$$
+
+an envelope of width $\sigma$ that says *where* the particle is, times a plane wave that says *how fast* it is moving. It is not an alternative to the eigenbasis — it is a particular vector in it, with the $c_n$ fixed by $x_0$, $k_0$ and $\sigma$.
+
+### Coherent states
+
+Among all these Gaussians, one width is singled out:
+
+$$
+\sigma_0 = \sqrt{\frac{\hbar}{2m\omega}}
+$$
+
+which is precisely the width of the ground state. A packet prepared at $\sigma = \sigma_0$ and displaced to $x_0$ is a **coherent state**: the ground state, translated. Its coefficients follow a Poisson distribution,
+
+$$
+|c_n|^2 = e^{-|\alpha|^2}\,\frac{|\alpha|^{2n}}{n!},
+\qquad
+\alpha = \sqrt{\frac{m\omega}{2\hbar}}\,x_0 + \frac{i\,k_0}{\sqrt{2m\omega\hbar}}
+$$
+
+with mean occupation $\bar n = |\alpha|^2$ and energy $E = \hbar\omega\left(\bar n + \tfrac12\right)$ — the same formula as a single level, with the integer replaced by an average. For $\omega = 1$ and $x_0 = 2.5$ this gives $\bar n = 3.125$ and $E = 3.625$, the packet spread across roughly states $n = 0$ to $7$.
+
+Three properties make it remarkable, and they all hold at once:
+
+1. **It does not spread.** $\Delta x = \sigma_0$ for all time. Every other Gaussian breathes, its width oscillating at $2\omega$ — twice the frequency of the sloshing.
+2. **Its centre obeys Newton exactly.** $\langle x\rangle(t) = x_0\cos\omega t + \dfrac{k_0}{m\omega}\sin\omega t$. Ehrenfest's theorem gives $m\,\mathrm{d}^2\langle x\rangle/\mathrm{d}t^2 = -\langle V'(x)\rangle$, and because the force is *linear* here, $\langle V'(x)\rangle = V'(\langle x\rangle)$ — the mean position follows the classical path with no approximation whatsoever.
+3. **It sits on the Heisenberg bound.** $\Delta x\,\Delta p = \hbar/2$ at every instant, the minimum any state is allowed.
+
+Taken together: a lump of probability that keeps its shape, tracks the classical trajectory, and is as sharply defined as the uncertainty principle permits. It is the closest quantum mechanics comes to a marble rolling in a bowl, and it is why coherent states are the natural bridge between the quantum and classical descriptions.
+
+They also escape the textbook. A single mode of the electromagnetic field *is* a harmonic oscillator, and its coherent states are what an ideal laser emits — $|\alpha|^2$ becomes the mean photon number, and the Poisson statistics above become the shot noise of the beam. Glauber received the 2005 Nobel Prize for working this out.
 
 <WavepacketEvolution
   potential="harmonic"
   params={{ omega: 1.0 }}
-  wavepacket={{ x0: 1.0, k0: 0.0, sigma: 0.5 }}
-  tMax={10}
+  wavepacket={{ x0: 2.5, k0: 0.0, sigma: 0.7071 }}
+  tMax={12.57}
   nFrames={120}
+  caption="A coherent state: displaced by x₀ = 2.5 with σ = 1/√2, shown over two full periods. Move σ away from 0.707 and the packet starts to breathe."
 />
+
+All of this is special to the parabola. Coherent states exist because the levels are evenly spaced; in an anharmonic well the phase differences are no longer commensurate, the terms of the sum drift out of step, and the packet spreads and never rigidly recurs. There, the gap between $\langle x\rangle(t)$ and the classical trajectory is exactly the part of the motion with no classical counterpart.

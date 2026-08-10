@@ -29,14 +29,27 @@ export interface EvolveRequest {
   t_max?: number;
   dt?: number;
   n_frames?: number;
+  /**
+   * [x_lo, x_hi] to stream, as a sub-range of the grid.
+   *
+   * The grid has to be wide enough that the packet never reaches its edge —
+   * the propagator is FFT-based, so anything that does wraps around and
+   * corrupts the run — but that width is mostly empty space nobody wants to
+   * look at. Set this to receive only the part worth drawing. Solving always
+   * uses the full grid; this crops the output. Omit to stream everything.
+   */
+  view_window?: [number, number];
 }
 
 export interface EvolveMetadataMessage {
   type: "metadata";
+  /** Grid points actually streamed — narrower than the solver grid if view_window was set. */
   x: number[];
   potential: number[];
   t_max: number;
   n_frames: number;
+  /** [x_min, x_max] of the full grid the equation was solved on. */
+  grid_bounds: number[];
   predicted_transmission: number | null;
   mean_energy_transmission: number | null;
 }

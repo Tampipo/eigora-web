@@ -10,6 +10,7 @@ import type {
   PotentialSchema,
   PotentialSchemaParams,
   PotentialType,
+  TrajectoryResponse,
 } from "@/lib/api/schemas";
 import {
   type EvolveFrameMessage,
@@ -20,6 +21,7 @@ import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
 import { useDebouncedValue } from "@/lib/use-debounced";
 import { useEvolveRun } from "@/lib/use-evolve-run";
+import { useTrajectory } from "@/lib/use-trajectory";
 
 export interface WavepacketEvolutionProps {
   potential: PotentialType;
@@ -35,6 +37,13 @@ export interface WavepacketEvolutionProps {
 
 const SPEED_STOPS = [0.25, 0.5, 1, 2, 4] as const;
 
+// The solver grid, deliberately far wider than anything we draw. The
+// propagator is FFT-based, so a packet that reaches the edge wraps around and
+// silently corrupts the run; at these bounds the measured boundary leakage
+// stays below 1e-6 across the whole slider range. The window actually drawn
+// is a fraction of this -- see viewWindow below.
+const WIDE_GRID: GridSchema = { x_min: -25, x_max: 25, n_points: 2048 };
+
 export function WavepacketEvolution({
   potential,
   params: initialParams,
@@ -43,21 +52,21 @@ export function WavepacketEvolution({
   dt = 0.01,
   nFrames: initialNFrames = 120,
   grid,
-  height = 300,
+  height = 340,
   caption,
 }: WavepacketEvolutionProps) {
   const [potParams, setPotParams] = useState<PotentialSchemaParams>(
     initialParams ?? defaultParamsFor(potential),
   );
   const [wavepacket, setWavepacket] = useState<Wavepacket>(
-    initialWavepacket ?? { x0: -5, k0: 1.5, sigma: 1 },
+    initialWavepacket ?? { x0: 2.5, k0: 0, sigma: 0.7071 },
   );
   const [tMax, setTMax] = useState<number>(initialTMax);
   const [nFrames, setNFrames] = useState<number>(initialNFrames);
 
   useEffect(() => {
     setPotParams(initialParams ?? defaultParamsFor(potential));
-    setWavepacket(initialWavepacket ?? { x0: -5, k0: 1.5, sigma: 1 });
+    setWavepacket(initialWavepacket ?? { x0: 2.5, k0: 0, sigma: 0.7071 });
     setTMax(initialTMax);
     setNFrames(initialNFrames);
   }, [potential, initialParams, initialWavepacket, initialTMax, initialNFrames]);
@@ -72,37 +81,65 @@ export function WavepacketEvolution({
     [potential, debouncedPotParams],
   );
 
-  const {
-    metadata,
-    framesRef,
-    bufferedCount,
-    totalFrames,
-    status,
-    error,
-  } = useEvolveRun({
+  const solverGrid = grid ?? WIDE_GRID;
+
+  // Where the packet is, over time. Every physical number on this figure
+  // comes from here or from the stream below — nothing is recomputed locally.
+  const { data: traj, error: trajError } = useTrajectory({
     potential: potentialSchema,
     wavepacket: debouncedWavepacket,
     tMax: debouncedTMax,
     dt,
     nFrames: debouncedNFrames,
-    grid,
+    grid: solverGrid,
+    includeClassical: true,
   });
 
+  // How much of the grid to draw. Purely a framing decision.
+  //
+  // Symmetric about the origin, because the wells this figure supports are:
+  // half a well is not a well, and a lopsided window makes the parabola read
+  // as a diagonal line with one wall missing. The half-width covers the
+  // furthest the packet's centre gets, plus its own tails, so the whole
+  // excursion stays in frame — but it is never narrower than the well itself
+  // needs to look like a well.
+  const viewWindow = useMemo<[number, number] | undefined>(() => {
+    if (!traj) return undefined;
+    let reach = 0;
+    for (const x of traj.mean_position) reach = Math.max(reach, Math.abs(x));
+    const half = reach + 3 * debouncedWavepacket.sigma;
+    const limit = Math.min(
+      Math.abs(solverGrid.x_min ?? -25),
+      Math.abs(solverGrid.x_max ?? 25),
+    );
+    return [-Math.min(half, limit), Math.min(half, limit)];
+  }, [traj, debouncedWavepacket.sigma, solverGrid.x_min, solverGrid.x_max]);
+
+  const { metadata, framesRef, bufferedCount, totalFrames, status, error } =
+    useEvolveRun({
+      potential: potentialSchema,
+      wavepacket: debouncedWavepacket,
+      tMax: debouncedTMax,
+      dt,
+      nFrames: debouncedNFrames,
+      grid: solverGrid,
+      viewWindow,
+    });
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const trackRef = useRef<HTMLCanvasElement | null>(null);
+  const momentumRef = useRef<HTMLCanvasElement | null>(null);
   const [frameIdx, setFrameIdx] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState<number>(1);
   const [loop, setLoop] = useState(true);
 
-  // Reset playback when a new stream starts (metadata identity flips)
   useEffect(() => {
     if (!metadata) return;
     setFrameIdx(0);
     setPlaying(true);
   }, [metadata]);
 
-  // Animation tick — runs as soon as metadata arrives and >= 1 frame is buffered.
-  // Pauses (without exposing it) when it catches the buffer head while streaming.
   useEffect(() => {
     if (!metadata || !playing || bufferedCount === 0) return;
     const frameDurationMs =
@@ -118,8 +155,6 @@ export function WavepacketEvolution({
         setFrameIdx((i) => {
           const next = i + advance;
           const lastBuffered = bufferedCount - 1;
-
-          // Cap at the buffer head — wait silently for more frames if streaming.
           if (next > lastBuffered) {
             if (status === "ready" && next >= metadata.n_frames - 1) {
               if (loop) return next % metadata.n_frames;
@@ -137,43 +172,99 @@ export function WavepacketEvolution({
     return () => cancelAnimationFrame(rafId);
   }, [metadata, playing, speed, loop, bufferedCount, status]);
 
-  const vRef = useMemo(() => vReferenceFor(potential), [potential]);
+  // ── Drawing ───────────────────────────────────────────────────────────────
+  const latest = useRef({ metadata, traj, frameIdx });
+  latest.current = { metadata, traj, frameIdx };
 
-  // Redraw whenever the displayed frame changes
-  useEffect(() => {
-    if (!metadata) return;
-    drawFrame(canvasRef.current, metadata, framesRef.current, frameIdx, vRef);
-  }, [metadata, framesRef, frameIdx, vRef]);
+  const paint = (
+    well: HTMLCanvasElement | null,
+    track: HTMLCanvasElement | null,
+    momentum: HTMLCanvasElement | null,
+    md: EvolveMetadataMessage,
+    tr: TrajectoryResponse,
+    idx: number,
+  ) => {
+    drawWell(well, md, framesRef.current, idx, tr);
+    drawSeries(
+      track,
+      tr.times,
+      tr.mean_position,
+      tr.classical_position ?? null,
+      "⟨x⟩(t)",
+      idx,
+    );
+    drawSeries(
+      momentum,
+      tr.times,
+      tr.mean_momentum,
+      tr.classical_momentum ?? null,
+      "⟨p⟩(t)",
+      idx,
+    );
+  };
 
-  // Keep canvas HiDPI-correct + redraw on resize
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!metadata || !traj) return;
+    paint(
+      canvasRef.current,
+      trackRef.current,
+      momentumRef.current,
+      metadata,
+      traj,
+      frameIdx,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata, traj, framesRef, frameIdx]);
+
+  useEffect(() => {
+    const well = canvasRef.current;
+    const track = trackRef.current;
+    const momentum = momentumRef.current;
+    if (!well || !track || !momentum) return;
     const observer = new ResizeObserver(() => {
-      sizeCanvas(canvas);
-      if (metadata) drawFrame(canvas, metadata, framesRef.current, frameIdx, vRef);
+      sizeCanvas(well);
+      sizeCanvas(track);
+      sizeCanvas(momentum);
+      const { metadata, traj, frameIdx } = latest.current;
+      if (metadata && traj) paint(well, track, momentum, metadata, traj, frameIdx);
     });
-    observer.observe(canvas);
-    sizeCanvas(canvas);
+    observer.observe(well);
+    observer.observe(track);
+    observer.observe(momentum);
+    sizeCanvas(well);
+    sizeCanvas(track);
+    sizeCanvas(momentum);
     return () => observer.disconnect();
-  }, [metadata, framesRef, frameIdx, vRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [framesRef]);
 
   const tNow =
     framesRef.current[frameIdx]?.t ??
     (metadata
       ? (frameIdx / Math.max(1, metadata.n_frames - 1)) * metadata.t_max
       : 0);
-  const tMaxLabel = metadata?.t_max ?? tMax;
-  const norm = framesRef.current[frameIdx]?.norm;
   const seekMax = Math.max(0, bufferedCount - 1);
   const expectedTotal = totalFrames || nFrames;
   const streamingPct = expectedTotal
     ? Math.min(100, (bufferedCount / expectedTotal) * 100)
     : 0;
 
-  const seek = (i: number) => {
-    setFrameIdx(Math.max(0, Math.min(seekMax, i)));
-  };
+  const seek = (i: number) => setFrameIdx(Math.max(0, Math.min(seekMax, i)));
+
+  const spread = traj?.spread_position?.[frameIdx];
+  const spreadP = traj?.spread_momentum?.[frameIdx];
+  const product = traj?.uncertainty_product?.[frameIdx];
+
+  // σ₀ = √(ħ/2mω) = 1/√(2ω), the ground-state width — the closed form quoted
+  // in the page text, not a second implementation of anything the API solves.
+  const omega = (potParams as Record<string, number | undefined> | null)?.omega;
+  const coherent =
+    potential === "harmonic" && typeof omega === "number" && omega > 0
+      ? 1 / Math.sqrt(2 * omega)
+      : null;
+  const isCoherent =
+    coherent !== null && Math.abs(debouncedWavepacket.sigma - coherent) < 0.02;
+  const leaking = (traj?.boundary_leakage ?? 0) > 1e-3;
 
   return (
     <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
@@ -183,23 +274,39 @@ export function WavepacketEvolution({
             <canvas
               ref={canvasRef}
               className="block h-full w-full"
-              aria-label="Wavepacket probability density |ψ(x,t)|² over time"
+              aria-label="Probability density of the wavepacket inside the potential well, drawn on its energy level"
             />
-            {status === "connecting" && (
+            {(status === "connecting" || (!traj && !trajError)) && (
               <div className="absolute inset-0 flex items-center justify-center text-sm text-muted">
                 <span className="inline-flex items-center gap-2">
-                  <Spinner /> Connecting…
+                  <Spinner /> Solving…
                 </span>
               </div>
             )}
-            {status === "error" && (
+            {(status === "error" || trajError) && (
               <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-red-400">
-                {error?.message ?? "Evolution failed"}
+                {error?.message ?? trajError?.message ?? "Evolution failed"}
               </div>
             )}
           </div>
 
-          {/* Scrubber with streaming-progress fill behind the played portion */}
+          {/* <x>(t) and <p>(t) on a shared time axis: momentum lags position
+              by a quarter period, which is only legible if they line up. */}
+          <div className="relative border-t border-border" style={{ height: 88 }}>
+            <canvas
+              ref={trackRef}
+              className="block h-full w-full"
+              aria-label="Mean position over time, compared with the classical trajectory"
+            />
+          </div>
+          <div className="relative border-t border-border" style={{ height: 88 }}>
+            <canvas
+              ref={momentumRef}
+              className="block h-full w-full"
+              aria-label="Mean momentum over time, compared with the classical trajectory"
+            />
+          </div>
+
           <div className="relative">
             {status === "streaming" && (
               <div
@@ -231,19 +338,8 @@ export function WavepacketEvolution({
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-surface/40 px-4 py-2 text-xs text-muted">
             <div className="flex items-center gap-0.5">
-              <IconButton
-                onClick={() => seek(0)}
-                disabled={!metadata}
-                label="Jump to start"
-              >
+              <IconButton onClick={() => seek(0)} disabled={!metadata} label="Jump to start">
                 ⏮
-              </IconButton>
-              <IconButton
-                onClick={() => seek(frameIdx - 1)}
-                disabled={!metadata || frameIdx === 0}
-                label="Previous frame"
-              >
-                ◀
               </IconButton>
               <IconButton
                 onClick={() => setPlaying((p) => !p)}
@@ -254,13 +350,6 @@ export function WavepacketEvolution({
                 {playing ? "⏸" : "▶"}
               </IconButton>
               <IconButton
-                onClick={() => seek(frameIdx + 1)}
-                disabled={!metadata || frameIdx >= seekMax}
-                label="Next frame"
-              >
-                ▶
-              </IconButton>
-              <IconButton
                 onClick={() => seek(seekMax)}
                 disabled={!metadata}
                 label="Jump to buffered end"
@@ -269,26 +358,43 @@ export function WavepacketEvolution({
               </IconButton>
             </div>
 
-            <div className="flex items-center gap-2 font-mono tabular-nums">
+            <div className="flex flex-wrap items-center gap-2 font-mono tabular-nums">
               <span>
-                t = <span className="text-foreground">{tNow.toFixed(2)}</span> /{" "}
-                {tMaxLabel.toFixed(2)}
+                t = <span className="text-foreground">{tNow.toFixed(2)}</span>
               </span>
-              <span className="text-border">·</span>
-              <span>
-                {frameIdx + 1}/{bufferedCount || "–"}
-                {status === "streaming" &&
-                  expectedTotal &&
-                  bufferedCount < expectedTotal && (
-                    <span className="ml-1 text-accent">
-                      ({bufferedCount}/{expectedTotal} streaming)
-                    </span>
-                  )}
-              </span>
-              {typeof norm === "number" && (
+              {traj && (
                 <>
                   <span className="text-border">·</span>
-                  <span>‖ψ‖ = {norm.toFixed(3)}</span>
+                  <span>
+                    E = <span className="text-foreground">{traj.energy.toFixed(3)}</span>
+                  </span>
+                </>
+              )}
+              {typeof spread === "number" && (
+                <>
+                  <span className="text-border">·</span>
+                  <span>
+                    Δx = <span className="text-foreground">{spread.toFixed(3)}</span>
+                  </span>
+                </>
+              )}
+              {typeof spreadP === "number" && (
+                <>
+                  <span className="text-border">·</span>
+                  <span>
+                    Δp = <span className="text-foreground">{spreadP.toFixed(3)}</span>
+                  </span>
+                </>
+              )}
+              {typeof product === "number" && (
+                <>
+                  <span className="text-border">·</span>
+                  <span>
+                    ΔxΔp ={" "}
+                    <span className={product < 0.505 ? "text-accent" : "text-foreground"}>
+                      {product.toFixed(3)}
+                    </span>
+                  </span>
                 </>
               )}
             </div>
@@ -320,11 +426,11 @@ export function WavepacketEvolution({
           <Section title="Wavepacket">
             <Slider
               label={<Tex>{`x_0`}</Tex>}
-              hint="position"
+              hint="start"
               value={wavepacket.x0}
               onChange={(v) => setWavepacket({ ...wavepacket, x0: v })}
-              min={-10}
-              max={10}
+              min={-4}
+              max={4}
               step={0.1}
             />
             <Slider
@@ -332,8 +438,8 @@ export function WavepacketEvolution({
               hint="momentum"
               value={wavepacket.k0}
               onChange={(v) => setWavepacket({ ...wavepacket, k0: v })}
-              min={-5}
-              max={5}
+              min={-3}
+              max={3}
               step={0.1}
             />
             <Slider
@@ -341,10 +447,34 @@ export function WavepacketEvolution({
               hint="width"
               value={wavepacket.sigma}
               onChange={(v) => setWavepacket({ ...wavepacket, sigma: v })}
-              min={0.2}
-              max={3}
-              step={0.05}
+              min={0.3}
+              max={2}
+              step={0.01}
             />
+            {coherent !== null && (
+              <button
+                type="button"
+                onClick={() => setWavepacket({ ...wavepacket, sigma: round2(coherent) })}
+                className={
+                  "w-full rounded border px-2 py-1.5 text-left text-[10px] leading-snug transition-colors " +
+                  (isCoherent
+                    ? "border-accent/40 bg-accent/10 text-foreground"
+                    : "border-border text-muted hover:border-border-strong hover:text-foreground")
+                }
+              >
+                {isCoherent ? (
+                  <>
+                    <span className="font-medium">Coherent state.</span> Shape is
+                    preserved; ΔxΔp sits on ℏ/2.
+                  </>
+                ) : (
+                  <>
+                    Set σ = {coherent.toFixed(3)} for the{" "}
+                    <span className="font-medium">coherent state</span>
+                  </>
+                )}
+              </button>
+            )}
           </Section>
 
           <Section title="Simulation">
@@ -352,7 +482,7 @@ export function WavepacketEvolution({
               label={<Tex>{`t_{\\max}`}</Tex>}
               value={tMax}
               onChange={setTMax}
-              min={1}
+              min={2}
               max={30}
               step={0.5}
             />
@@ -368,6 +498,23 @@ export function WavepacketEvolution({
         </div>
       </div>
 
+      {leaking && (
+        <p className="border-t border-border bg-red-500/5 px-4 py-2 text-xs text-red-400">
+          The packet is reaching the edge of the solver grid ({(traj!.boundary_leakage * 100).toFixed(1)}
+          % of |ψ|²). The propagator is periodic, so these numbers are no longer
+          reliable — reduce t<sub>max</sub> or the starting energy.
+        </p>
+      )}
+
+      <div className="flex items-center justify-between gap-3 border-t border-border bg-surface/40 px-4 py-2 text-xs text-muted">
+        <Legend />
+        {metadata && (
+          <span className="font-mono tabular-nums">
+            solved on {solverGrid.n_points} pts · drawn {metadata.x.length}
+          </span>
+        )}
+      </div>
+
       {caption && (
         <figcaption className="border-t border-border px-4 py-2 text-xs text-muted">
           {caption}
@@ -377,13 +524,43 @@ export function WavepacketEvolution({
   );
 }
 
-function Section({
-  title,
-  children,
+function Legend() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+      <Key color="rgb(190 197 210)" label="V(x)" dashed />
+      <Key color="rgb(124 160 255)" label="|ψ(x,t)|², drawn on E" />
+      <Key color="rgb(255 200 120)" label="⟨x⟩(t)" />
+      <Key color="rgb(143 152 169)" label="classical" dashed />
+    </div>
+  );
+}
+
+function Key({
+  color,
+  label,
+  dashed,
 }: {
-  title: string;
-  children: React.ReactNode;
+  color: string;
+  label: string;
+  dashed?: boolean;
 }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span
+        aria-hidden
+        className="inline-block h-[2px] w-5"
+        style={{
+          background: dashed
+            ? `repeating-linear-gradient(to right, ${color} 0 4px, transparent 4px 7px)`
+            : color,
+        }}
+      />
+      <span>{label}</span>
+    </span>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
@@ -409,89 +586,18 @@ function PotentialSliders({
   const p = (params ?? {}) as Record<string, number | undefined>;
 
   switch (potential) {
+    // No x₀: shifting a parabola sideways moves the whole figure and changes
+    // nothing physical. The range is capped where the grid stays safe.
     case "harmonic":
       return (
-        <>
-          <Slider
-            label={<Tex>{`\\omega`}</Tex>}
-            value={p.omega ?? 1}
-            onChange={(v) => set("omega", v)}
-            min={0.2}
-            max={3}
-            step={0.05}
-          />
-          <Slider
-            label={<Tex>{`x_0`}</Tex>}
-            value={p.x0 ?? 0}
-            onChange={(v) => set("x0", v)}
-            min={-5}
-            max={5}
-            step={0.1}
-          />
-        </>
-      );
-    case "barrier":
-      return (
-        <>
-          <Slider
-            label={<Tex>{`V_0`}</Tex>}
-            value={p.height ?? 2}
-            onChange={(v) => set("height", v)}
-            min={0.5}
-            max={20}
-            step={0.1}
-          />
-          <Slider
-            label={<Tex>{`a`}</Tex>}
-            value={p.width ?? 1}
-            onChange={(v) => set("width", v)}
-            min={0.1}
-            max={5}
-            step={0.05}
-          />
-        </>
-      );
-    case "finite_well":
-      return (
-        <>
-          <Slider
-            label={<Tex>{`V_0`}</Tex>}
-            value={p.depth ?? 5}
-            onChange={(v) => set("depth", v)}
-            min={0.5}
-            max={30}
-            step={0.1}
-          />
-          <Slider
-            label={<Tex>{`L`}</Tex>}
-            value={p.width ?? 4}
-            onChange={(v) => set("width", v)}
-            min={0.5}
-            max={10}
-            step={0.1}
-          />
-        </>
-      );
-    case "infinite_well":
-      return (
         <Slider
-          label={<Tex>{`L`}</Tex>}
-          value={p.width ?? 4}
-          onChange={(v) => set("width", v)}
+          label={<Tex>{`\\omega`}</Tex>}
+          hint="frequency"
+          value={p.omega ?? 1}
+          onChange={(v) => set("omega", v)}
           min={0.5}
-          max={10}
-          step={0.1}
-        />
-      );
-    case "step":
-      return (
-        <Slider
-          label={<Tex>{`V_0`}</Tex>}
-          value={p.height ?? 1}
-          onChange={(v) => set("height", v)}
-          min={-5}
-          max={10}
-          step={0.1}
+          max={2}
+          step={0.05}
         />
       );
     case "double_well":
@@ -523,20 +629,16 @@ function PotentialSliders({
 function defaultParamsFor(p: PotentialType): PotentialSchemaParams {
   switch (p) {
     case "harmonic":
-      return { omega: 1.0, x0: 0.0 };
-    case "barrier":
-      return { height: 2.0, width: 1.0, x0: 0.0 };
-    case "finite_well":
-      return { depth: 5.0, width: 4.0, x0: 0.0 };
-    case "infinite_well":
-      return { width: 4.0, x0: 0.0 };
-    case "step":
-      return { height: 1.0, x0: 0.0 };
+      return { omega: 1.0 };
     case "double_well":
       return { a: 1.0, b: 4.0 };
     default:
       return null;
   }
+}
+
+function round2(v: number) {
+  return Math.round(v * 100) / 100;
 }
 
 function Spinner() {
@@ -596,9 +698,7 @@ function SpeedControl({
           onClick={() => onChange(s)}
           className={
             "rounded px-1.5 py-0.5 font-mono text-[10px] tabular-nums transition-colors " +
-            (s === value
-              ? "bg-surface text-foreground"
-              : "text-muted hover:text-foreground")
+            (s === value ? "bg-surface text-foreground" : "text-muted hover:text-foreground")
           }
           aria-pressed={s === value}
         >
@@ -609,36 +709,7 @@ function SpeedControl({
   );
 }
 
-// ── V(x) reference scale ────────────────────────────────────────────────────
-// Used to keep the potential band's vertical scale fixed for the lifetime of
-// a figure, so changing V₀ via the slider actually changes the visible
-// barrier/well height. Ranges roughly match each potential's slider bounds.
-
-interface VReference {
-  vMin: number;
-  vMax: number;
-}
-
-function vReferenceFor(p: PotentialType): VReference {
-  switch (p) {
-    case "harmonic":
-      return { vMin: 0, vMax: 12 };
-    case "barrier":
-      return { vMin: 0, vMax: 22 };
-    case "finite_well":
-      return { vMin: -32, vMax: 2 };
-    case "infinite_well":
-      return { vMin: 0, vMax: 12 };
-    case "step":
-      return { vMin: -6, vMax: 11 };
-    case "double_well":
-      return { vMin: -6, vMax: 12 };
-    default:
-      return { vMin: -5, vMax: 15 };
-  }
-}
-
-// ── Canvas rendering ────────────────────────────────────────────────────────
+// ── Canvas ──────────────────────────────────────────────────────────────────
 
 function sizeCanvas(canvas: HTMLCanvasElement) {
   const dpr = window.devicePixelRatio || 1;
@@ -649,12 +720,22 @@ function sizeCanvas(canvas: HTMLCanvasElement) {
   if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
-function drawFrame(
+const MONO = 'var(--font-geist-mono), ui-monospace, monospace';
+
+/**
+ * One physical picture: energy up, position across.
+ *
+ * V(x) is the well, E is the level the packet sits on, and |ψ(x,t)|² rides on
+ * that level the way a textbook draws it — so the figure reads as "a particle
+ * of this energy, sloshing between these turning points", rather than as two
+ * unrelated curves stacked on top of each other.
+ */
+function drawWell(
   canvas: HTMLCanvasElement | null,
   metadata: EvolveMetadataMessage,
   frames: EvolveFrameMessage[],
   i: number,
-  vRef: VReference,
+  traj: TrajectoryResponse,
 ) {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -665,67 +746,101 @@ function drawFrame(
   const h = rect.height;
   ctx.clearRect(0, 0, w, h);
 
-  const { x: xs, potential: V } = metadata;
-  const frame = frames[Math.min(i, frames.length - 1)];
+  const xs = metadata.x;
+  const V = metadata.potential;
+  if (xs.length < 2) return;
 
   const xMin = xs[0];
   const xMax = xs[xs.length - 1];
+  const E = traj.energy;
 
-  // Fixed V range per potential type so changes in V₀ are visually meaningful
-  const vMin = vRef.vMin;
-  const vMax = vRef.vMax;
-  const vRange = vMax - vMin || 1;
+  // Vertical extent: floor of the well up to as far above E as E is above the
+  // floor, which leaves the density room without shrinking the well.
+  let vMin = Infinity;
+  for (const v of V) if (v < vMin) vMin = v;
+  const span = Math.max(E - vMin, 1e-3);
+  const eMin = vMin - 0.12 * span;
+  const eMax = E + span;
 
-  const padTop = 12;
-  const padBottom = 16;
-  const usable = h - padTop - padBottom;
-  const probArea = usable * 0.62;
-  const potArea = usable * 0.38;
+  const padL = 8;
+  const padR = 8;
+  const padTop = 10;
+  const padBottom = 26;
+  const plotW = w - padL - padR;
+  const plotH = h - padTop - padBottom;
 
-  const xToPx = (x: number) => ((x - xMin) / (xMax - xMin)) * w;
-  // Clamp V to the fixed band so harmonic edges don't explode visually
-  const vToY = (v: number) => {
-    const clamped = Math.max(vMin, Math.min(vMax, v));
-    return padTop + probArea + potArea - ((clamped - vMin) / vRange) * potArea;
-  };
+  const xToPx = (x: number) => padL + ((x - xMin) / (xMax - xMin)) * plotW;
+  const eToPy = (e: number) =>
+    padTop + plotH - ((e - eMin) / (eMax - eMin)) * plotH;
 
-  // Separator
+  // x-axis ticks
   ctx.strokeStyle = "rgba(255,255,255,0.07)";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, padTop + probArea);
-  ctx.lineTo(w, padTop + probArea);
+  ctx.moveTo(padL, padTop + plotH);
+  ctx.lineTo(padL + plotW, padTop + plotH);
   ctx.stroke();
 
-  // V(x) — dotted
-  ctx.strokeStyle = "rgba(190,197,210,0.5)";
+  ctx.fillStyle = "rgb(99 108 126)";
+  ctx.font = `10.5px ${MONO}`;
+  ctx.textAlign = "center";
+  for (const tick of niceTicks(xMin, xMax, 7)) {
+    const px = xToPx(tick);
+    ctx.fillText(formatTick(tick), px, padTop + plotH + 15);
+  }
+
+  // Energy level, spanning the classically allowed region. The crossings are
+  // read off the V(x) samples being drawn, so the markers land exactly on the
+  // curve instead of near it.
+  const [tpLo, tpHi] = crossingsAt(xs, V, E);
+  const eY = eToPy(E);
+  ctx.strokeStyle = "rgba(255, 200, 120, 0.5)";
+  ctx.setLineDash([4, 4]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xToPx(tpLo), eY);
+  ctx.lineTo(xToPx(tpHi), eY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Turning points: where the level meets the wall
+  ctx.fillStyle = "rgba(255, 200, 120, 0.85)";
+  for (const tp of [tpLo, tpHi]) {
+    ctx.beginPath();
+    ctx.arc(xToPx(tp), eY, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // V(x)
+  ctx.strokeStyle = "rgba(190,197,210,0.55)";
   ctx.setLineDash([3, 3]);
   ctx.lineWidth = 1.25;
   ctx.beginPath();
   for (let k = 0; k < xs.length; k++) {
-    const px = xToPx(xs[k]);
-    const py = vToY(V[k]);
-    if (k === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
+    const py = eToPy(V[k]);
+    if (k === 0) ctx.moveTo(xToPx(xs[k]), py);
+    else ctx.lineTo(xToPx(xs[k]), py);
   }
   ctx.stroke();
   ctx.setLineDash([]);
 
+  const frame = frames[Math.min(i, frames.length - 1)];
   if (frame) {
     const prob = frame.probability_density;
     const pMax = computePMaxRunning(frames);
-    const probToY = (p: number) => padTop + probArea - (p / pMax) * probArea;
+    // Density sits on the energy line and reaches at most 80% of the way to
+    // the top of the frame, so a breathing packet never leaves the picture.
+    const probToPy = (p: number) =>
+      eY - (p / pMax) * (eY - padTop) * 0.8;
 
-    const gradient = ctx.createLinearGradient(0, padTop, 0, padTop + probArea);
-    gradient.addColorStop(0, "rgba(124, 160, 255, 0.55)");
-    gradient.addColorStop(1, "rgba(124, 160, 255, 0.03)");
+    const gradient = ctx.createLinearGradient(0, padTop, 0, eY);
+    gradient.addColorStop(0, "rgba(124, 160, 255, 0.5)");
+    gradient.addColorStop(1, "rgba(124, 160, 255, 0.04)");
     ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.moveTo(xToPx(xs[0]), padTop + probArea);
-    for (let k = 0; k < xs.length; k++) {
-      ctx.lineTo(xToPx(xs[k]), probToY(prob[k]));
-    }
-    ctx.lineTo(xToPx(xs[xs.length - 1]), padTop + probArea);
+    ctx.moveTo(xToPx(xs[0]), eY);
+    for (let k = 0; k < xs.length; k++) ctx.lineTo(xToPx(xs[k]), probToPy(prob[k]));
+    ctx.lineTo(xToPx(xs[xs.length - 1]), eY);
     ctx.closePath();
     ctx.fill();
 
@@ -735,23 +850,191 @@ function drawFrame(
     ctx.beginPath();
     for (let k = 0; k < xs.length; k++) {
       const px = xToPx(xs[k]);
-      const py = probToY(prob[k]);
+      const py = probToPy(prob[k]);
       if (k === 0) ctx.moveTo(px, py);
       else ctx.lineTo(px, py);
     }
     ctx.stroke();
   }
 
+  // <x>(t): the marker that makes the motion legible as a particle
+  const meanX = traj.mean_position[Math.min(i, traj.mean_position.length - 1)];
+  if (typeof meanX === "number") {
+    const px = xToPx(meanX);
+    ctx.strokeStyle = "rgba(255, 200, 120, 0.25)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, eY);
+    ctx.lineTo(px, padTop + plotH);
+    ctx.stroke();
+
+    ctx.fillStyle = "rgb(255, 200, 120)";
+    ctx.beginPath();
+    ctx.arc(px, eY, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   ctx.fillStyle = "rgba(143,152,169,0.9)";
-  ctx.font = '600 11px var(--font-geist-mono), ui-monospace, monospace';
+  ctx.font = `600 10.5px ${MONO}`;
   ctx.textAlign = "left";
-  ctx.fillText("|ψ|²", 10, padTop + 12);
-  ctx.fillText("V(x)", 10, padTop + probArea + 14);
+  ctx.fillText(`E = ${E.toFixed(2)}`, padL + 2, eY - 6);
 }
 
-// Running pMax — refreshed live as frames arrive so the curve doesn't get
-// renormalised every animation tick. Cached by frames-array identity so the
-// scan only happens when the array grows or is replaced.
+/**
+ * A quantum expectation value over time, against its classical counterpart.
+ *
+ * Used for both <x>(t) and <p>(t). Drawn on a shared time axis so the quarter
+ * period by which momentum lags position is readable straight off the pair.
+ */
+function drawSeries(
+  canvas: HTMLCanvasElement | null,
+  t: number[],
+  q: number[],
+  cl: number[] | null,
+  label: string,
+  i: number,
+) {
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width;
+  const h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+
+  if (t.length < 2 || q.length < 2) return;
+
+  const padL = 8;
+  const padR = 8;
+  const padTop = 16;
+  const padBottom = 12;
+  const plotW = w - padL - padR;
+  const plotH = h - padTop - padBottom;
+
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (const v of q) {
+    if (v < lo) lo = v;
+    if (v > hi) hi = v;
+  }
+  if (cl) for (const v of cl) {
+    if (v < lo) lo = v;
+    if (v > hi) hi = v;
+  }
+  const pad = Math.max((hi - lo) * 0.15, 0.05);
+  lo -= pad;
+  hi += pad;
+
+  const tToPx = (v: number) => padL + (v / t[t.length - 1]) * plotW;
+  const xToPy = (v: number) => padTop + plotH - ((v - lo) / (hi - lo)) * plotH;
+
+  // x = 0 baseline
+  if (lo < 0 && hi > 0) {
+    ctx.strokeStyle = "rgba(255,255,255,0.07)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, xToPy(0));
+    ctx.lineTo(padL + plotW, xToPy(0));
+    ctx.stroke();
+  }
+
+  // Classical path underneath, so any divergence shows as the quantum curve
+  // lifting off it.
+  if (cl) {
+    ctx.strokeStyle = "rgba(143,152,169,0.75)";
+    ctx.setLineDash([4, 3]);
+    ctx.lineWidth = 1.25;
+    ctx.beginPath();
+    for (let k = 0; k < cl.length; k++) {
+      const px = tToPx(t[k]);
+      const py = xToPy(cl[k]);
+      if (k === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  ctx.strokeStyle = "rgb(255, 200, 120)";
+  ctx.lineWidth = 1.75;
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  for (let k = 0; k < q.length; k++) {
+    const px = tToPx(t[k]);
+    const py = xToPy(q[k]);
+    if (k === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Playhead
+  const idx = Math.min(i, q.length - 1);
+  const px = tToPx(t[idx]);
+  ctx.strokeStyle = "rgba(255,255,255,0.18)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(px, padTop);
+  ctx.lineTo(px, padTop + plotH);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgb(255, 200, 120)";
+  ctx.beginPath();
+  ctx.arc(px, xToPy(q[idx]), 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(143,152,169,0.9)";
+  ctx.font = `600 10px ${MONO}`;
+  ctx.textAlign = "left";
+  ctx.fillText(label, padL + 2, 11);
+
+  // Current value, so the panel is readable while paused.
+  ctx.textAlign = "right";
+  ctx.fillStyle = "rgba(232,235,242,0.85)";
+  ctx.fillText(q[idx].toFixed(2), w - padR - 2, 11);
+}
+
+/**
+ * Where the drawn V(x) crosses a level, innermost pair around the well floor.
+ * Interpolated between samples so the marker sits on the line, not beside it.
+ */
+function crossingsAt(
+  xs: number[],
+  V: number[],
+  level: number,
+): [number, number] {
+  let floor = 0;
+  for (let i = 1; i < V.length; i++) if (V[i] < V[floor]) floor = i;
+
+  const walk = (step: -1 | 1): number => {
+    let i = floor;
+    while (i + step >= 0 && i + step < V.length && V[i + step] <= level) i += step;
+    const j = i + step;
+    if (j < 0 || j >= V.length) return xs[i];
+    const denom = V[j] - V[i];
+    if (denom === 0) return xs[i];
+    return xs[i] + ((level - V[i]) / denom) * (xs[j] - xs[i]);
+  };
+
+  return [walk(-1), walk(1)];
+}
+
+function niceTicks(min: number, max: number, target: number): number[] {
+  const raw = (max - min) / target;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const norm = raw / mag;
+  const step = (norm >= 5 ? 5 : norm >= 2 ? 2 : 1) * mag;
+  const out: number[] = [];
+  for (let v = Math.ceil(min / step) * step; v <= max; v += step) out.push(v);
+  return out;
+}
+
+function formatTick(v: number): string {
+  const r = Math.abs(v) < 1e-9 ? 0 : v;
+  return Number.isInteger(r) ? String(r) : r.toFixed(1);
+}
+
+// Running pMax so the curve is not renormalised on every animation tick.
 const PMAX_CACHE = new WeakMap<EvolveFrameMessage[], { count: number; pMax: number }>();
 function computePMaxRunning(frames: EvolveFrameMessage[]): number {
   const cached = PMAX_CACHE.get(frames);
