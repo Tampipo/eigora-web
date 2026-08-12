@@ -6,7 +6,14 @@
   "nav": {
     "home": "Home",
     "qm": "Quantum mechanics",
-    "about": "About"
+    "about": "About",
+    "search": "Search"
+  },
+  "search": {
+    "placeholder": "Search the content…",
+    "hint": "Type to search across every module.",
+    "loading": "Loading index…",
+    "empty": "Nothing found."
   },
   "home": {
     "eyebrow": "Live physics simulations",
@@ -33,32 +40,45 @@
   "qm": {
     "index": {
       "heading": "Quantum mechanics",
-      "intro": "Eigenstates, wavepackets, and the geometry of solutions to the Schrödinger equation."
+      "intro": "Eigenstates, wavepackets, and the geometry of solutions to the Schrödinger equation.",
+      "readingOrder": "The modules are numbered in a suggested reading order, but each one stands on its own — select tags to narrow the list.",
+      "searchPlaceholder": "Search modules…",
+      "filterLabel": "Filter by tag",
+      "clearFilters": "Clear",
+      "shownLabel": "Modules shown",
+      "noResults": "No module matches — try another word or clear the filters.",
+      "matchIn": "Found in the content"
     },
     "modules": {
       "harmonic": {
         "title": "Harmonic oscillator",
-        "summary": "Quantised energy levels and the zero-point energy."
+        "summary": "Quantised energy levels and the zero-point energy.",
+        "tags": "wavefunction, energy, superposition, dynamics"
       },
       "barrier": {
         "title": "Tunneling through a barrier",
-        "summary": "Transmission and reflection at a finite potential step."
+        "summary": "Transmission and reflection at a finite potential step.",
+        "tags": "wavefunction, dynamics, probability"
       },
       "well-bound-states": {
         "title": "Bound states of the finite well",
-        "summary": "Parity, the graphical construction, and how many states a well holds."
+        "summary": "Parity, the graphical construction, and how many states a well holds.",
+        "tags": "wavefunction, energy, symmetry"
       },
       "well-2d": {
         "title": "Particle in a 2D well",
-        "summary": "Separable states, and degeneracy as lattice points on an ellipse."
+        "summary": "Separable states, and degeneracy as lattice points on an ellipse.",
+        "tags": "wavefunction, energy, symmetry, geometry"
       },
       "orbitals": {
         "title": "Atomic orbitals",
-        "summary": "3D electron density of hydrogen-like states, in spherical coordinates."
+        "summary": "3D electron density of hydrogen-like states, in spherical coordinates.",
+        "tags": "wavefunction, geometry, atoms"
       },
       "spin": {
         "title": "Spin measurement",
-        "summary": "Successive measurements, collapse, and the Bloch sphere."
+        "summary": "Successive measurements, collapse, and the Bloch sphere.",
+        "tags": "measurement, superposition, probability, geometry"
       }
     }
   },

@@ -7,11 +7,12 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Newsreader } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/metadata";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { MobileHeader } from "@/components/ui/MobileHeader";
+import { SearchPalette } from "@/components/ui/SearchPalette";
 import "katex/dist/katex.min.css";
 import "@/app/globals.css";
 
@@ -57,6 +58,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   setRequestLocale(locale);
+  const t = await getTranslations("search");
 
   return (
     <html
@@ -69,6 +71,16 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <Sidebar />
           <MobileHeader />
+          {/* Mounted once: the sidebar and mobile triggers both dispatch to it,
+              so there is a single dialog and a single ⌘K listener. */}
+          <SearchPalette
+            labels={{
+              placeholder: t("placeholder"),
+              hint: t("hint"),
+              loading: t("loading"),
+              empty: t("empty"),
+            }}
+          />
           <main className="relative z-10 lg:pl-64">
             <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-14 lg:py-20">
               {children}

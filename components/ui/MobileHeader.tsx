@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Wordmark } from "./Wordmark";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { SearchTrigger } from "./SearchTrigger";
 
 /** Sticky top bar for viewports below `lg`, where the sidebar is hidden. */
 export async function MobileHeader() {
@@ -17,6 +18,7 @@ export async function MobileHeader() {
           <Wordmark size={24} />
         </Link>
         <div className="flex items-center gap-1">
+          <SearchTrigger label={t("search")} variant="compact" />
           <Link
             href="/qm"
             className="rounded-md px-2.5 py-1.5 text-sm text-muted transition-colors hover:bg-surface-2 hover:text-foreground"

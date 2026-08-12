@@ -4,17 +4,28 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
-/** A linked course-module card with an index, title and one-line summary. */
+/**
+ * A linked course-module card with an index, title and one-line summary.
+ * `tags` render as inert chips — the card is a link, so selecting a tag
+ * belongs to the filter bar, not in here.
+ */
 export function ModuleCard({
   href,
   index,
   title,
   summary,
+  tags,
+  excerpt,
+  excerptLabel,
 }: {
   href: string;
   index: number;
   title: string;
   summary: string;
+  tags?: readonly string[];
+  /** Why this card matched, when the hit was in the body rather than on screen. */
+  excerpt?: string;
+  excerptLabel?: string;
 }) {
   return (
     <Link
@@ -36,6 +47,30 @@ export function ModuleCard({
         </h3>
         <p className="text-sm leading-relaxed text-muted">{summary}</p>
       </div>
+      {excerpt && (
+        <div className="border-l-2 border-accent/40 pl-3">
+          {excerptLabel && (
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
+              {excerptLabel}
+            </p>
+          )}
+          <p className="line-clamp-3 text-xs leading-relaxed text-muted">
+            {excerpt}
+          </p>
+        </div>
+      )}
+      {tags && tags.length > 0 && (
+        <ul className="flex flex-wrap gap-1.5">
+          {tags.map((tag) => (
+            <li
+              key={tag}
+              className="rounded-full border border-border bg-surface-2/50 px-2 py-0.5 text-[11px] text-faint transition-colors group-hover:border-border-strong"
+            >
+              {tag}
+            </li>
+          ))}
+        </ul>
+      )}
       <span
         aria-hidden
         className="mt-auto h-px w-full origin-left scale-x-0 bg-gradient-to-r from-accent/70 to-transparent transition-transform duration-300 ease-out-expo group-hover:scale-x-100"
