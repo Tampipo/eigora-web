@@ -6,7 +6,14 @@
   "nav": {
     "home": "Accueil",
     "qm": "Mécanique quantique",
-    "about": "À propos"
+    "about": "À propos",
+    "search": "Rechercher"
+  },
+  "search": {
+    "placeholder": "Rechercher dans le contenu…",
+    "hint": "Tapez pour chercher dans tous les modules.",
+    "loading": "Chargement de l'index…",
+    "empty": "Aucun résultat."
   },
   "home": {
     "eyebrow": "Simulations de physique en direct",
@@ -33,32 +40,45 @@
   "qm": {
     "index": {
       "heading": "Mécanique quantique",
-      "intro": "États propres, paquets d'ondes et géométrie des solutions de l'équation de Schrödinger."
+      "intro": "États propres, paquets d'ondes et géométrie des solutions de l'équation de Schrödinger.",
+      "readingOrder": "Les modules sont numérotés dans un ordre de lecture conseillé, mais chacun se suffit à lui-même — sélectionnez des tags pour filtrer la liste.",
+      "searchPlaceholder": "Rechercher un module…",
+      "filterLabel": "Filtrer par tag",
+      "clearFilters": "Réinitialiser",
+      "shownLabel": "Modules affichés",
+      "noResults": "Aucun module ne correspond — essayez un autre mot ou réinitialisez les filtres.",
+      "matchIn": "Trouvé dans le contenu"
     },
     "modules": {
       "harmonic": {
         "title": "Oscillateur harmonique",
-        "summary": "Niveaux d'énergie quantifiés et énergie de point zéro."
+        "summary": "Niveaux d'énergie quantifiés et énergie de point zéro.",
+        "tags": "fonction d'onde, énergie, superposition, dynamique"
       },
       "barrier": {
         "title": "Effet tunnel",
-        "summary": "Transmission et réflexion sur une marche de potentiel finie."
+        "summary": "Transmission et réflexion sur une marche de potentiel finie.",
+        "tags": "fonction d'onde, dynamique, probabilité"
       },
       "well-bound-states": {
         "title": "États liés du puits fini",
-        "summary": "Parité, construction graphique, et combien d'états un puits peut contenir."
+        "summary": "Parité, construction graphique, et combien d'états un puits peut contenir.",
+        "tags": "fonction d'onde, énergie, symétrie"
       },
       "well-2d": {
         "title": "Particule dans un puits 2D",
-        "summary": "États séparables, et la dégénérescence comme points du réseau sur une ellipse."
+        "summary": "États séparables, et la dégénérescence comme points du réseau sur une ellipse.",
+        "tags": "fonction d'onde, énergie, symétrie, géométrie"
       },
       "orbitals": {
         "title": "Orbitales atomiques",
-        "summary": "Densité électronique 3D des états hydrogénoïdes, en coordonnées sphériques."
+        "summary": "Densité électronique 3D des états hydrogénoïdes, en coordonnées sphériques.",
+        "tags": "fonction d'onde, géométrie, atomes"
       },
       "spin": {
         "title": "Mesure du spin",
-        "summary": "Mesures successives, réduction, et la sphère de Bloch."
+        "summary": "Mesures successives, réduction, et la sphère de Bloch.",
+        "tags": "mesure, superposition, probabilité, géométrie"
       }
     }
   },

@@ -7,6 +7,7 @@ import { QM_MODULES } from "@/lib/qm-modules";
 import { Wordmark } from "./Wordmark";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
+import { SearchTrigger } from "./SearchTrigger";
 
 export async function Sidebar() {
   const t = await getTranslations("nav");
@@ -20,7 +21,11 @@ export async function Sidebar() {
         <span className="text-[11px] text-muted">{site("tagline")}</span>
       </Link>
 
-      <nav className="mt-10 flex-1 space-y-7 text-sm">
+      <div className="mt-7">
+        <SearchTrigger label={t("search")} />
+      </div>
+
+      <nav className="mt-6 flex-1 space-y-7 text-sm">
         <div className="space-y-0.5">
           <SidebarNavItem href="/" label={t("home")} />
         </div>
