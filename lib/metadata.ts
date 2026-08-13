@@ -43,6 +43,12 @@ export async function moduleMetadata(
       languages: languageAlternates(path),
     },
     openGraph: {
+      // Next merges metadata field by field, and a child `openGraph` replaces
+      // the parent's entirely — so every property the root layout supplies has
+      // to be restated. `type` is one of OpenGraph's four required properties,
+      // and WhatsApp discards the whole card when it is missing.
+      type: "website",
+      siteName: "Eigora",
       title,
       description,
       url: `/${locale}${path}`,
@@ -72,6 +78,12 @@ export async function pageMetadata(
       languages: languageAlternates(path),
     },
     openGraph: {
+      // Next merges metadata field by field, and a child `openGraph` replaces
+      // the parent's entirely — so every property the root layout supplies has
+      // to be restated. `type` is one of OpenGraph's four required properties,
+      // and WhatsApp discards the whole card when it is missing.
+      type: "website",
+      siteName: "Eigora",
       title,
       description,
       url: `/${locale}${path}`,
