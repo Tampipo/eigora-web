@@ -67,6 +67,21 @@ export default async function LocaleLayout({
       className={`${GeistSans.variable} ${GeistMono.variable} ${newsreader.variable}`}
     >
       <body suppressHydrationWarning className="font-sans">
+        {/* Google infers a site name from the domain unless told otherwise, which
+            for tampipo.fr means results read "- Tampipo". This is the signal it
+            documents as taking precedence. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Eigora",
+              alternateName: "Eigora — Interactive physics, written clearly",
+              url: SITE_URL,
+            }),
+          }}
+        />
         <div className="page-glow" aria-hidden />
         <NextIntlClientProvider>
           <Sidebar />
