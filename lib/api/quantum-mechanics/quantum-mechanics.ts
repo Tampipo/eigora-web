@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
+  DiscreteEvolutionRequest,
+  DiscreteEvolutionResponse,
   EigenstatesRequest,
   EigenstatesResponse,
   HTTPValidationError,
@@ -208,6 +210,59 @@ export const discreteMeasurementQmDiscreteMeasurementPost = async (measurementRe
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       measurementRequest,)
+  }
+);}
+
+
+/**
+ * Evolve a state on a finite Hilbert space, reported in the energy eigenbasis.
+
+Returns c_n(t) = <E_n|psi(t)> at every frame, alongside the energies those
+coefficients belong to. Each one keeps its modulus and turns at its own
+rate, c_n(t) = c_n(0) exp(-i E_n t) — the whole content of the Schrödinger
+equation once the eigenproblem is solved.
+
+`reference` additionally projects psi(t) onto a fixed state; with the
+all-ones vector that is the sum of the amplitudes, which is what adding
+the individual phasors up gives.
+ * @summary Discrete Evolution
+ */
+export type discreteEvolutionQmDiscreteEvolutionPostResponse200 = {
+  data: DiscreteEvolutionResponse
+  status: 200
+}
+
+export type discreteEvolutionQmDiscreteEvolutionPostResponse422 = {
+  data: HTTPValidationError
+  status: 422
+}
+    
+export type discreteEvolutionQmDiscreteEvolutionPostResponseSuccess = (discreteEvolutionQmDiscreteEvolutionPostResponse200) & {
+  headers: Headers;
+};
+export type discreteEvolutionQmDiscreteEvolutionPostResponseError = (discreteEvolutionQmDiscreteEvolutionPostResponse422) & {
+  headers: Headers;
+};
+
+export type discreteEvolutionQmDiscreteEvolutionPostResponse = (discreteEvolutionQmDiscreteEvolutionPostResponseSuccess | discreteEvolutionQmDiscreteEvolutionPostResponseError)
+
+export const getDiscreteEvolutionQmDiscreteEvolutionPostUrl = () => {
+
+
+  
+
+  return `/qm/discrete-evolution`
+}
+
+export const discreteEvolutionQmDiscreteEvolutionPost = async (discreteEvolutionRequest: DiscreteEvolutionRequest, options?: RequestInit): Promise<discreteEvolutionQmDiscreteEvolutionPostResponse> => {
+  
+  return customFetch<discreteEvolutionQmDiscreteEvolutionPostResponse>(getDiscreteEvolutionQmDiscreteEvolutionPostUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      discreteEvolutionRequest,)
   }
 );}
 

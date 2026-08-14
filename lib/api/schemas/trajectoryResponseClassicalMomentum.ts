@@ -6,4 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
+/**
+ * Present only when include_classical was set.
+ */
 export type TrajectoryResponseClassicalMomentum = number[] | null;

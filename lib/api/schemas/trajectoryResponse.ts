@@ -7,8 +7,6 @@
  */
 import type { TrajectoryResponseClassicalPosition } from './trajectoryResponseClassicalPosition';
 import type { TrajectoryResponseClassicalMomentum } from './trajectoryResponseClassicalMomentum';
-import type { TrajectoryResponseTurningPoints } from './trajectoryResponseTurningPoints';
-import type { TrajectoryResponseCoherentWidth } from './trajectoryResponseCoherentWidth';
 
 /**
  * Where the wavepacket is, as a function of time.
@@ -33,11 +31,8 @@ export interface TrajectoryResponse {
   energy: number;
   /** Largest fraction of |psi|^2 in the outer 5% of the grid at any frame. The propagator is FFT-based, so the box is periodic and a packet reaching one edge reappears at the other -- which turns every series above into an average over a ring. Above ~1e-3, widen the grid or shorten t_max; the numbers cannot be trusted. */
   boundary_leakage: number;
-  /** Position of a classical point particle launched from (x0, k0) in the same potential. In a harmonic well this coincides with mean_position exactly -- Ehrenfest's theorem, since the force is linear. None for potentials with a step in them (well, barrier, step), where the force is a delta function that no finite difference can represent. */
+  /** Position of a classical point particle launched from (x0, k0) in the same potential, present only when include_classical was set. In a harmonic well it coincides with mean_position exactly -- Ehrenfest's theorem, since the force is linear. */
   classical_position?: TrajectoryResponseClassicalPosition;
+  /** Present only when include_classical was set. */
   classical_momentum?: TrajectoryResponseClassicalMomentum;
-  /** [x_left, x_right] reached by the classical particle, where V(x) = E. */
-  turning_points?: TrajectoryResponseTurningPoints;
-  /** The sigma that would make this packet a coherent state, 1/sqrt(2*omega). Harmonic potential only -- an anharmonic well has no shape-invariant Gaussian, so this is None there. */
-  coherent_width?: TrajectoryResponseCoherentWidth;
 }

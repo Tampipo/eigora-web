@@ -7,6 +7,6 @@
  */
 
 /**
- * Position of a classical point particle launched from (x0, k0) in the same potential. In a harmonic well this coincides with mean_position exactly -- Ehrenfest's theorem, since the force is linear. None for potentials with a step in them (well, barrier, step), where the force is a delta function that no finite difference can represent.
+ * Position of a classical point particle launched from (x0, k0) in the same potential, present only when include_classical was set. In a harmonic well it coincides with mean_position exactly -- Ehrenfest's theorem, since the force is linear.
  */
 export type TrajectoryResponseClassicalPosition = number[] | null;

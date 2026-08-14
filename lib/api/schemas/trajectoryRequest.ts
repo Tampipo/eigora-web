@@ -27,4 +27,6 @@ export interface TrajectoryRequest {
    * @maximum 400
    */
   n_frames?: number;
+  /** Also integrate a classical point particle from (x0, k0) in the same potential and return its path. Rejected for potentials with a step in them, where a finite-difference force is meaningless. */
+  include_classical?: boolean;
 }
