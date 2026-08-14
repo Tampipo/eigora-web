@@ -12,6 +12,7 @@ import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
 import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
+import { SuperpositionPhases } from "@/components/simulations/SuperpositionPhases";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
 import { Video } from "@/components/ui/Video";
 
@@ -28,6 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DegeneracyLattice,
     SeparableStateViewer,
     SpinMeasurement,
+    SuperpositionPhases,
     FormulaBlock,
     Video,
   };

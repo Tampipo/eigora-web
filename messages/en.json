@@ -50,6 +50,11 @@
       "matchIn": "Found in the content"
     },
     "modules": {
+      "schrodinger": {
+        "title": "The Schrödinger equation",
+        "summary": "The evolution postulate, and why everything reduces to an eigenvalue problem.",
+        "tags": "energy, superposition, dynamics"
+      },
       "harmonic": {
         "title": "Harmonic oscillator",
         "summary": "Quantised energy levels and the zero-point energy.",

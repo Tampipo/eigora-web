@@ -1,0 +1,49 @@
+## The Schrödinger equation
+
+The Schrödinger equation is a postulate of quantum mechanics. It is not a result deduced from other principles, but a fundamental hypothesis about the dynamics of quantum systems. It describes how the quantum state of a system evolves in time,
+
+$$
+\frac{d}{dt} |\psi(t)\rangle = -\frac{i}{\hbar} \hat{H} |\psi(t)\rangle,
+$$
+
+where $|\psi(t)\rangle$ is the state vector of the system at time $t$, $\hat{H}$ is the Hamiltonian operator representing the total energy of the system, and $\hbar$ is the reduced Planck constant. This equation is fundamental to understanding how particles behave at the quantum scale, and it underpins a great many applications in physics and chemistry.
+
+All of the equation's subtlety hides in the definition of the Hamiltonian operator. For a system of non-relativistic particles, the Hamiltonian is generally made of a kinetic term and a potential term. In general this operator has eigenstates $|\phi_n\rangle$ with eigenvalues $E_n$, the quantised energies of the system. Those eigenstates form an orthonormal basis of the state space (the Hamiltonian being Hermitian), and the quantum state of the system can be written as a linear combination of them:
+$$
+\frac{d}{dt} |\psi(t)\rangle = -\frac{i}{\hbar} \sum_n E_n c_n(t) |\phi_n\rangle,
+$$
+where the $c_n(t)$ are the coefficients of that combination. Knowing the state at $t=0$ — that is, the coefficients $c_n(0)$ — the state at any time $t$ follows from solving this differential equation. One finds
+
+$$
+\frac{d}{dt} c_n(t) = -\frac{i}{\hbar} E_n c_n(t) \implies c_n(t) = c_n(0) e^{-i E_n t / \hbar}.
+$$
+
+and so the quantum state at time $t$ is given by
+
+$$
+|\psi(t)\rangle = \sum_n c_n(0) e^{-i E_n t / \hbar} |\phi_n\rangle.
+$$
+
+Each coefficient therefore keeps its modulus and does nothing but turn in the complex plane, at a rate set by its own energy alone. Nothing else moves. In particular the probabilities $|c_n|^2$ of measuring each energy are fixed once and for all: the whole of the dynamics lives in the *relative* phases between the components.
+
+To collapse that motion into a single number, one can ask how much the state still resembles the one it started as. That is the **survival amplitude**,
+
+$$
+A(t) = \langle \psi(0) | \psi(t) \rangle = \sum_n |c_n(0)|^2 e^{-i E_n t / \hbar},
+$$
+
+where the inner product makes the eigenstates disappear and leaves exactly the phasors above, weighted this time by numbers that never move. Its squared modulus $|A(t)|^2$ is the probability of finding the system in precisely its initial state. It starts at 1 and falls away as the terms drift out of step — not because anything is lost, but because the components stop pointing the same way.
+
+Nothing forces $|A|$ to stay small, though. If the energies are commensurate the phases eventually line up again and the state returns to itself: a **revival**. On the ladder of the figure, whose levels are spaced by $\hbar\omega$, the relative phases realign at $t = 2\pi/\omega$, where $|A|^2$ is back to 1; it takes until $t = 4\pi/\omega$ for $A$ itself, global phase included, to return to exactly $1$.
+
+Notice, finally, that the starting phases $\arg c_n(0)$ have dropped out of the calculation. That is no oversight: each appears once in the ket and once, conjugated, in the bra, and cancels. $A$ measures the state against its own starting point — shifting the initial phases shifts the reference with them. The figure makes it visible: turning an argument reshapes the sum $\sum_n c_n(t)$, which adds the arrows exactly as drawn, and leaves $A$ untouched. The price is that the sum depends on the phase convention chosen for each $|\phi_n\rangle$ — replacing $|\phi_3\rangle$ by $-|\phi_3\rangle$ moves it without any physics having changed. Both curves say something true; only one of them is a measurable quantity.
+
+<SuperpositionPhases caption="Five levels, five coefficients. Each arrow turns at its own rate Eₙ/ℏ and never changes length — the probabilities |cₙ|² are constants of the motion. Below them, two ways of collapsing the five into one: Σcₙ(t) adds the arrows as they are drawn, and A(t) compares the state to where it started. Move a phase slider — the first responds, the second cannot." />
+
+This result shows that it is enough to solve the eigenvalue equation,
+
+$$
+\hat{H} |\phi\rangle = E |\phi\rangle,
+$$
+
+and to decompose a state on that basis at any one instant, to know its evolution at every later instant (and every earlier one too). That eigenvalue equation is called the time-independent Schrödinger equation.

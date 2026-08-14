@@ -1,0 +1,50 @@
+## L'équation de Schrödinger
+
+L'équation de Schrödinger est un postulat de la mécanique quantique. Ce n'est pas un résultat que l'on déduit d'autres principes, mais plutôt une hypothèse fondamentale sur la dynamique des systèmes quantiques. Elle décrit comment l'état quantique d'un système évolue dans le temps,
+
+$$
+\frac{d}{dt} |\psi(t)\rangle = -\frac{i}{\hbar} \hat{H} |\psi(t)\rangle,
+$$
+
+où $|\psi(t)\rangle$ est le vecteur d'état du système à l'instant $t$, $\hat{H}$ est l'opérateur hamiltonien qui représente l'énergie totale du système, et $\hbar$ est la constante de Planck réduite. Cette équation est fondamentale pour comprendre le comportement des particules à l'échelle quantique, et elle sert de base à de nombreuses applications en physique et en chimie.
+
+Toute la subtilité de l'équation se cache dans la définition de l'opérateur hamiltonien. Pour un système de particules non relativistes, l'hamiltonien est généralement composé d'un terme cinétique et d'un terme potentiel. De manière général, cet opérateur possède des états propres $|\phi_n\rangle$ associés à des valeurs propres $E_n$ qui représentent les énergies quantifiées du système. Ces états propres forment une base orthonormée de l'espace des états (car l'hamiltonien est un opérateur hermitien), et l'état quantique du système peut être exprimé comme une combinaison linéaire de ces états propres :
+$$
+\frac{d}{dt} |\psi(t)\rangle = -\frac{i}{\hbar} \sum_n E_n c_n(t) |\phi_n\rangle,
+$$
+où $c_n(t)$ sont les coefficients de la combinaison linéaire. Connaissant l'état à l'instant $t=0$, c'est à dire les coefficients $c_n(0)$, on peut déterminer l'état à tout instant $t$ en résolvant cette équation différentielle. On trouve,
+
+$$
+\frac{d}{dt} c_n(t) = -\frac{i}{\hbar} E_n c_n(t) \implies c_n(t) = c_n(0) e^{-i E_n t / \hbar}.
+$$
+
+et l'état quantique à l'instant $t$ est donc donné par
+
+$$
+|\psi(t)\rangle = \sum_n c_n(0) e^{-i E_n t / \hbar} |\phi_n\rangle.
+$$
+
+Chaque coefficient garde donc son module et ne fait que tourner dans le plan complexe, à une vitesse fixée par sa seule énergie. Rien d'autre ne bouge. En particulier, les probabilités $|c_n|^2$ de mesurer chaque énergie sont figées une fois pour toutes : toute la dynamique est dans les phases *relatives* entre les composantes.
+
+Pour résumer ce mouvement en un seul nombre, on peut demander à quel point l'état ressemble encore à celui de départ. C'est l'**amplitude de survie**,
+
+$$
+A(t) = \langle \psi(0) | \psi(t) \rangle = \sum_n |c_n(0)|^2 e^{-i E_n t / \hbar},
+$$
+
+où le produit scalaire fait disparaître les états propres et ne laisse que les mêmes phaseurs qu'au-dessus, pondérés cette fois par des poids qui ne bougent jamais. Son module au carré $|A(t)|^2$ est la probabilité de retrouver le système exactement dans son état initial. Elle part de 1, puis chute à mesure que les termes se déphasent — non pas parce que quelque chose se perd, mais parce que les composantes cessent de pointer dans la même direction.
+
+Rien n'oblige cependant $|A|$ à rester petit. Si les énergies sont commensurables, les phases finissent par se rejoindre et l'état revient sur lui-même : c'est une **résurgence**. Sur l'échelle de la figure, dont les niveaux sont espacés de $\hbar\omega$, les phases relatives se recalent à $t = 2\pi/\omega$, où $|A|^2$ vaut de nouveau 1 ; il faut attendre $t = 4\pi/\omega$ pour que $A$ elle-même, phase globale comprise, retrouve exactement $1$.
+
+Notons enfin que les phases de départ $\arg c_n(0)$ ont disparu du calcul. Ce n'est pas un oubli : chacune apparaît une fois dans le bra et une fois dans le ket, conjuguée, et se simplifie. $A$ compare l'état à son propre point de départ — décaler les phases initiales décale aussi la référence. C'est visible sur la figure : tourner un argument déforme la somme $\sum_n c_n(t)$, qui additionne les flèches telles qu'elles sont dessinées, et ne touche absolument pas à $A$. La contrepartie est que la somme dépend, elle, de la convention de phase choisie pour chaque $|\phi_n\rangle$ — changer $|\phi_3\rangle$ en $-|\phi_3\rangle$ la déplace sans qu'aucune physique n'ait bougé. Les deux courbes disent quelque chose de vrai ; une seule des deux est une quantité mesurable.
+
+<SuperpositionPhases caption="Cinq niveaux, cinq coefficients. Chaque flèche tourne à sa propre vitesse Eₙ/ℏ sans jamais changer de longueur — les probabilités |cₙ|² sont des constantes du mouvement. Dessous, deux façons de résumer les cinq : Σcₙ(t) additionne les flèches telles quelles, et A(t) compare l'état à son point de départ. Déplacez un slider d'argument — la première bouge, la seconde non." />
+
+Ce résultat montre qu'il suffit de résoudre l'équation aux valeurs propres,
+
+$$
+\hat{H} |\phi\rangle = E |\phi\rangle,
+$$
+
+et de décomposer un état à n'importe quel instant sur cette base pour connaitre son évolution à tout instant ultérieur (et également antérieur). L'équation aux valeurs propres est appelée l'équation de Schrödinger stationnaire.
+

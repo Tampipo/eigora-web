@@ -50,6 +50,11 @@
       "matchIn": "Trouvé dans le contenu"
     },
     "modules": {
+      "schrodinger": {
+        "title": "Équation de Schrödinger",
+        "summary": "Le postulat d'évolution, et pourquoi tout se ramène à un problème aux valeurs propres.",
+        "tags": "énergie, superposition, dynamique"
+      },
       "harmonic": {
         "title": "Oscillateur harmonique",
         "summary": "Niveaux d'énergie quantifiés et énergie de point zéro.",
