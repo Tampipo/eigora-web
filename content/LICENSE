@@ -1,0 +1,22 @@
+SPDX-License-Identifier: CC-BY-SA-4.0
+
+Copyright (C) 2026 Tanguy Marsault - Eigora
+
+The course material in this directory — prose, figures, captions and the
+accompanying animations under public/videos — is licensed under the Creative
+Commons Attribution-ShareAlike 4.0 International License.
+
+The repository's AGPL-3.0-or-later licence governs the software: the pages,
+components and libraries that render this material. It does not govern the
+material itself, which is a written work rather than a program, and for which
+copyleft on the prose rather than on the build output is what is meant.
+
+You are free to share and adapt the material, including commercially, provided
+you give appropriate credit to Eigora (https://eigora.tampipo.fr) and license
+your derivative work under the same terms.
+
+To view a copy of this license, visit:
+
+    https://creativecommons.org/licenses/by-sa/4.0/
+
+or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.

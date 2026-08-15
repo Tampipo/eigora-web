@@ -4,6 +4,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { QM_MODULES } from "@/lib/qm-modules";
+import { LEGAL_PAGES } from "@/lib/legal-pages";
 import { SITE_URL } from "@/lib/metadata";
 
 /**
@@ -14,15 +15,25 @@ import { SITE_URL } from "@/lib/metadata";
  * other — they are told explicitly that the two are the same page.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = ["", "/qm", ...QM_MODULES.map((slug) => `/qm/${slug}`)];
+  const paths = [
+    "",
+    "/qm",
+    ...QM_MODULES.map((slug) => `/qm/${slug}`),
+    ...LEGAL_PAGES.map((slug) => `/legal/${slug}`),
+  ];
   const lastModified = new Date();
+
+  // The legal pages have to be indexable — a mentions légales page nobody can
+  // reach serves no purpose — but they are not what the site is for, so they
+  // are ranked below the course material rather than competing with it.
+  const isLegal = (path: string) => path.startsWith("/legal/");
 
   return paths.flatMap((path) =>
     routing.locales.map((locale) => ({
       url: `${SITE_URL}/${locale}${path}`,
       lastModified,
-      changeFrequency: "monthly" as const,
-      priority: path === "" ? 1 : 0.8,
+      changeFrequency: isLegal(path) ? ("yearly" as const) : ("monthly" as const),
+      priority: path === "" ? 1 : isLegal(path) ? 0.3 : 0.8,
       alternates: {
         languages: Object.fromEntries(
           routing.locales.map((other) => [other, `${SITE_URL}/${other}${path}`]),

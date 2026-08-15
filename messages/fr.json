@@ -87,6 +87,28 @@
       }
     }
   },
+  "legal": {
+    "pages": {
+      "notice": {
+        "title": "Mentions légales",
+        "summary": "Éditeur, directeur de la publication, hébergeur et licences d'eigora.tampipo.fr.",
+        "footer": "Mentions légales"
+      },
+      "privacy": {
+        "title": "Politique de confidentialité",
+        "summary": "Ce que le site enregistre — des journaux techniques, un cookie de langue — et rien d'autre.",
+        "footer": "Confidentialité"
+      },
+      "credits": {
+        "title": "Crédits",
+        "summary": "Les logiciels libres sur lesquels Eigora est bâti, et leurs licences.",
+        "footer": "Crédits"
+      }
+    },
+    "footer": {
+      "source": "Sources"
+    }
+  },
   "locale": {
     "switchTo": "Changer de langue"
   }

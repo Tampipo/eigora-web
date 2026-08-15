@@ -9,7 +9,9 @@ import { Newsreader } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 import { SITE_URL } from "@/lib/metadata";
+import { LEGAL_PAGES } from "@/lib/legal-pages";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { MobileHeader } from "@/components/ui/MobileHeader";
 import { SearchPalette } from "@/components/ui/SearchPalette";
@@ -59,6 +61,7 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const t = await getTranslations("search");
+  const legal = await getTranslations("legal");
 
   return (
     <html
@@ -101,9 +104,30 @@ export default async function LocaleLayout({
               {children}
             </div>
             <footer className="mx-auto max-w-5xl px-6 pb-12 sm:px-8 lg:px-14">
-              <div className="flex flex-col gap-2 border-t border-border pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 border-t border-border pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
                 <span>© {new Date().getFullYear()} Eigora · AGPL-3.0</span>
-                <span className="font-mono">Interactive physics, written clearly.</span>
+                <nav className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  {LEGAL_PAGES.map((slug) => (
+                    <Link
+                      key={slug}
+                      href={`/legal/${slug}`}
+                      className="transition-colors hover:text-muted"
+                    >
+                      {legal(`pages.${slug}.footer`)}
+                    </Link>
+                  ))}
+                  {/* AGPL §13: anyone interacting with the running instance over
+                      a network must be offered its source, so the offer has to
+                      live in the service itself — not only in the repository. */}
+                  <a
+                    href="https://github.com/Tampipo/eigora-web"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-muted"
+                  >
+                    {legal("footer.source")}
+                  </a>
+                </nav>
               </div>
             </footer>
           </main>

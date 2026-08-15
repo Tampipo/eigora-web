@@ -87,6 +87,28 @@
       }
     }
   },
+  "legal": {
+    "pages": {
+      "notice": {
+        "title": "Legal notice",
+        "summary": "Publisher, publication director, hosting and licences for eigora.tampipo.fr.",
+        "footer": "Legal notice"
+      },
+      "privacy": {
+        "title": "Privacy policy",
+        "summary": "What the site records — server logs, one language cookie — and nothing else.",
+        "footer": "Privacy"
+      },
+      "credits": {
+        "title": "Credits",
+        "summary": "The free software Eigora is built on, and the licences it is used under.",
+        "footer": "Credits"
+      }
+    },
+    "footer": {
+      "source": "Source"
+    }
+  },
   "locale": {
     "switchTo": "Switch language"
   }
