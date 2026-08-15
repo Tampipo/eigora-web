@@ -28,6 +28,15 @@ export type SearchEntry = {
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
 
+/**
+ * Content directories that are not course material.
+ *
+ * `legal` follows the same `content/{locale}/{domain}/{slug}.mdx` shape and is
+ * rendered by the same MDX pipeline, but it is boilerplate, not physics — a
+ * search for "état" should not surface the privacy policy.
+ */
+const NON_COURSE_DOMAINS = new Set(["legal"]);
+
 /** Text short enough to be a stray fragment rather than a real section. */
 const MIN_SECTION_CHARS = 40;
 
@@ -91,7 +100,9 @@ async function listDomains(locale: string): Promise<string[]> {
   const root = path.join(CONTENT_ROOT, locale);
   try {
     const entries = await fs.readdir(root, { withFileTypes: true });
-    return entries.filter((e) => e.isDirectory()).map((e) => e.name);
+    return entries
+      .filter((e) => e.isDirectory() && !NON_COURSE_DOMAINS.has(e.name))
+      .map((e) => e.name);
   } catch {
     return [];
   }
