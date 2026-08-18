@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import {
-  eigenstatesQmEigenstatesPost,
-  type eigenstatesQmEigenstatesPostResponse,
+  eigenstatesV1QmEigenstatesPost,
+  type eigenstatesV1QmEigenstatesPostResponse,
 } from "@/lib/api/quantum-mechanics/quantum-mechanics";
 import type {
   EigenstatesResponse,
@@ -56,8 +56,8 @@ export function useEigenstates(
       setError(null);
       const body = JSON.parse(key);
 
-      eigenstatesQmEigenstatesPost(body)
-        .then((res: eigenstatesQmEigenstatesPostResponse) => {
+      eigenstatesV1QmEigenstatesPost(body)
+        .then((res: eigenstatesV1QmEigenstatesPostResponse) => {
           if (!alive.current) return;
           if (res.status === 200) {
             setData(res.data as EigenstatesResponse);

@@ -29,36 +29,36 @@ import { customFetch } from '../../http';
 Accepts either a named potential (Option A) or a custom V(x) array (Option B).
  * @summary Eigenstates
  */
-export type eigenstatesQmEigenstatesPostResponse200 = {
+export type eigenstatesV1QmEigenstatesPostResponse200 = {
   data: EigenstatesResponse
   status: 200
 }
 
-export type eigenstatesQmEigenstatesPostResponse422 = {
+export type eigenstatesV1QmEigenstatesPostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type eigenstatesQmEigenstatesPostResponseSuccess = (eigenstatesQmEigenstatesPostResponse200) & {
+export type eigenstatesV1QmEigenstatesPostResponseSuccess = (eigenstatesV1QmEigenstatesPostResponse200) & {
   headers: Headers;
 };
-export type eigenstatesQmEigenstatesPostResponseError = (eigenstatesQmEigenstatesPostResponse422) & {
+export type eigenstatesV1QmEigenstatesPostResponseError = (eigenstatesV1QmEigenstatesPostResponse422) & {
   headers: Headers;
 };
 
-export type eigenstatesQmEigenstatesPostResponse = (eigenstatesQmEigenstatesPostResponseSuccess | eigenstatesQmEigenstatesPostResponseError)
+export type eigenstatesV1QmEigenstatesPostResponse = (eigenstatesV1QmEigenstatesPostResponseSuccess | eigenstatesV1QmEigenstatesPostResponseError)
 
-export const getEigenstatesQmEigenstatesPostUrl = () => {
+export const getEigenstatesV1QmEigenstatesPostUrl = () => {
 
 
   
 
-  return `/qm/eigenstates`
+  return `/v1/qm/eigenstates`
 }
 
-export const eigenstatesQmEigenstatesPost = async (eigenstatesRequest: EigenstatesRequest, options?: RequestInit): Promise<eigenstatesQmEigenstatesPostResponse> => {
+export const eigenstatesV1QmEigenstatesPost = async (eigenstatesRequest: EigenstatesRequest, options?: RequestInit): Promise<eigenstatesV1QmEigenstatesPostResponse> => {
   
-  return customFetch<eigenstatesQmEigenstatesPostResponse>(getEigenstatesQmEigenstatesPostUrl(),
+  return customFetch<eigenstatesV1QmEigenstatesPostResponse>(getEigenstatesV1QmEigenstatesPostUrl(),
   {      
     ...options,
     method: 'POST',
@@ -78,36 +78,36 @@ differ. Each axis is solved analytically when its potential has a known
 solution and numerically otherwise; the state is the product of the two.
  * @summary Separable State
  */
-export type separableStateQmSeparableStatePostResponse200 = {
+export type separableStateV1QmSeparableStatePostResponse200 = {
   data: SeparableStateResponse
   status: 200
 }
 
-export type separableStateQmSeparableStatePostResponse422 = {
+export type separableStateV1QmSeparableStatePostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type separableStateQmSeparableStatePostResponseSuccess = (separableStateQmSeparableStatePostResponse200) & {
+export type separableStateV1QmSeparableStatePostResponseSuccess = (separableStateV1QmSeparableStatePostResponse200) & {
   headers: Headers;
 };
-export type separableStateQmSeparableStatePostResponseError = (separableStateQmSeparableStatePostResponse422) & {
+export type separableStateV1QmSeparableStatePostResponseError = (separableStateV1QmSeparableStatePostResponse422) & {
   headers: Headers;
 };
 
-export type separableStateQmSeparableStatePostResponse = (separableStateQmSeparableStatePostResponseSuccess | separableStateQmSeparableStatePostResponseError)
+export type separableStateV1QmSeparableStatePostResponse = (separableStateV1QmSeparableStatePostResponseSuccess | separableStateV1QmSeparableStatePostResponseError)
 
-export const getSeparableStateQmSeparableStatePostUrl = () => {
+export const getSeparableStateV1QmSeparableStatePostUrl = () => {
 
 
   
 
-  return `/qm/separable-state`
+  return `/v1/qm/separable-state`
 }
 
-export const separableStateQmSeparableStatePost = async (separableStateRequest: SeparableStateRequest, options?: RequestInit): Promise<separableStateQmSeparableStatePostResponse> => {
+export const separableStateV1QmSeparableStatePost = async (separableStateRequest: SeparableStateRequest, options?: RequestInit): Promise<separableStateV1QmSeparableStatePostResponse> => {
   
-  return customFetch<separableStateQmSeparableStatePostResponse>(getSeparableStateQmSeparableStatePostUrl(),
+  return customFetch<separableStateV1QmSeparableStatePostResponse>(getSeparableStateV1QmSeparableStatePostUrl(),
   {      
     ...options,
     method: 'POST',
@@ -124,36 +124,36 @@ export const separableStateQmSeparableStatePost = async (separableStateRequest: 
 Accepts either a named potential (Option A) or a custom V(x) array (Option B).
  * @summary Single Atom State
  */
-export type singleAtomStateQmSingleAtomStatePostResponse200 = {
+export type singleAtomStateV1QmSingleAtomStatePostResponse200 = {
   data: SingleAtomStateResponse
   status: 200
 }
 
-export type singleAtomStateQmSingleAtomStatePostResponse422 = {
+export type singleAtomStateV1QmSingleAtomStatePostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type singleAtomStateQmSingleAtomStatePostResponseSuccess = (singleAtomStateQmSingleAtomStatePostResponse200) & {
+export type singleAtomStateV1QmSingleAtomStatePostResponseSuccess = (singleAtomStateV1QmSingleAtomStatePostResponse200) & {
   headers: Headers;
 };
-export type singleAtomStateQmSingleAtomStatePostResponseError = (singleAtomStateQmSingleAtomStatePostResponse422) & {
+export type singleAtomStateV1QmSingleAtomStatePostResponseError = (singleAtomStateV1QmSingleAtomStatePostResponse422) & {
   headers: Headers;
 };
 
-export type singleAtomStateQmSingleAtomStatePostResponse = (singleAtomStateQmSingleAtomStatePostResponseSuccess | singleAtomStateQmSingleAtomStatePostResponseError)
+export type singleAtomStateV1QmSingleAtomStatePostResponse = (singleAtomStateV1QmSingleAtomStatePostResponseSuccess | singleAtomStateV1QmSingleAtomStatePostResponseError)
 
-export const getSingleAtomStateQmSingleAtomStatePostUrl = () => {
+export const getSingleAtomStateV1QmSingleAtomStatePostUrl = () => {
 
 
   
 
-  return `/qm/single-atom-state`
+  return `/v1/qm/single-atom-state`
 }
 
-export const singleAtomStateQmSingleAtomStatePost = async (singleAtomStateRequest: SingleAtomStateRequest, options?: RequestInit): Promise<singleAtomStateQmSingleAtomStatePostResponse> => {
+export const singleAtomStateV1QmSingleAtomStatePost = async (singleAtomStateRequest: SingleAtomStateRequest, options?: RequestInit): Promise<singleAtomStateV1QmSingleAtomStatePostResponse> => {
   
-  return customFetch<singleAtomStateQmSingleAtomStatePostResponse>(getSingleAtomStateQmSingleAtomStatePostUrl(),
+  return customFetch<singleAtomStateV1QmSingleAtomStatePostResponse>(getSingleAtomStateV1QmSingleAtomStatePostUrl(),
   {      
     ...options,
     method: 'POST',
@@ -174,36 +174,36 @@ probabilities are exact; `n_draws` additionally samples that distribution
 and reports how many draws landed on each outcome.
  * @summary Discrete Measurement
  */
-export type discreteMeasurementQmDiscreteMeasurementPostResponse200 = {
+export type discreteMeasurementV1QmDiscreteMeasurementPostResponse200 = {
   data: MeasurementResponse
   status: 200
 }
 
-export type discreteMeasurementQmDiscreteMeasurementPostResponse422 = {
+export type discreteMeasurementV1QmDiscreteMeasurementPostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type discreteMeasurementQmDiscreteMeasurementPostResponseSuccess = (discreteMeasurementQmDiscreteMeasurementPostResponse200) & {
+export type discreteMeasurementV1QmDiscreteMeasurementPostResponseSuccess = (discreteMeasurementV1QmDiscreteMeasurementPostResponse200) & {
   headers: Headers;
 };
-export type discreteMeasurementQmDiscreteMeasurementPostResponseError = (discreteMeasurementQmDiscreteMeasurementPostResponse422) & {
+export type discreteMeasurementV1QmDiscreteMeasurementPostResponseError = (discreteMeasurementV1QmDiscreteMeasurementPostResponse422) & {
   headers: Headers;
 };
 
-export type discreteMeasurementQmDiscreteMeasurementPostResponse = (discreteMeasurementQmDiscreteMeasurementPostResponseSuccess | discreteMeasurementQmDiscreteMeasurementPostResponseError)
+export type discreteMeasurementV1QmDiscreteMeasurementPostResponse = (discreteMeasurementV1QmDiscreteMeasurementPostResponseSuccess | discreteMeasurementV1QmDiscreteMeasurementPostResponseError)
 
-export const getDiscreteMeasurementQmDiscreteMeasurementPostUrl = () => {
+export const getDiscreteMeasurementV1QmDiscreteMeasurementPostUrl = () => {
 
 
   
 
-  return `/qm/discrete-measurement`
+  return `/v1/qm/discrete-measurement`
 }
 
-export const discreteMeasurementQmDiscreteMeasurementPost = async (measurementRequest: MeasurementRequest, options?: RequestInit): Promise<discreteMeasurementQmDiscreteMeasurementPostResponse> => {
+export const discreteMeasurementV1QmDiscreteMeasurementPost = async (measurementRequest: MeasurementRequest, options?: RequestInit): Promise<discreteMeasurementV1QmDiscreteMeasurementPostResponse> => {
   
-  return customFetch<discreteMeasurementQmDiscreteMeasurementPostResponse>(getDiscreteMeasurementQmDiscreteMeasurementPostUrl(),
+  return customFetch<discreteMeasurementV1QmDiscreteMeasurementPostResponse>(getDiscreteMeasurementV1QmDiscreteMeasurementPostUrl(),
   {      
     ...options,
     method: 'POST',
@@ -227,36 +227,36 @@ all-ones vector that is the sum of the amplitudes, which is what adding
 the individual phasors up gives.
  * @summary Discrete Evolution
  */
-export type discreteEvolutionQmDiscreteEvolutionPostResponse200 = {
+export type discreteEvolutionV1QmDiscreteEvolutionPostResponse200 = {
   data: DiscreteEvolutionResponse
   status: 200
 }
 
-export type discreteEvolutionQmDiscreteEvolutionPostResponse422 = {
+export type discreteEvolutionV1QmDiscreteEvolutionPostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type discreteEvolutionQmDiscreteEvolutionPostResponseSuccess = (discreteEvolutionQmDiscreteEvolutionPostResponse200) & {
+export type discreteEvolutionV1QmDiscreteEvolutionPostResponseSuccess = (discreteEvolutionV1QmDiscreteEvolutionPostResponse200) & {
   headers: Headers;
 };
-export type discreteEvolutionQmDiscreteEvolutionPostResponseError = (discreteEvolutionQmDiscreteEvolutionPostResponse422) & {
+export type discreteEvolutionV1QmDiscreteEvolutionPostResponseError = (discreteEvolutionV1QmDiscreteEvolutionPostResponse422) & {
   headers: Headers;
 };
 
-export type discreteEvolutionQmDiscreteEvolutionPostResponse = (discreteEvolutionQmDiscreteEvolutionPostResponseSuccess | discreteEvolutionQmDiscreteEvolutionPostResponseError)
+export type discreteEvolutionV1QmDiscreteEvolutionPostResponse = (discreteEvolutionV1QmDiscreteEvolutionPostResponseSuccess | discreteEvolutionV1QmDiscreteEvolutionPostResponseError)
 
-export const getDiscreteEvolutionQmDiscreteEvolutionPostUrl = () => {
+export const getDiscreteEvolutionV1QmDiscreteEvolutionPostUrl = () => {
 
 
   
 
-  return `/qm/discrete-evolution`
+  return `/v1/qm/discrete-evolution`
 }
 
-export const discreteEvolutionQmDiscreteEvolutionPost = async (discreteEvolutionRequest: DiscreteEvolutionRequest, options?: RequestInit): Promise<discreteEvolutionQmDiscreteEvolutionPostResponse> => {
+export const discreteEvolutionV1QmDiscreteEvolutionPost = async (discreteEvolutionRequest: DiscreteEvolutionRequest, options?: RequestInit): Promise<discreteEvolutionV1QmDiscreteEvolutionPostResponse> => {
   
-  return customFetch<discreteEvolutionQmDiscreteEvolutionPostResponse>(getDiscreteEvolutionQmDiscreteEvolutionPostUrl(),
+  return customFetch<discreteEvolutionV1QmDiscreteEvolutionPostResponse>(getDiscreteEvolutionV1QmDiscreteEvolutionPostUrl(),
   {      
     ...options,
     method: 'POST',
@@ -277,36 +277,36 @@ theorem, the force being linear); anywhere else the gap between them is
 the part of the motion that has no classical counterpart.
  * @summary Trajectory
  */
-export type trajectoryQmTrajectoryPostResponse200 = {
+export type trajectoryV1QmTrajectoryPostResponse200 = {
   data: TrajectoryResponse
   status: 200
 }
 
-export type trajectoryQmTrajectoryPostResponse422 = {
+export type trajectoryV1QmTrajectoryPostResponse422 = {
   data: HTTPValidationError
   status: 422
 }
     
-export type trajectoryQmTrajectoryPostResponseSuccess = (trajectoryQmTrajectoryPostResponse200) & {
+export type trajectoryV1QmTrajectoryPostResponseSuccess = (trajectoryV1QmTrajectoryPostResponse200) & {
   headers: Headers;
 };
-export type trajectoryQmTrajectoryPostResponseError = (trajectoryQmTrajectoryPostResponse422) & {
+export type trajectoryV1QmTrajectoryPostResponseError = (trajectoryV1QmTrajectoryPostResponse422) & {
   headers: Headers;
 };
 
-export type trajectoryQmTrajectoryPostResponse = (trajectoryQmTrajectoryPostResponseSuccess | trajectoryQmTrajectoryPostResponseError)
+export type trajectoryV1QmTrajectoryPostResponse = (trajectoryV1QmTrajectoryPostResponseSuccess | trajectoryV1QmTrajectoryPostResponseError)
 
-export const getTrajectoryQmTrajectoryPostUrl = () => {
+export const getTrajectoryV1QmTrajectoryPostUrl = () => {
 
 
   
 
-  return `/qm/trajectory`
+  return `/v1/qm/trajectory`
 }
 
-export const trajectoryQmTrajectoryPost = async (trajectoryRequest: TrajectoryRequest, options?: RequestInit): Promise<trajectoryQmTrajectoryPostResponse> => {
+export const trajectoryV1QmTrajectoryPost = async (trajectoryRequest: TrajectoryRequest, options?: RequestInit): Promise<trajectoryV1QmTrajectoryPostResponse> => {
   
-  return customFetch<trajectoryQmTrajectoryPostResponse>(getTrajectoryQmTrajectoryPostUrl(),
+  return customFetch<trajectoryV1QmTrajectoryPostResponse>(getTrajectoryV1QmTrajectoryPostUrl(),
   {      
     ...options,
     method: 'POST',

@@ -14,8 +14,8 @@ import {
 } from "react";
 
 import {
-  singleAtomStateQmSingleAtomStatePost,
-  type singleAtomStateQmSingleAtomStatePostResponse,
+  singleAtomStateV1QmSingleAtomStatePost,
+  type singleAtomStateV1QmSingleAtomStatePostResponse,
 } from "@/lib/api/quantum-mechanics/quantum-mechanics";
 import type {
   SingleAtomStateRequest,
@@ -397,8 +397,8 @@ function useSingleAtomState(request: SingleAtomStateRequest) {
     setError(null);
     const body = JSON.parse(requestKey) as SingleAtomStateRequest;
 
-    singleAtomStateQmSingleAtomStatePost(body, { signal: controller.signal })
-      .then((res: singleAtomStateQmSingleAtomStatePostResponse) => {
+    singleAtomStateV1QmSingleAtomStatePost(body, { signal: controller.signal })
+      .then((res: singleAtomStateV1QmSingleAtomStatePostResponse) => {
         if (controller.signal.aborted) return;
         if (res.status === 200) {
           setData(res.data as SingleAtomStateResponse);

@@ -4,8 +4,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
-  discreteMeasurementQmDiscreteMeasurementPost,
-  type discreteMeasurementQmDiscreteMeasurementPostResponse,
+  discreteMeasurementV1QmDiscreteMeasurementPost,
+  type discreteMeasurementV1QmDiscreteMeasurementPostResponse,
 } from "@/lib/api/quantum-mechanics/quantum-mechanics";
 import type {
   ComplexMatrixSchema,
@@ -38,8 +38,8 @@ function stateForTheta(thetaDeg: number): ComplexVectorSchema {
 }
 
 function measure(body: MeasurementRequest) {
-  return discreteMeasurementQmDiscreteMeasurementPost(body).then(
-    (res: discreteMeasurementQmDiscreteMeasurementPostResponse) => {
+  return discreteMeasurementV1QmDiscreteMeasurementPost(body).then(
+    (res: discreteMeasurementV1QmDiscreteMeasurementPostResponse) => {
       if (res.status !== 200) {
         throw new Error(
           `API returned ${res.status}: ${JSON.stringify(res.data)}`,

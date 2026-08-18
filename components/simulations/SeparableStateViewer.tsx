@@ -281,7 +281,7 @@ function useSeparableState({
     const ticket = ++latest.current;
     setLoading(true);
     customFetch<{ data: SeparableStateResponse; status: number }>(
-      "/qm/separable-state",
+      "/v1/qm/separable-state",
       {
         method: "POST",
         headers: { "content-type": "application/json" },

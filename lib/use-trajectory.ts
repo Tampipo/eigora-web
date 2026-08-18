@@ -6,8 +6,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import {
-  trajectoryQmTrajectoryPost,
-  type trajectoryQmTrajectoryPostResponse,
+  trajectoryV1QmTrajectoryPost,
+  type trajectoryV1QmTrajectoryPostResponse,
 } from "@/lib/api/quantum-mechanics/quantum-mechanics";
 import type {
   GridSchema,
@@ -72,8 +72,8 @@ export function useTrajectory(args: UseTrajectoryArgs) {
       setLoading(true);
       setError(null);
 
-      trajectoryQmTrajectoryPost(JSON.parse(key))
-        .then((res: trajectoryQmTrajectoryPostResponse) => {
+      trajectoryV1QmTrajectoryPost(JSON.parse(key))
+        .then((res: trajectoryV1QmTrajectoryPostResponse) => {
           if (!alive.current) return;
           if (res.status === 200) {
             setData(res.data as TrajectoryResponse);
