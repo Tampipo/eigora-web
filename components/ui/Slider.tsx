@@ -7,7 +7,7 @@ import { useId, type ReactNode } from "react";
 
 export interface SliderProps {
   label: ReactNode;
-  hint?: string;
+  hint?: ReactNode;
   value: number;
   onChange: (value: number) => void;
   min: number;
@@ -43,7 +43,9 @@ export function Slider({
         >
           {label}
           {hint && (
-            <span className="text-[10px] font-normal text-muted">{hint}</span>
+            <span className="slider-hint text-[11px] font-normal text-muted">
+              {hint}
+            </span>
           )}
         </label>
         <span className="font-mono text-[11px] tabular-nums text-muted">

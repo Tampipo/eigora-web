@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -30,7 +30,7 @@ export interface DegeneracyLatticeProps {
   /** Initial energy in units of pi^2 / 2 L_x^2. */
   energy?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function DegeneracyLattice({
@@ -122,7 +122,7 @@ export function DegeneracyLattice({
           <div className="space-y-3.5">
             <Slider
               label={<Tex>{`r`}</Tex>}
-              hint="width ratio Lx/Ly"
+              hint={<Tex>{`\\text{width ratio } L_x/L_y`}</Tex>}
               value={ratio}
               onChange={setRatio}
               min={0.25}
@@ -131,7 +131,7 @@ export function DegeneracyLattice({
             />
             <Slider
               label={<Tex>{`E`}</Tex>}
-              hint="in units of π²/2Lx²"
+              hint={<Tex>{`\\text{in units of } \\pi^2/2L_x^2`}</Tex>}
               value={energy}
               onChange={setEnergy}
               min={1}

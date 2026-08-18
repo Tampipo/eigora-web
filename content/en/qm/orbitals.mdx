@@ -20,8 +20,20 @@ $$
 
 involves an associated Laguerre polynomial, while $Y_l^m$ is the familiar spherical harmonic that gives each orbital its characteristic lobed shape.
 
-<OrbitalViewer Z={1} n={2} l={1} m={0} caption="Real part of ψ for a hydrogen-like orbital — blue where ψ > 0, red where ψ < 0. Drag to rotate, scroll to zoom." />
+<OrbitalViewer
+  Z={1}
+  n={2}
+  l={1}
+  m={0}
+  caption={
+    <>
+      Real part of <Tex>{`\\psi`}</Tex> for a hydrogen-like orbital — blue
+      where <Tex>{`\\psi > 0`}</Tex>, red where <Tex>{`\\psi < 0`}</Tex>. Drag
+      to rotate, scroll to zoom.
+    </>
+  }
+/>
 
 ### Reading the shape
 
-The rendered surfaces enclose the region where $|\psi_{nlm}|$ exceeds a chosen fraction of its peak value — the "iso level" slider — colored by the *sign* of $\psi_{nlm}$ itself rather than by $|\psi_{nlm}|^2$: blue where the wavefunction is positive, red where it is negative. The boundary between the two colors is exactly a node, a surface where $\psi_{nlm} = 0$. Push $n$ up to see the number of radial nodes grow, each one another red/blue boundary along the radius; push $l$ up at fixed $n$ to watch the shape flatten from a sphere ($s$) into the familiar two-toned dumbbell ($p$) and four-lobed cloverleaf ($d$); sweep $m$ to see the lobes rotate around the $z$-axis, the axis along which angular momentum is quantised.
+The rendered surfaces enclose the region where $|\psi_{nlm}|$ exceeds a chosen fraction of its peak value colored by the *sign* of $\psi_{nlm}$ itself rather than by $|\psi_{nlm}|^2$: blue where the wavefunction is positive, red where it is negative. The boundary between the two colors is exactly a node, a surface where $\psi_{nlm} = 0$. Push $n$ up to see the number of radial nodes grow, each one another red/blue boundary along the radius; push $l$ up at fixed $n$ to watch the shape flatten from a sphere ($s$) into the familiar two-toned dumbbell ($p$) and four-lobed cloverleaf ($d$); sweep $m$ to see the lobes rotate around the $z$-axis, the axis along which angular momentum is quantised.

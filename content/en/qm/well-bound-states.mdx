@@ -39,7 +39,16 @@ A bound state is an intersection. Drag $R$ below and watch the circle grow throu
 
 <FiniteWellGraphical
   radius={5}
-  caption="The matching conditions (solid curves) against the circle X² + Y² = R². The curves are the prediction; the dots are states returned by the numerical eigensolver, placed at X = ka and Y = βa from their solved energies. Blue branches are even, orange odd — they alternate, each leaving the axis at X = nπ/2."
+  caption={
+    <>
+      The matching conditions (solid curves) against the circle{" "}
+      <Tex>{`X^2 + Y^2 = R^2`}</Tex>. The curves are the prediction; the dots
+      are states returned by the numerical eigensolver, placed at{" "}
+      <Tex>{`X = ka`}</Tex> and <Tex>{`Y = \\beta a`}</Tex> from their solved
+      energies. Blue branches are even, orange odd — they alternate, each
+      leaving the axis at <Tex>{`X = n\\pi/2`}</Tex>.
+    </>
+  }
 />
 
 ### Why the count is what it is
@@ -93,7 +102,15 @@ $$
 
 <InfiniteLeftWellStates
   radius={5}
-  caption="The bound states of the well closed by an infinite wall at x = 0, from the numerical solver. They are exactly the odd states of the symmetric well: each vanishes at the wall, the hatched region is forbidden to all of them, and below R = π/2 none is left."
+  caption={
+    <>
+      The bound states of the well closed by an infinite wall at{" "}
+      <Tex>{`x = 0`}</Tex>, from the numerical solver. They are exactly the
+      odd states of the symmetric well: each vanishes at the wall, the
+      hatched region is forbidden to all of them, and below{" "}
+      <Tex>{`R = \\pi/2`}</Tex> none is left.
+    </>
+  }
 />
 
 Drag $R$ below $\pi/2$ and the figure empties out — the well holds nothing. The vertical line at $x = a$ marks the one open edge: that is the only side the states can leak from, and the only side they do.

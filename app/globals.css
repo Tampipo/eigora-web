@@ -217,6 +217,13 @@
 .slider-label .katex .mrel {
   color: inherit;
 }
+/* The hint sits in a smaller (11px) type context than the label itself, so
+   the 0.95em above would compound into an illegibly small formula — pin it
+   back up relative to the hint's own size instead. */
+.slider-label .slider-hint .katex {
+  font-size: 1.05em;
+  line-height: 1;
+}
 
 /* ── Scrollbars ───────────────────────────────────────────────────────── */
 

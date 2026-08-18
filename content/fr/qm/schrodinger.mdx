@@ -38,7 +38,19 @@ Rien n'oblige cependant $|A|$ à rester petit. Si les énergies sont commensurab
 
 Notons enfin que les phases de départ $\arg c_n(0)$ ont disparu du calcul. Ce n'est pas un oubli : chacune apparaît une fois dans le bra et une fois dans le ket, conjuguée, et se simplifie. $A$ compare l'état à son propre point de départ — décaler les phases initiales décale aussi la référence. C'est visible sur la figure : tourner un argument déforme la somme $\sum_n c_n(t)$, qui additionne les flèches telles qu'elles sont dessinées, et ne touche absolument pas à $A$. La contrepartie est que la somme dépend, elle, de la convention de phase choisie pour chaque $|\phi_n\rangle$ — changer $|\phi_3\rangle$ en $-|\phi_3\rangle$ la déplace sans qu'aucune physique n'ait bougé. Les deux courbes disent quelque chose de vrai ; une seule des deux est une quantité mesurable.
 
-<SuperpositionPhases caption="Cinq niveaux, cinq coefficients. Chaque flèche tourne à sa propre vitesse Eₙ/ℏ sans jamais changer de longueur — les probabilités |cₙ|² sont des constantes du mouvement. Dessous, deux façons de résumer les cinq : Σcₙ(t) additionne les flèches telles quelles, et A(t) compare l'état à son point de départ. Déplacez un slider d'argument — la première bouge, la seconde non." />
+<SuperpositionPhases
+  caption={
+    <>
+      Cinq niveaux, cinq coefficients. Chaque flèche tourne à sa propre
+      vitesse <Tex>{`E_n/\\hbar`}</Tex> sans jamais changer de longueur — les
+      probabilités <Tex>{`|c_n|^2`}</Tex> sont des constantes du mouvement.
+      Dessous, deux façons de résumer les cinq :{" "}
+      <Tex>{`\\Sigma c_n(t)`}</Tex> additionne les flèches telles quelles, et{" "}
+      <Tex>{`A(t)`}</Tex> compare l'état à son point de départ. Déplacez un
+      slider d'argument — la première bouge, la seconde non.
+    </>
+  }
+/>
 
 Ce résultat montre qu'il suffit de résoudre l'équation aux valeurs propres,
 

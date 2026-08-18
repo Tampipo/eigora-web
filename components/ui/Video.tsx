@@ -1,13 +1,15 @@
 // Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import type { ReactNode } from "react";
+
 export function Video({
   src,
   caption,
   poster,
 }: {
   src: string;
-  caption?: string;
+  caption?: ReactNode;
   poster?: string;
 }) {
   return (

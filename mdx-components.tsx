@@ -14,6 +14,7 @@ import { SeparableStateViewer } from "@/components/simulations/SeparableStateVie
 import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
 import { SuperpositionPhases } from "@/components/simulations/SuperpositionPhases";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
+import { Tex } from "@/components/ui/Tex";
 import { Video } from "@/components/ui/Video";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -31,6 +32,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SpinMeasurement,
     SuperpositionPhases,
     FormulaBlock,
+    Tex,
     Video,
   };
 }

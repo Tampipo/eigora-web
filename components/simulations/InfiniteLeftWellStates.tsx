@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -50,7 +50,7 @@ export interface InfiniteLeftWellStatesProps {
   radius?: number;
   rMax?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function InfiniteLeftWellStates({
@@ -222,7 +222,7 @@ export function InfiniteLeftWellStates({
         <div className="border-t border-border p-4 lg:border-l lg:border-t-0">
           <Slider
             label={<Tex>{`R`}</Tex>}
-            hint="well radius √(2mV₀a²)/ℏ"
+            hint={<Tex>{`R = \\sqrt{2mV_0a^2}/\\hbar`}</Tex>}
             value={R}
             onChange={setR}
             min={0.2}
@@ -231,11 +231,16 @@ export function InfiniteLeftWellStates({
           />
 
           <div className="mt-4 space-y-1.5 border-t border-border pt-3 text-[11px] text-muted">
-            <LegendRow color={WALL_COLOR} label="V(x)" note="∞ at x=0" />
-            <LegendRow color={STATE_COLOR} label="ψₙ" note="sin inside" />
+            <LegendRow
+              color={WALL_COLOR}
+              label={<Tex>{`V(x)`}</Tex>}
+              note={<Tex>{`\\infty \\text{ at } x=0`}</Tex>}
+            />
+            <LegendRow color={STATE_COLOR} label={<Tex>{`\\psi_n`}</Tex>} note="sin inside" />
             <div className="pt-1 text-[10.5px] leading-relaxed">
-              The wall forces ψ(0) = 0, so only the odd states of the symmetric
-              well survive — and none at all below R = π/2.
+              The wall forces <Tex>{`\\psi(0) = 0`}</Tex>, so only the odd
+              states of the symmetric well survive — and none at all below{" "}
+              <Tex>{`R = \\pi/2`}</Tex>.
             </div>
           </div>
 
@@ -243,8 +248,12 @@ export function InfiniteLeftWellStates({
             <table className="w-full font-mono text-[10.5px] tabular-nums">
               <thead>
                 <tr className="text-muted">
-                  <th className="pb-1 text-left font-normal">n</th>
-                  <th className="pb-1 text-right font-normal">E/V₀</th>
+                  <th className="pb-1 text-left font-normal">
+                    <Tex>{`n`}</Tex>
+                  </th>
+                  <th className="pb-1 text-right font-normal">
+                    <Tex>{`E/V_0`}</Tex>
+                  </th>
                   <th className="pb-1 text-right font-normal">out</th>
                 </tr>
               </thead>
@@ -324,8 +333,8 @@ function LegendRow({
   dashed,
 }: {
   color: string;
-  label: string;
-  note?: string;
+  label: ReactNode;
+  note?: ReactNode;
   dashed?: boolean;
 }) {
   return (

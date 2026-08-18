@@ -38,7 +38,19 @@ Nothing forces $|A|$ to stay small, though. If the energies are commensurate the
 
 Notice, finally, that the starting phases $\arg c_n(0)$ have dropped out of the calculation. That is no oversight: each appears once in the ket and once, conjugated, in the bra, and cancels. $A$ measures the state against its own starting point — shifting the initial phases shifts the reference with them. The figure makes it visible: turning an argument reshapes the sum $\sum_n c_n(t)$, which adds the arrows exactly as drawn, and leaves $A$ untouched. The price is that the sum depends on the phase convention chosen for each $|\phi_n\rangle$ — replacing $|\phi_3\rangle$ by $-|\phi_3\rangle$ moves it without any physics having changed. Both curves say something true; only one of them is a measurable quantity.
 
-<SuperpositionPhases caption="Five levels, five coefficients. Each arrow turns at its own rate Eₙ/ℏ and never changes length — the probabilities |cₙ|² are constants of the motion. Below them, two ways of collapsing the five into one: Σcₙ(t) adds the arrows as they are drawn, and A(t) compares the state to where it started. Move a phase slider — the first responds, the second cannot." />
+<SuperpositionPhases
+  caption={
+    <>
+      Five levels, five coefficients. Each arrow turns at its own rate{" "}
+      <Tex>{`E_n/\\hbar`}</Tex> and never changes length — the probabilities{" "}
+      <Tex>{`|c_n|^2`}</Tex> are constants of the motion. Below them, two ways
+      of collapsing the five into one: <Tex>{`\\Sigma c_n(t)`}</Tex> adds the
+      arrows as they are drawn, and <Tex>{`A(t)`}</Tex> compares the state to
+      where it started. Move a phase slider — the first responds, the second
+      cannot.
+    </>
+  }
+/>
 
 This result shows that it is enough to solve the eigenvalue equation,
 

@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import type {
   GridSchema,
@@ -32,7 +32,7 @@ export interface WavepacketEvolutionProps {
   nFrames?: number;
   grid?: GridSchema;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 const SPEED_STOPS = [0.25, 0.5, 1, 2, 4] as const;
@@ -359,38 +359,41 @@ export function WavepacketEvolution({
             </div>
 
             <div className="flex flex-wrap items-center gap-2 font-mono tabular-nums">
-              <span>
-                t = <span className="text-foreground">{tNow.toFixed(2)}</span>
+              <span className="inline-flex items-baseline gap-1">
+                <Tex>{`t`}</Tex> = <span className="text-foreground">{tNow.toFixed(2)}</span>
               </span>
               {traj && (
                 <>
                   <span className="text-border">·</span>
-                  <span>
-                    E = <span className="text-foreground">{traj.energy.toFixed(3)}</span>
+                  <span className="inline-flex items-baseline gap-1">
+                    <Tex>{`E`}</Tex> ={" "}
+                    <span className="text-foreground">{traj.energy.toFixed(3)}</span>
                   </span>
                 </>
               )}
               {typeof spread === "number" && (
                 <>
                   <span className="text-border">·</span>
-                  <span>
-                    Δx = <span className="text-foreground">{spread.toFixed(3)}</span>
+                  <span className="inline-flex items-baseline gap-1">
+                    <Tex>{`\\Delta x`}</Tex> ={" "}
+                    <span className="text-foreground">{spread.toFixed(3)}</span>
                   </span>
                 </>
               )}
               {typeof spreadP === "number" && (
                 <>
                   <span className="text-border">·</span>
-                  <span>
-                    Δp = <span className="text-foreground">{spreadP.toFixed(3)}</span>
+                  <span className="inline-flex items-baseline gap-1">
+                    <Tex>{`\\Delta p`}</Tex> ={" "}
+                    <span className="text-foreground">{spreadP.toFixed(3)}</span>
                   </span>
                 </>
               )}
               {typeof product === "number" && (
                 <>
                   <span className="text-border">·</span>
-                  <span>
-                    ΔxΔp ={" "}
+                  <span className="inline-flex items-baseline gap-1">
+                    <Tex>{`\\Delta x\\,\\Delta p`}</Tex> ={" "}
                     <span className={product < 0.505 ? "text-accent" : "text-foreground"}>
                       {product.toFixed(3)}
                     </span>
@@ -465,11 +468,12 @@ export function WavepacketEvolution({
                 {isCoherent ? (
                   <>
                     <span className="font-medium">Coherent state.</span> Shape is
-                    preserved; ΔxΔp sits on ℏ/2.
+                    preserved; <Tex>{`\\Delta x\\,\\Delta p`}</Tex> sits on{" "}
+                    <Tex>{`\\hbar/2`}</Tex>.
                   </>
                 ) : (
                   <>
-                    Set σ = {coherent.toFixed(3)} for the{" "}
+                    Set <Tex>{`\\sigma`}</Tex> = {coherent.toFixed(3)} for the{" "}
                     <span className="font-medium">coherent state</span>
                   </>
                 )}
@@ -501,8 +505,9 @@ export function WavepacketEvolution({
       {leaking && (
         <p className="border-t border-border bg-red-500/5 px-4 py-2 text-xs text-red-400">
           The packet is reaching the edge of the solver grid ({(traj!.boundary_leakage * 100).toFixed(1)}
-          % of |ψ|²). The propagator is periodic, so these numbers are no longer
-          reliable — reduce t<sub>max</sub> or the starting energy.
+          % of <Tex>{`|\\psi|^2`}</Tex>). The propagator is periodic, so these
+          numbers are no longer reliable — reduce <Tex>{`t_{\\max}`}</Tex> or
+          the starting energy.
         </p>
       )}
 
@@ -527,9 +532,16 @@ export function WavepacketEvolution({
 function Legend() {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      <Key color="rgb(190 197 210)" label="V(x)" dashed />
-      <Key color="rgb(124 160 255)" label="|ψ(x,t)|², drawn on E" />
-      <Key color="rgb(255 200 120)" label="⟨x⟩(t)" />
+      <Key color="rgb(190 197 210)" label={<Tex>{`V(x)`}</Tex>} dashed />
+      <Key
+        color="rgb(124 160 255)"
+        label={
+          <>
+            <Tex>{`|\\psi(x,t)|^2`}</Tex>, drawn on <Tex>{`E`}</Tex>
+          </>
+        }
+      />
+      <Key color="rgb(255 200 120)" label={<Tex>{`\\langle x\\rangle(t)`}</Tex>} />
       <Key color="rgb(143 152 169)" label="classical" dashed />
     </div>
   );
@@ -541,7 +553,7 @@ function Key({
   dashed,
 }: {
   color: string;
-  label: string;
+  label: ReactNode;
   dashed?: boolean;
 }) {
   return (

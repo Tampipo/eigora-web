@@ -3,10 +3,11 @@
 // Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import type { GridSchema } from "@/lib/api/schemas";
 import type { Wavepacket } from "@/lib/ws";
+import { Tex } from "@/components/ui/Tex";
 import { useEvolveRun } from "@/lib/use-evolve-run";
 
 export interface BarrierScatteringProps {
@@ -17,7 +18,7 @@ export interface BarrierScatteringProps {
   nFrames?: number;
   grid?: GridSchema;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function BarrierScattering(props: BarrierScatteringProps) {
@@ -178,20 +179,20 @@ function BarrierScatteringRun({
       {(meanEnergyT !== null || predicted !== null) && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border px-4 py-2 text-xs text-muted">
           {meanEnergyT !== null && (
-            <span>
-              T(mean energy) ={" "}
+            <span className="inline-flex items-baseline gap-1">
+              <Tex>{`T(\\langle E\\rangle)`}</Tex> ={" "}
               <span className="font-mono text-foreground">{meanEnergyT.toFixed(3)}</span>
             </span>
           )}
           {predicted !== null && (
-            <span>
-              predicted (energy-averaged) ={" "}
+            <span className="inline-flex items-baseline gap-1">
+              <Tex>{`\\langle T\\rangle`}</Tex> (energy-averaged) ={" "}
               <span className="font-mono text-foreground">{predicted.toFixed(3)}</span>
             </span>
           )}
           {isFinished && fractions && (
-            <span>
-              measured ={" "}
+            <span className="inline-flex items-baseline gap-1">
+              <Tex>{`T`}</Tex> (measured) ={" "}
               <span className="font-mono text-foreground">
                 {fractions.transmitted.toFixed(3)}
               </span>

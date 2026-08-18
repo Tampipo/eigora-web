@@ -39,7 +39,17 @@ Un état lié est une intersection. Faites varier $R$ ci-dessous et regardez le 
 
 <FiniteWellGraphical
   radius={5}
-  caption="Les conditions de raccordement (courbes pleines) face au cercle X² + Y² = R². Les courbes sont la prédiction ; les points sont les états renvoyés par le solveur numérique, placés en X = ka et Y = βa à partir de leurs énergies résolues. Les branches bleues sont paires, les oranges impaires — elles alternent, chacune quittant l'axe en X = nπ/2."
+  caption={
+    <>
+      Les conditions de raccordement (courbes pleines) face au cercle{" "}
+      <Tex>{`X^2 + Y^2 = R^2`}</Tex>. Les courbes sont la prédiction ; les
+      points sont les états renvoyés par le solveur numérique, placés en{" "}
+      <Tex>{`X = ka`}</Tex> et <Tex>{`Y = \\beta a`}</Tex> à partir de leurs
+      énergies résolues. Les branches bleues sont paires, les oranges
+      impaires — elles alternent, chacune quittant l'axe en{" "}
+      <Tex>{`X = n\\pi/2`}</Tex>.
+    </>
+  }
 />
 
 ### D'où vient le compte
@@ -91,7 +101,15 @@ On représente ci-dessous les états liés du puits bordé à gauche. Le puits e
 
 <InfiniteLeftWellStates
   radius={5}
-  caption="Les états liés du puits fermé par une paroi infinie en x = 0, issus du solveur numérique. Ce sont exactement les états impairs du puits symétrique : chacun s'annule à la paroi, la région hachurée leur est interdite, et sous R = π/2 il n'en reste aucun."
+  caption={
+    <>
+      Les états liés du puits fermé par une paroi infinie en{" "}
+      <Tex>{`x = 0`}</Tex>, issus du solveur numérique. Ce sont exactement les
+      états impairs du puits symétrique : chacun s'annule à la paroi, la
+      région hachurée leur est interdite, et sous <Tex>{`R = \\pi/2`}</Tex> il
+      n'en reste aucun.
+    </>
+  }
 />
 
 Descendez $R$ sous $\pi/2$ et la figure se vide : le puits ne retient plus rien. Le trait vertical à $x = a$ marque le seul bord ouvert — c'est de ce côté-là, et de ce côté seulement, que les états fuient.

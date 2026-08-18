@@ -72,7 +72,13 @@ Leur portée dépasse le manuel. Un mode du champ électromagnétique *est* un o
   wavepacket={{ x0: 2.5, k0: 0.0, sigma: 0.7071 }}
   tMax={12.57}
   nFrames={120}
-  caption="Un état cohérent : déplacé de x₀ = 2,5 avec σ = 1/√2, sur deux périodes complètes. Écartez σ de 0,707 et le paquet se met à respirer."
+  caption={
+    <>
+      Un état cohérent : déplacé de <Tex>{`x_0 = 2{,}5`}</Tex> avec{" "}
+      <Tex>{`\\sigma = 1/\\sqrt{2}`}</Tex>, sur deux périodes complètes.
+      Écartez <Tex>{`\\sigma`}</Tex> de 0,707 et le paquet se met à respirer.
+    </>
+  }
 />
 
 Tout ceci est propre à la parabole. Les états cohérents existent parce que les niveaux sont équidistants ; dans un puits anharmonique les écarts de phase ne sont plus commensurables, les termes de la somme se désynchronisent, et le paquet s'étale sans jamais se reformer à l'identique. Là, l'écart entre $\langle x\rangle(t)$ et la trajectoire classique mesure exactement la part du mouvement qui n'a pas d'équivalent classique.

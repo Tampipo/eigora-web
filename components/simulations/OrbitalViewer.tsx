@@ -55,7 +55,7 @@ export interface OrbitalViewerProps {
   m?: number;
   resolution?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function OrbitalViewer({
@@ -162,8 +162,14 @@ export function OrbitalViewer({
           <p className="font-serif text-xl font-medium tracking-tight text-foreground">
             {label} orbital
           </p>
-          <p className="mt-0.5 font-mono text-xs text-muted">
-            n={dN} · l={dL} · m={dM} · Re(ψ)
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs text-muted">
+            <Tex>{`n = ${dN}`}</Tex>
+            <span>·</span>
+            <Tex>{`l = ${dL}`}</Tex>
+            <span>·</span>
+            <Tex>{`m = ${dM}`}</Tex>
+            <span>·</span>
+            <Tex>{`\\operatorname{Re}(\\psi)`}</Tex>
           </p>
         </div>
         <div className="hidden items-center gap-4 text-xs text-muted sm:flex">

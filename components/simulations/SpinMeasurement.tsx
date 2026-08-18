@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState, type ReactNode } from "react";
 
 import { Tex } from "@/components/ui/Tex";
 import { useSpinMeasurement } from "@/lib/use-spin-measurement";
@@ -28,7 +28,7 @@ export interface SpinMeasurementProps {
   theta?: number;
   /** Shots per pack. */
   shots?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function SpinMeasurement({
@@ -152,8 +152,12 @@ export function SpinMeasurement({
               strokeWidth={1}
             />
 
-            <PoleLabel x={CENTER} y={CENTER - RADIUS - 22} text="|u⟩  +1" />
-            <PoleLabel x={CENTER} y={CENTER + RADIUS + 30} text="|d⟩  −1" />
+            <PoleLabel x={CENTER} y={CENTER - RADIUS - 22}>
+              <Tex>{`|u\\rangle`}</Tex>&nbsp;&nbsp;+1
+            </PoleLabel>
+            <PoleLabel x={CENTER} y={CENTER + RADIUS + 30}>
+              <Tex>{`|d\\rangle`}</Tex>&nbsp;&nbsp;−1
+            </PoleLabel>
             <AxisLabel x={CENTER + RADIUS + 20} y={CENTER + 4} text="+x" />
             <AxisLabel x={CENTER - RADIUS - 20} y={CENTER + 4} text="−x" />
 
@@ -166,14 +170,16 @@ export function SpinMeasurement({
                 strokeWidth={1}
               />
             )}
-            <text
-              x={CENTER + (ARC_RADIUS + 14) * Math.sin(rad / 2)}
-              y={CENTER - (ARC_RADIUS + 14) * Math.cos(rad / 2) + 4}
-              textAnchor="middle"
-              className="fill-muted font-mono text-[11px]"
+            <foreignObject
+              x={CENTER + (ARC_RADIUS + 14) * Math.sin(rad / 2) - 10}
+              y={CENTER - (ARC_RADIUS + 14) * Math.cos(rad / 2) - 8}
+              width={20}
+              height={16}
             >
-              θ
-            </text>
+              <div className="flex h-full items-center justify-center text-[11px] text-muted">
+                <Tex>{`\\theta`}</Tex>
+              </div>
+            </foreignObject>
 
             <line
               x1={CENTER}
@@ -193,8 +199,8 @@ export function SpinMeasurement({
         <div className="space-y-4 border-t border-border p-4 lg:border-l lg:border-t-0">
           <div className="flex items-baseline justify-between">
             <span className="text-xs text-muted">Drag the arrow</span>
-            <span className="font-mono text-lg tabular-nums text-foreground">
-              θ = {theta}°
+            <span className="flex items-baseline gap-1 font-mono text-lg tabular-nums text-foreground">
+              <Tex>{`\\theta`}</Tex> = {theta}°
             </span>
           </div>
 
@@ -325,13 +331,20 @@ function Statistics({
   return (
     <dl className="space-y-1 font-mono text-[11px] tabular-nums text-muted">
       <Stat label="shots" value={String(total)} />
-      <Stat label="⟨σz⟩ measured" value={mean.toFixed(3)} />
-      <Stat label="cos θ" value={expected.toFixed(3)} />
+      <Stat
+        label={
+          <>
+            <Tex>{`\\langle\\sigma_z\\rangle`}</Tex> measured
+          </>
+        }
+        value={mean.toFixed(3)}
+      />
+      <Stat label={<Tex>{`\\cos\\theta`}</Tex>} value={expected.toFixed(3)} />
     </dl>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value }: { label: ReactNode; value: string }) {
   return (
     <div className="flex justify-between gap-2">
       <dt className="text-faint">{label}</dt>
@@ -340,16 +353,23 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function PoleLabel({ x, y, text }: { x: number; y: number; text: string }) {
+function PoleLabel({
+  x,
+  y,
+  children,
+}: {
+  x: number;
+  y: number;
+  children: ReactNode;
+}) {
+  const w = 70;
+  const h = 18;
   return (
-    <text
-      x={x}
-      y={y}
-      textAnchor="middle"
-      className="fill-muted font-mono text-[11px]"
-    >
-      {text}
-    </text>
+    <foreignObject x={x - w / 2} y={y - h / 2} width={w} height={h}>
+      <div className="flex h-full items-center justify-center whitespace-nowrap font-mono text-[11px] text-muted">
+        {children}
+      </div>
+    </foreignObject>
   );
 }
 

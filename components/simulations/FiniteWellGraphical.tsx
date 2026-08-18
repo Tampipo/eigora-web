@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -36,7 +36,7 @@ export interface FiniteWellGraphicalProps {
   radius?: number;
   rMax?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function FiniteWellGraphical({
@@ -159,7 +159,7 @@ export function FiniteWellGraphical({
         <div className="border-t border-border p-4 lg:border-l lg:border-t-0">
           <Slider
             label={<Tex>{`R`}</Tex>}
-            hint="well radius √(2mV₀a²)/ℏ"
+            hint={<Tex>{`R = \\sqrt{2mV_0a^2}/\\hbar`}</Tex>}
             value={R}
             onChange={setR}
             min={0.2}
@@ -168,9 +168,9 @@ export function FiniteWellGraphical({
           />
 
           <div className="mt-4 space-y-1.5 border-t border-border pt-3 text-[11px] text-muted">
-            <LegendRow color={EVEN_COLOR} label="Y = X tan X" note="even" />
-            <LegendRow color={ODD_COLOR} label="Y = −X cot X" note="odd" />
-            <LegendRow color={CIRCLE_COLOR} label="X² + Y² = R²" dashed />
+            <LegendRow color={EVEN_COLOR} label={<Tex>{`Y = X\\tan X`}</Tex>} note="even" />
+            <LegendRow color={ODD_COLOR} label={<Tex>{`Y = -X\\cot X`}</Tex>} note="odd" />
+            <LegendRow color={CIRCLE_COLOR} label={<Tex>{`X^2 + Y^2 = R^2`}</Tex>} dashed />
             <div className="pt-1 text-[10.5px] leading-relaxed">
               Curves are the matching condition; dots are the solved states.
             </div>
@@ -227,7 +227,7 @@ function LegendRow({
   dashed,
 }: {
   color: string;
-  label: string;
+  label: ReactNode;
   note?: string;
   dashed?: boolean;
 }) {
@@ -237,7 +237,7 @@ function LegendRow({
         className="inline-block h-0 w-4 shrink-0"
         style={{ borderTop: `2px ${dashed ? "dotted" : "solid"} ${color}` }}
       />
-      <span className="font-mono">{label}</span>
+      <span>{label}</span>
       {note && <span className="ml-auto">{note}</span>}
     </div>
   );

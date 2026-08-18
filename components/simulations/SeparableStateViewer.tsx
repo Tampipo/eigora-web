@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -40,7 +40,7 @@ export interface SeparableStateViewerProps {
   ratio?: number;
   points?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function SeparableStateViewer({
@@ -164,7 +164,7 @@ export function SeparableStateViewer({
           <div className="space-y-3.5">
             <Slider
               label={<Tex>{`n_1`}</Tex>}
-              hint="nodes across x"
+              hint={<Tex>{`\\text{nodes across } x`}</Tex>}
               value={n1}
               onChange={(v) => setN1(Math.round(v))}
               min={1}
@@ -174,7 +174,7 @@ export function SeparableStateViewer({
             />
             <Slider
               label={<Tex>{`n_2`}</Tex>}
-              hint="nodes across y"
+              hint={<Tex>{`\\text{nodes across } y`}</Tex>}
               value={n2}
               onChange={(v) => setN2(Math.round(v))}
               min={1}
@@ -184,7 +184,7 @@ export function SeparableStateViewer({
             />
             <Slider
               label={<Tex>{`r`}</Tex>}
-              hint="width ratio Lx/Ly"
+              hint={<Tex>{`\\text{width ratio } L_x/L_y`}</Tex>}
               value={ratio}
               onChange={setRatio}
               min={0.5}
@@ -196,13 +196,24 @@ export function SeparableStateViewer({
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-border bg-surface/40 px-4 py-2 text-xs text-muted">
-        <span>
-          {data
-            ? `${data.quantum_numbers.join(", ")} = ${data.label.join(", ")}` +
-              (data.degeneracy > 1
-                ? ` · ${data.degeneracy}-fold degenerate`
-                : " · non-degenerate")
-            : "—"}
+        <span className="inline-flex flex-wrap items-center gap-x-1">
+          {data ? (
+            <>
+              {data.quantum_numbers.map((qn, i) => (
+                <span key={qn} className="inline-flex items-center">
+                  <Tex>{`${qn} = ${data.label[i]}`}</Tex>
+                  {i < data.quantum_numbers.length - 1 ? "," : ""}
+                </span>
+              ))}
+              <span>
+                {data.degeneracy > 1
+                  ? `· ${data.degeneracy}-fold degenerate`
+                  : "· non-degenerate"}
+              </span>
+            </>
+          ) : (
+            "—"
+          )}
         </span>
         {data && (
           <span className="shrink-0 font-mono tabular-nums">

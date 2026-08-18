@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Tanguy Marsault - Eigora
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -60,7 +60,7 @@ export interface SuperpositionPhasesProps {
   phases?: number[];
   tMax?: number;
   nFrames?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function SuperpositionPhases({
@@ -228,7 +228,9 @@ export function SuperpositionPhases({
       <div className="border-b border-border p-4">
         <div className="mb-3 flex items-baseline justify-between">
           <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
-            ψ(0)
+            {/* normal-case: KaTeX's ψ is a real lowercase-psi glyph — the
+                inherited "uppercase" transform would flip it to Ψ. */}
+            <Tex className="normal-case">{`\\psi(0)`}</Tex>
           </p>
           <button
             type="button"
@@ -361,8 +363,10 @@ export function SuperpositionPhases({
         <Key color={RE_COLOR} label="Re" />
         <Key color={IM_COLOR} label="Im" dashed />
         <span className="text-faint">
-          Σ adds the arrows up; A(t) = ⟨ψ(0)|ψ(t)⟩ compares the state to its own
-          start — so turning an initial phase moves Σ and never A.
+          <Tex>{`\\Sigma`}</Tex> adds the arrows up;{" "}
+          <Tex>{`A(t) = \\langle\\psi(0)|\\psi(t)\\rangle`}</Tex> compares the
+          state to its own start — so turning an initial phase moves{" "}
+          <Tex>{`\\Sigma`}</Tex> and never <Tex>{`A`}</Tex>.
         </span>
       </div>
 

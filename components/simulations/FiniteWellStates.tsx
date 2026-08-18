@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { Slider } from "@/components/ui/Slider";
 import { Tex } from "@/components/ui/Tex";
@@ -36,7 +36,7 @@ export interface FiniteWellStatesProps {
   radius?: number;
   rMax?: number;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 export function FiniteWellStates({
@@ -174,7 +174,7 @@ export function FiniteWellStates({
         <div className="border-t border-border p-4 lg:border-l lg:border-t-0">
           <Slider
             label={<Tex>{`R`}</Tex>}
-            hint="well radius √(2mV₀a²)/ℏ"
+            hint={<Tex>{`R = \\sqrt{2mV_0a^2}/\\hbar`}</Tex>}
             value={R}
             onChange={setR}
             min={0.2}
@@ -191,8 +191,12 @@ export function FiniteWellStates({
             <table className="w-full font-mono text-[10.5px] tabular-nums">
               <thead>
                 <tr className="text-muted">
-                  <th className="pb-1 text-left font-normal">n</th>
-                  <th className="pb-1 text-right font-normal">E/V₀</th>
+                  <th className="pb-1 text-left font-normal">
+                    <Tex>{`n`}</Tex>
+                  </th>
+                  <th className="pb-1 text-right font-normal">
+                    <Tex>{`E/V_0`}</Tex>
+                  </th>
                   <th className="pb-1 text-right font-normal">out</th>
                 </tr>
               </thead>

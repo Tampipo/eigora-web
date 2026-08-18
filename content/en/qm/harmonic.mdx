@@ -72,7 +72,13 @@ They also escape the textbook. A single mode of the electromagnetic field *is* a
   wavepacket={{ x0: 2.5, k0: 0.0, sigma: 0.7071 }}
   tMax={12.57}
   nFrames={120}
-  caption="A coherent state: displaced by x₀ = 2.5 with σ = 1/√2, shown over two full periods. Move σ away from 0.707 and the packet starts to breathe."
+  caption={
+    <>
+      A coherent state: displaced by <Tex>{`x_0 = 2.5`}</Tex> with{" "}
+      <Tex>{`\\sigma = 1/\\sqrt{2}`}</Tex>, shown over two full periods. Move{" "}
+      <Tex>{`\\sigma`}</Tex> away from 0.707 and the packet starts to breathe.
+    </>
+  }
 />
 
 All of this is special to the parabola. Coherent states exist because the levels are evenly spaced; in an anharmonic well the phase differences are no longer commensurate, the terms of the sum drift out of step, and the packet spreads and never rigidly recurs. There, the gap between $\langle x\rangle(t)$ and the classical trajectory is exactly the part of the motion with no classical counterpart.

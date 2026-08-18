@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Annotations } from "plotly.js";
 
 import type {
@@ -26,7 +26,7 @@ export interface EigenstateViewerProps {
   nStates?: number;
   grid?: GridSchema;
   height?: number;
-  caption?: string;
+  caption?: ReactNode;
 }
 
 type DisplayMode = "psi" | "prob";
@@ -440,9 +440,9 @@ function ModeToggle({
   value: DisplayMode;
   onChange: (m: DisplayMode) => void;
 }) {
-  const options: Array<{ id: DisplayMode; label: string }> = [
-    { id: "psi", label: "ψₙ" },
-    { id: "prob", label: "|ψₙ|²" },
+  const options: Array<{ id: DisplayMode; label: ReactNode }> = [
+    { id: "psi", label: <Tex>{`\\psi_n`}</Tex> },
+    { id: "prob", label: <Tex>{`|\\psi_n|^2`}</Tex> },
   ];
   return (
     <div>
@@ -485,7 +485,7 @@ function EnergyList({ energies }: { energies: number[] }) {
               className="inline-block h-[2px] w-3 shrink-0 rounded-full"
               style={{ backgroundColor: stateColor(n, energies.length) }}
             />
-            <span className="text-muted">E{subscript(n)}</span>
+            <Tex className="text-muted">{`E_{${n}}`}</Tex>
             <span className="ml-auto text-foreground">{E.toFixed(3)}</span>
           </li>
         ))}
@@ -525,16 +525,17 @@ function Spinner() {
 function Legend({ mode }: { mode: DisplayMode }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      <LegendKey color="rgb(190 197 210)" label="V(x)" dashed />
+      <LegendKey color="rgb(190 197 210)" label={<Tex>{`V(x)`}</Tex>} dashed />
       <LegendKey
         gradient
         label={
-          mode === "psi"
-            ? "ψₙ(x), drawn on its level Eₙ"
-            : "|ψₙ(x)|², drawn on its level Eₙ"
+          <>
+            <Tex>{mode === "psi" ? `\\psi_n(x)` : `|\\psi_n(x)|^2`}</Tex>,
+            drawn on its level <Tex>{`E_n`}</Tex>
+          </>
         }
       />
-      <LegendKey color="rgb(255 200 120)" label="Eₙ" dashed />
+      <LegendKey color="rgb(255 200 120)" label={<Tex>{`E_n`}</Tex>} dashed />
     </div>
   );
 }
@@ -546,7 +547,7 @@ function LegendKey({
   gradient,
 }: {
   color?: string;
-  label: string;
+  label: ReactNode;
   dashed?: boolean;
   gradient?: boolean;
 }) {

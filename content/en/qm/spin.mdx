@@ -14,7 +14,14 @@ and conversely every $(\theta, \varphi)$ is a state. The correspondence runs bot
 
 <Video
   src="/videos/BlochSphere.mp4"
-  caption="The Bloch sphere. |u⟩ and |d⟩ are mutually exclusive outcomes, yet they sit at opposite poles rather than at right angles — 180° apart in space for states that are orthogonal in Hilbert space."
+  caption={
+    <>
+      The Bloch sphere. <Tex>{`|u\\rangle`}</Tex> and{" "}
+      <Tex>{`|d\\rangle`}</Tex> are mutually exclusive outcomes, yet they sit
+      at opposite poles rather than at right angles — 180° apart in space for
+      states that are orthogonal in Hilbert space.
+    </>
+  }
 />
 
 Note where $|u\rangle$ and $|d\rangle$ ended up. They are orthogonal — they exclude each other absolutely — and they sit **antipodal** on the sphere, not perpendicular. Angles in Hilbert space are half angles in real space, and that factor of two is the whole reason a half-angle appears in the formula above.
@@ -37,7 +44,14 @@ Send a single electron through a line of them, each measuring along its own axis
 
 <Video
   src="/videos/ConsecutiveMeasurements.mp4"
-  caption="One electron crossing four apparatuses. The blue arrow on each dial is the spin's direction, the yellow needle is the axis being measured, and θ is the angle between them — the same θ that appears in the algebra below each device."
+  caption={
+    <>
+      One electron crossing four apparatuses. The blue arrow on each dial is
+      the spin's direction, the yellow needle is the axis being measured, and{" "}
+      <Tex>{`\\theta`}</Tex> is the angle between them — the same{" "}
+      <Tex>{`\\theta`}</Tex> that appears in the algebra below each device.
+    </>
+  }
 />
 
 Read the dials in order: $+1$, $+1$, $-1$, $+1$.
@@ -54,7 +68,15 @@ $\langle \sigma_n \rangle = \cos\theta$ is a statement about an ensemble, not ab
 
 <Video
   src="/videos/ElectronFlux.mp4"
-  caption="Ninety electrons, each prepared fresh in |u⟩ and measured once at θ = 60°. Individual readings are only ever ±1; the running fraction settles on cos²(θ/2) = 0.75 and the mean on cos θ = 0.50."
+  caption={
+    <>
+      Ninety electrons, each prepared fresh in <Tex>{`|u\\rangle`}</Tex> and
+      measured once at <Tex>{`\\theta = 60^\\circ`}</Tex>. Individual readings are
+      only ever ±1; the running fraction settles on{" "}
+      <Tex>{`\\cos^2(\\theta/2) = 0.75`}</Tex> and the mean on{" "}
+      <Tex>{`\\cos\\theta = 0.50`}</Tex>.
+    </>
+  }
 />
 
 The re-preparation is the experiment, not stage dressing. Reuse the electron that just came out and it is already an eigenstate of $\sigma_n$: every subsequent press returns the same value, and the average runs to $\pm 1$ instead of $\cos\theta$.
@@ -72,5 +94,11 @@ Turn the arrow to set $\theta$, then draw shots a hundred at a time. The tick on
 <SpinMeasurement
   theta={60}
   shots={100}
-  caption="The x–z circle of the Bloch sphere. The blue arrow is the spin, the amber axis is the apparatus. Every shot returns +1 or −1 — never θ, never cos θ."
+  caption={
+    <>
+      The x–z circle of the Bloch sphere. The blue arrow is the spin, the
+      amber axis is the apparatus. Every shot returns +1 or −1 — never{" "}
+      <Tex>{`\\theta`}</Tex>, never <Tex>{`\\cos\\theta`}</Tex>.
+    </>
+  }
 />
