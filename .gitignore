@@ -20,6 +20,8 @@ yarn-error.log*
 .vscode/
 .idea/
 
+.direnv/
+
 next-env.d.ts
 
 # Uncomment if you prefer to regenerate the orval client on every build:
