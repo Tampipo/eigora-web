@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import {
-  discreteEvolutionQmDiscreteEvolutionPost,
-  type discreteEvolutionQmDiscreteEvolutionPostResponse,
+  discreteEvolutionV1QmDiscreteEvolutionPost,
+  type discreteEvolutionV1QmDiscreteEvolutionPostResponse,
 } from "@/lib/api/quantum-mechanics/quantum-mechanics";
 import type {
   DiscreteEvolutionRequest,
@@ -46,10 +46,10 @@ export function useDiscreteEvolution(request: DiscreteEvolutionRequest | null) {
     setLoading(true);
     setError(null);
 
-    discreteEvolutionQmDiscreteEvolutionPost(
+    discreteEvolutionV1QmDiscreteEvolutionPost(
       JSON.parse(key) as DiscreteEvolutionRequest,
     )
-      .then((res: discreteEvolutionQmDiscreteEvolutionPostResponse) => {
+      .then((res: discreteEvolutionV1QmDiscreteEvolutionPostResponse) => {
         if (!alive.current || generation.current !== mine) return;
         if (res.status !== 200) {
           throw new Error(

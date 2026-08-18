@@ -86,7 +86,7 @@ export function evolveWs(
   request: EvolveRequest,
   handlers: EvolveHandlers,
 ): EvolveSession {
-  const url = `${getWsBaseUrl()}/qm/evolve`;
+  const url = `${getWsBaseUrl()}/v1/qm/evolve`;
   const ws = new WebSocket(url);
   let closedByUs = false;
   let finished = false;
