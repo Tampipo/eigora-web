@@ -1,0 +1,80 @@
+## Wavefunctions
+
+The wavefunction $\psi(x)$ is often the single most important quantity in quantum mechanics. It carries all the information about the state of a particle, and its squared modulus $|\psi(x)|^2$ is the probability density of finding the particle at position $x$. How is it properly defined?
+
+### Decomposing in the eigenbasis of an arbitrary operator
+
+Take any operator $\hat A$ and diagonalise it: this gives an eigenbasis $| \psi_n \rangle$ with eigenvalues $a_n$. The state of the particle can be written as a superposition of these eigenstates:
+$$
+ | \psi \rangle = \sum_n c_n | \psi_n \rangle,
+$$
+where the coefficients $c_n$ are given by the inner product $c_n = \langle \psi_n | \psi \rangle$. This decomposition is particularly well suited to reading off the probability of measuring the value $a_n$ of the observable $\hat A$: it is simply $|c_n|^2$ (in the non-degenerate case).
+
+### The position operator
+
+The idea, then, is to build an operator that measures the position of a state and to decompose the state of the particle in its eigenbasis, following exactly the recipe above. One cannot, however, take $\hat A = \hat x$ directly: as we'll see, its eigenstates are not normalisable, and so are not physical states in the usual sense. The problem is regularised by cutting space into small intervals of size $\Delta$. Order the intervals and label them $I_n(\Delta)$. Define the position operator $\hat{x}^\Delta$ as follows: it acts on a state $\psi$ by projecting the wavefunction onto the interval $I_n(\Delta)$ and multiplying by the position $x_n$. Its eigenstates are denoted $| I_n(\Delta) \rangle$, and
+$$
+\hat{x}^\Delta | I_n(\Delta) \rangle = x_n | I_n(\Delta) \rangle.
+$$
+For these eigenstates to be physical, they are taken to have unit norm: $| I_n(\Delta) \rangle$ represents the particle spread uniformly over the interval, with associated function $1/\sqrt{\Delta}$ on $I_n(\Delta)$ and $0$ elsewhere — the factor $1/\sqrt{\Delta}$ is exactly what's needed for $\int_{I_n(\Delta)} \frac{1}{\Delta} \, dx = 1$.
+
+The state $| \psi \rangle$ can then be decomposed in this eigenbasis:
+$$
+| \psi \rangle = \sum_n c_n(\Delta) | I_n(\Delta) \rangle,
+$$
+where the coefficients $c_n(\Delta)$ — written with a $\Delta$ to distinguish them from the generic $c_n$ of the previous paragraph, of which they are just the particular case for the operator $\hat x^\Delta$ — are $c_n(\Delta) = \langle I_n(\Delta) | \psi \rangle$. Writing this inner product as an integral,
+$$
+c_n(\Delta) = \frac{1}{\sqrt{\Delta}} \int_{I_n(\Delta)} \psi(x) \, dx,
+$$
+shows that dividing once more by $\sqrt{\Delta}$ amounts to taking the average of $\psi$ over the interval. It only remains to let $\Delta$ tend to zero. By Riemann sums, this limit is well defined and gives the wavefunction $\psi(x)$:
+$$
+\psi(x) = \lim_{\Delta \to 0} \frac{c_n(\Delta)}{\sqrt{\Delta}} \quad \text{for } x \in I_n(\Delta).
+$$
+
+<PositionBins
+  caption={
+    <>
+      Space cut into intervals <Tex>{`I_n(\\Delta)`}</Tex>, refined finer and
+      finer. Each bar is the average of <Tex>{`\\psi`}</Tex> over its
+      interval, i.e. <Tex>{`c_n(\\Delta)/\\sqrt{\\Delta}`}</Tex> — as{" "}
+      <Tex>{`\\Delta \\to 0`}</Tex> the histogram merges into the curve.
+      Notice <Tex>{`\\psi`}</Tex> can be negative: only{" "}
+      <Tex>{`|\\psi|^2`}</Tex> is a probability density.
+    </>
+  }
+/>
+
+More simply, denote the limit of the states as $\Delta \to 0$ by $| x \rangle = \lim_{\Delta \to 0} | I_n(\Delta) \rangle$, giving
+$$
+\psi(x) = \langle x | \psi \rangle.
+$$
+The state decomposes as an integral over the eigenstates of the position operator:
+$$
+| \psi \rangle = \int dx \, \psi(x) | x \rangle.
+$$
+
+### Momentum
+
+The same procedure can be applied to momentum. Instead of the position operator, consider the momentum $\hat p$ of a state. The resulting basis is denoted $| p \rangle$. The state $| \psi \rangle$ can be decomposed in this basis:
+$$
+| \psi \rangle = \int dp \, \tilde{\psi}(p) | p \rangle,
+$$
+where $\tilde{\psi}(p) = \langle p | \psi \rangle$ is the wavefunction in momentum space.
+
+The states $| p \rangle$ must likewise be decomposable in the eigenbasis of the position operator, so
+$$
+| p \rangle = \int dx \, \langle x | p \rangle | x \rangle.
+$$
+These states are, in the position basis,
+$$
+\langle x | p \rangle = \frac{1}{\sqrt{2\pi\hbar}} \, e^{ipx/\hbar},
+$$
+plane waves, normalised in the distributional sense: $\langle p | p' \rangle = \delta(p - p')$. Inserting a decomposition on the position basis, $\tilde\psi(p)$ becomes
+$$
+\tilde\psi(p) = \langle p | \psi \rangle = \int dx \, \langle p | x \rangle \langle x | \psi \rangle = \frac{1}{\sqrt{2\pi\hbar}} \int dx \, e^{-ipx/\hbar} \, \psi(x):
+$$
+the momentum-space wavefunction is the Fourier transform of the position-space wavefunction.
+
+### The wavefunction of any operator
+
+In fact, there is no reason to stop at position and momentum. For any operator $\hat A$ with a continuous spectrum, one can define a wavefunction $\psi_A(a) = \langle a | \psi \rangle$ as the coefficients of the state $| \psi \rangle$ in the eigenbasis $| a \rangle$ of $\hat A$. The wavefunction is thus a general concept, one that depends on the operator chosen.

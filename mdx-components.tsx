@@ -10,6 +10,7 @@ import { FiniteWellStates } from "@/components/simulations/FiniteWellStates";
 import { InfiniteLeftWellStates } from "@/components/simulations/InfiniteLeftWellStates";
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
+import { PositionBins } from "@/components/simulations/PositionBins";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
 import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
 import { SuperpositionPhases } from "@/components/simulations/SuperpositionPhases";
@@ -28,6 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     InfiniteLeftWellStates,
     OrbitalViewer,
     DegeneracyLattice,
+    PositionBins,
     SeparableStateViewer,
     SpinMeasurement,
     SuperpositionPhases,

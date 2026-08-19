@@ -7,15 +7,19 @@
 // qm.modules.{slug}.{title,summary,tags} entry in messages/{locale}.json.
 // Suggested reading order: the equation itself first — schrodinger states the
 // postulate and shows that solving it reduces to an eigenvalue problem, which
-// is what every module after it then goes and solves. Then 1D bound states
-// (harmonic sets up eigenstates, superposition and wavepackets; the finite
-// well adds parity and counting), then the unbound counterpart (barrier reuses
-// those wavepackets), then more dimensions (well-2d introduces separability
-// and degeneracy, which orbitals builds straight on top of), and finally spin
-// — a different formalism, with no wavefunction and no Schrödinger equation,
-// so it stands apart.
+// is what every module after it then goes and solves. Then wavefunctions
+// defines psi(x) and its momentum-space counterpart as position/momentum-basis
+// coefficients of that same decomposition — a prerequisite for reading psi(x)
+// in every module that follows. Then 1D bound states (harmonic sets up
+// eigenstates, superposition and wavepackets; the finite well adds parity and
+// counting), then the unbound counterpart (barrier reuses those wavepackets),
+// then more dimensions (well-2d introduces separability and degeneracy, which
+// orbitals builds straight on top of), and finally spin — a different
+// formalism, with no wavefunction and no Schrödinger equation, so it stands
+// apart.
 export const QM_MODULES = [
   "schrodinger",
+  "wavefunctions",
   "harmonic",
   "well-bound-states",
   "barrier",

@@ -55,6 +55,11 @@
         "summary": "The evolution postulate, and why everything reduces to an eigenvalue problem.",
         "tags": "energy, superposition, dynamics"
       },
+      "wavefunctions": {
+        "title": "The wavefunction",
+        "summary": "What is the wavefunction? How do we define it in position and momentum space, and how do we interpret it?",
+        "tags": "wavefunction, probability"
+      },
       "harmonic": {
         "title": "Harmonic oscillator",
         "summary": "Quantised energy levels and the zero-point energy.",
