@@ -60,6 +60,11 @@
         "summary": "What is the wavefunction? How do we define it in position and momentum space, and how do we interpret it?",
         "tags": "wavefunction, probability"
       },
+      "measurement": {
+        "title": "Measurement",
+        "summary": "The measurement postulate: possible outcomes, the Born rule, wavefunction collapse — and why the operator has to be Hermitian.",
+        "tags": "measurement, probability, collapse"
+      },
       "harmonic": {
         "title": "Harmonic oscillator",
         "summary": "Quantised energy levels and the zero-point energy.",

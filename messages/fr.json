@@ -60,6 +60,11 @@
         "summary": "Qu'est-ce que la fonction d'onde ? Comment la définit-on dans l'espace des positions et des impulsions, et comment l'interprète-t-on ?",
         "tags": "fonction d'onde, probabilité"
       },
+      "measurement": {
+        "title": "La mesure",
+        "summary": "Le postulat de la mesure : résultats possibles, règle de Born, réduction du paquet d'onde — et pourquoi l'opérateur doit être hermitien.",
+        "tags": "mesure, probabilité, réduction"
+      },
       "harmonic": {
         "title": "Oscillateur harmonique",
         "summary": "Niveaux d'énergie quantifiés et énergie de point zéro.",

@@ -1,0 +1,47 @@
+## Measurement
+
+Measuring an observable does not reveal a value that already existed before the measurement: quantum mechanics postulates what happens, building on the eigenbasis decomposition seen earlier.
+
+### The postulate
+
+Let $\hat A$ be a Hermitian operator (an observable), with eigenbasis $| \psi_n \rangle$ and eigenvalues $a_n$, and let $| \psi \rangle = \sum_n c_n | \psi_n \rangle$ be the state of the particle, with $c_n = \langle \psi_n | \psi \rangle$. Measuring $\hat A$:
+
+- can only give one of the eigenvalues $a_n$;
+- gives the result $a_n$ with probability $|c_n|^2$ — the Born rule;
+- immediately projects the state onto $| \psi_n \rangle$: this is the collapse of the wavefunction.
+
+$$
+| \psi \rangle \xrightarrow{\ a_n\ } | \psi_n \rangle \qquad \text{with probability } |c_n|^2.
+$$
+
+Repeating the measurement on identically prepared systems therefore gives, on average,
+$$
+\langle \hat A \rangle = \sum_n a_n |c_n|^2 = \langle \psi | \hat A | \psi \rangle.
+$$
+
+### Why Hermitian
+
+None of this holds if $\hat A$ is not Hermitian. A Hermitian operator has two properties measurement relies on directly: its eigenvalues $a_n$ are real — a measurement outcome is a real number, not a complex one — and its eigenstates form a complete orthonormal basis, which guarantees $\sum_n |c_n|^2 = 1$: the probabilities of the different outcomes sum to 1, as they must. A non-Hermitian operator offers neither guarantee: its eigenvalues can be complex, and its eigenstates generally form neither an orthogonal basis, nor even a basis at all.
+
+### The degenerate case
+
+If several eigenstates $| \psi_n^{(1)} \rangle, \dots, | \psi_n^{(d_n)} \rangle$ share the same eigenvalue $a_n$ (an eigenspace of dimension $d_n$), nothing distinguishes which one the measurement selects. The probability of $a_n$ is then summed over the whole eigenspace, and the state collapses onto that entire eigenspace rather than onto any single eigenvector. Writing $\hat P_n = \sum_k | \psi_n^{(k)} \rangle \langle \psi_n^{(k)} |$ for the projector onto it,
+$$
+P(a_n) = \sum_k |\langle \psi_n^{(k)} | \psi \rangle|^2 = \| \hat P_n | \psi \rangle \|^2, \qquad
+| \psi \rangle \xrightarrow{\ a_n\ } \frac{\hat P_n | \psi \rangle}{\| \hat P_n | \psi \rangle \|}.
+$$
+When $d_n = 1$, this reduces exactly to the non-degenerate case above.
+
+<OperatorMeasurement
+  caption={
+    <>
+      Fill in an operator (Re/Im per cell) and a state, in a basis of
+      dimension 2 to 4. Each row of the result is a distinct eigenvalue: its
+      Born-rule probability, and the state <Tex>{`|\\psi\\rangle`}</Tex>{" "}
+      collapses to if it is obtained — the eigenvector itself when the value
+      isn't degenerate, the projection onto the eigenspace otherwise. A
+      non-Hermitian operator is flagged before it's even sent: those are
+      exactly the two properties the previous section relied on.
+    </>
+  }
+/>

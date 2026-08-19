@@ -10,16 +10,20 @@
 // is what every module after it then goes and solves. Then wavefunctions
 // defines psi(x) and its momentum-space counterpart as position/momentum-basis
 // coefficients of that same decomposition — a prerequisite for reading psi(x)
-// in every module that follows. Then 1D bound states (harmonic sets up
-// eigenstates, superposition and wavepackets; the finite well adds parity and
-// counting), then the unbound counterpart (barrier reuses those wavepackets),
-// then more dimensions (well-2d introduces separability and degeneracy, which
-// orbitals builds straight on top of), and finally spin — a different
-// formalism, with no wavefunction and no Schrödinger equation, so it stands
-// apart.
+// in every module that follows. Then measurement spells out the postulate
+// that decomposition was already quietly assuming (outcomes, Born rule,
+// collapse), and why Hermiticity is the condition that makes it work — used
+// from here on by name, most visibly in spin. Then 1D bound states (harmonic
+// sets up eigenstates, superposition and wavepackets; the finite well adds
+// parity and counting), then the unbound counterpart (barrier reuses those
+// wavepackets), then more dimensions (well-2d introduces separability and
+// degeneracy, which orbitals builds straight on top of), and finally spin —
+// a different formalism, with no wavefunction and no Schrödinger equation,
+// so it stands apart.
 export const QM_MODULES = [
   "schrodinger",
   "wavefunctions",
+  "measurement",
   "harmonic",
   "well-bound-states",
   "barrier",
