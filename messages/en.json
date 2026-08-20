@@ -60,6 +60,11 @@
         "summary": "The measurement postulate: possible outcomes, the Born rule, wavefunction collapse — and why the operator has to be Hermitian.",
         "tags": "measurement, probability, collapse"
       },
+      "maser": {
+        "title": "The ammonia maser",
+        "summary": "A two-level Hamiltonian with off-diagonal coupling: symmetric and antisymmetric states, the tunneling oscillation between them, and how it becomes a maser.",
+        "tags": "energy, measurement, dynamics"
+      },
       "wavefunctions": {
         "title": "The wavefunction",
         "summary": "What is the wavefunction? How do we define it in position and momentum space, and how do we interpret it?",

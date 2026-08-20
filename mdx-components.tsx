@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { MDXComponents } from "mdx/types";
+import { AmmoniaInversion } from "@/components/simulations/AmmoniaInversion";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
 import { BarrierScattering } from "@/components/simulations/BarrierScattering";
@@ -22,6 +23,7 @@ import { Video } from "@/components/ui/Video";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
+    AmmoniaInversion,
     EigenstateViewer,
     WavepacketEvolution,
     BarrierScattering,

@@ -1,0 +1,64 @@
+## The ammonia maser
+
+Ammonia, NH₃, is a pyramid: three hydrogens form a triangular base, and the nitrogen sits either above or below their plane. The two arrangements are mirror images of each other, and classically both are equally good equilibria. Call them $|1\rangle$ and $|2\rangle$. Quantum mechanically the nitrogen can tunnel from one side to the other, and what follows from that one fact is close to the simplest nontrivial system in quantum mechanics: two states, coupled by a single number. It is also the system that gave masers, and shortly after lasers, their name.
+
+### Two configurations, one Hamiltonian
+
+Restrict attention to $|1\rangle$ and $|2\rangle$ and write the Hamiltonian in that basis. Left alone in either well, the molecule would sit at the same energy $E_0$, since the two configurations are mirror images and nothing distinguishes them energetically. That fixes the diagonal:
+$$
+\langle 1|\hat H|1\rangle = \langle 2|\hat H|2\rangle = E_0.
+$$
+The barrier separating the wells is finite, though, so the nitrogen has a small but nonzero amplitude to tunnel through it rather than stay put. That coupling is the off-diagonal element, real by the same mirror symmetry, written $-A$:
+$$
+\langle 1|\hat H|2\rangle = \langle 2|\hat H|1\rangle = -A, \qquad \hat H = \begin{pmatrix} E_0 & -A \\ -A & E_0 \end{pmatrix}.
+$$
+$A > 0$ measures how easily the molecule tunnels: a taller or wider barrier makes $A$ smaller, and $A = 0$ decouples the wells entirely, leaving $|1\rangle$ and $|2\rangle$ each stationary on its own.
+
+### Symmetric and antisymmetric states
+
+$\hat H$ is not diagonal in $\{|1\rangle, |2\rangle\}$, so those are not the states of definite energy. Diagonalising it gives two,
+$$
+|+\rangle = \frac{1}{\sqrt2}\big(|1\rangle + |2\rangle\big), \quad E_+ = E_0 - A;
+\qquad
+|-\rangle = \frac{1}{\sqrt2}\big(|1\rangle - |2\rangle\big), \quad E_- = E_0 + A.
+$$
+The sign names the combination, not the energy: $|+\rangle$ is the symmetric state and lies *lower*, since the coupling enters as $-A$. (Writing these $|S\rangle$ and $|A\rangle$ is common, but $A$ is already the coupling, and $E_A = E_0 + A$ is asking for trouble.)
+
+Tunneling, invisible on the diagonal, has split a single energy $E_0$ into two, $2A$ apart. The symmetric combination sits lower and the antisymmetric one higher, the same pattern that puts a bonding orbital below an antibonding one. For real ammonia $2A/h \approx 23.87\ \text{GHz}$, a wavelength of about $1.25\ \text{cm}$: a photon at that frequency connects $|+\rangle$ and $|-\rangle$. Cleeton and Williams measured this absorption line in 1934, and it is exactly the transition that Gordon, Zeiger and Townes drove into oscillation around 1953–54 to build the first maser, *Microwave Amplification by Stimulated Emission of Radiation*, the direct ancestor of the laser.
+
+### The molecule flips
+
+Prepare the molecule in a definite configuration, $|\psi(0)\rangle = |1\rangle = \frac{1}{\sqrt2}\big(|+\rangle + |-\rangle\big)$: an equal superposition, not an eigenstate, so it does not sit still. Each component turns at its own rate, set by $E_+$ and $E_-$,
+$$
+|\psi(t)\rangle = \frac{1}{\sqrt2}\Big(e^{-iE_+ t/\hbar}|+\rangle + e^{-iE_- t/\hbar}|-\rangle\Big),
+$$
+and projecting back onto the original basis gives
+$$
+P_1(t) = |\langle 1|\psi(t)\rangle|^2 = \cos^2\!\Big(\frac{At}{\hbar}\Big),
+\qquad
+P_2(t) = |\langle 2|\psi(t)\rangle|^2 = \sin^2\!\Big(\frac{At}{\hbar}\Big).
+$$
+The nitrogen genuinely oscillates from one side of the molecule to the other, at angular frequency $2A/\hbar$, exactly the gap that separates $E_+$ from $E_-$. Ask a different question, though: not *where* the nitrogen is, but *what energy a measurement would return*. Nothing moves at all. $|c_+(t)|^2 = |c_-(t)|^2 = \tfrac12$ for every $t$, since $|+\rangle$ and $|-\rangle$ are themselves stationary states and only their phase evolves. The flipping lives entirely in the configuration basis $\{|1\rangle, |2\rangle\}$; it is invisible to a measurement made in the energy basis.
+
+<AmmoniaInversion
+  caption={
+    <>
+      The state is two complex numbers, so it is drawn as two: each arrow is
+      one amplitude, <Tex>{`\\langle 1|\\psi(t)\\rangle`}</Tex> and{" "}
+      <Tex>{`\\langle 2|\\psi(t)\\rangle`}</Tex>, its squared length the
+      probability of finding the nitrogen on that side. Watch one shorten as
+      the other grows: that is the inversion, at <Tex>{`2A/\\hbar`}</Tex>.
+      Below, the same state read two ways. The configuration probabilities
+      oscillate, while <Tex>{`|c_+|^2`}</Tex> and <Tex>{`|c_-|^2`}</Tex> sit
+      at <Tex>{`1/2`}</Tex> and stay there, stated as bars since there is
+      nothing for them to do over time. Time is in units of{" "}
+      <Tex>{`\\hbar/A`}</Tex>, which is all <Tex>{`A`}</Tex> ever sets here:
+      it is the only scale in the problem, so changing it renames the clock
+      and leaves every curve exactly where it is.
+    </>
+  }
+/>
+
+### From oscillation to amplification
+
+A beam of ammonia by itself just flips back and forth. Turning that into a maser needs one more piece, a way to separate $|+\rangle$ from $|-\rangle$ before they reach a cavity. Each geometric configuration carries an electric dipole moment, pointing opposite ways in $|1\rangle$ and $|2\rangle$, so an external electric field pushes the two levels apart in energy by an amount that grows with the field and has opposite sign for each. Passing the molecular beam through a strongly inhomogeneous field turns that state-dependent Stark shift into a spatial sort: the upper state $|-\rangle$ is focused into a beam, $|+\rangle$ is steered away. What enters the cavity next is a population living almost entirely in $|-\rangle$, a population inversion, upside down from thermal equilibrium, feeding a cavity resonant at $2A/\hbar$. A single photon at that frequency, striking one of those molecules, stimulates the $|-\rangle \to |+\rangle$ transition and comes out accompanied by a second photon identical to the first. Repeated across the whole beam, that is amplification by stimulated emission, the physics behind the name.
