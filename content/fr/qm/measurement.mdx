@@ -1,0 +1,48 @@
+## La mesure
+
+Mesurer une observable ne révèle pas une valeur qui existait déjà avant la mesure : la mécanique quantique postule ce qui se passe, à partir de la décomposition en états propres vue précédemment.
+
+### Le postulat
+
+Soit $\hat A$ un opérateur hermitien (une observable), de base d'états propres $| \psi_n \rangle$ et de valeurs propres $a_n$, et $| \psi \rangle = \sum_n c_n | \psi_n \rangle$ l'état de la particule, avec $c_n = \langle \psi_n | \psi \rangle$. Mesurer $\hat A$ :
+
+- ne peut donner qu'une des valeurs propres $a_n$ ;
+- donne le résultat $a_n$ avec probabilité $|c_n|^2$ — la règle de Born ;
+- projette immédiatement l'état sur $| \psi_n \rangle$ : c'est la réduction du paquet d'onde.
+
+$$
+| \psi \rangle \xrightarrow{\ a_n\ } | \psi_n \rangle \qquad \text{avec probabilité } |c_n|^2.
+$$
+
+Répéter la mesure sur des systèmes préparés à l'identique donne donc, en moyenne,
+$$
+\langle \hat A \rangle = \sum_n a_n |c_n|^2 = \langle \psi | \hat A | \psi \rangle.
+$$
+
+### Pourquoi hermitien
+
+Rien de tout cela ne tient si $\hat A$ n'est pas hermitien. Un opérateur hermitien a deux propriétés que la mesure exploite directement : ses valeurs propres $a_n$ sont réelles — un résultat de mesure est un nombre réel, pas complexe —, et ses états propres forment une base orthonormée complète, ce qui garantit $\sum_n |c_n|^2 = 1$ : les probabilités des différents résultats somment à 1, comme il se doit. Un opérateur non hermitien n'offre aucune de ces deux garanties : ses valeurs propres peuvent être complexes, et ses états propres ne forment en général ni une base orthogonale, ni même une base tout court.
+
+### Cas dégénéré
+
+Si plusieurs états propres $| \psi_n^{(1)} \rangle, \dots, | \psi_n^{(d_n)} \rangle$ partagent la même valeur propre $a_n$ (un sous-espace propre de dimension $d_n$), rien ne distingue lequel d'entre eux la mesure sélectionne. La probabilité de $a_n$ se somme alors sur tout le sous-espace, et l'état se projette sur le sous-espace entier plutôt que sur un vecteur propre particulier. En notant $\hat P_n = \sum_k | \psi_n^{(k)} \rangle \langle \psi_n^{(k)} |$ le projecteur sur ce sous-espace,
+$$
+P(a_n) = \sum_k |\langle \psi_n^{(k)} | \psi \rangle|^2 = \| \hat P_n | \psi \rangle \|^2, \qquad
+| \psi \rangle \xrightarrow{\ a_n\ } \frac{\hat P_n | \psi \rangle}{\| \hat P_n | \psi \rangle \|}.
+$$
+Quand $d_n = 1$, ceci redonne exactement le cas non dégénéré ci-dessus.
+
+<OperatorMeasurement
+  caption={
+    <>
+      Remplissez un opérateur (Re/Im par case) et un état, dans une base de
+      dimension 2 à 4. Chaque ligne du résultat est une valeur propre
+      distincte : sa probabilité par la règle de Born, et l'état sur lequel{" "}
+      <Tex>{`|\\psi\\rangle`}</Tex> se projette si elle est obtenue — le
+      vecteur propre lui-même quand la valeur n'est pas dégénérée, la
+      projection sur le sous-espace sinon. Un opérateur non hermitien est
+      signalé avant même d'être envoyé : ce sont précisément les deux
+      propriétés du paragraphe précédent qui manqueraient.
+    </>
+  }
+/>

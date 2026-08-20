@@ -56,6 +56,21 @@
         "summary": "Le postulat d'évolution, et pourquoi tout se ramène à un problème aux valeurs propres.",
         "tags": "énergie, superposition, dynamique"
       },
+      "measurement": {
+        "title": "La mesure",
+        "summary": "Le postulat de la mesure : résultats possibles, règle de Born, réduction du paquet d'onde — et pourquoi l'opérateur doit être hermitien.",
+        "tags": "mesure, probabilité, réduction"
+      },
+      "maser": {
+        "title": "Le maser à ammoniac",
+        "summary": "Un hamiltonien à deux niveaux avec un couplage hors diagonale : états symétrique et antisymétrique, l'oscillation par effet tunnel entre eux, et comment cela devient un maser.",
+        "tags": "énergie, mesure, dynamique"
+      },
+      "wavefunctions": {
+        "title": "La fonction d'onde",
+        "summary": "Qu'est-ce que la fonction d'onde ? Comment la définit-on dans l'espace des positions et des impulsions, et comment l'interprète-t-on ?",
+        "tags": "fonction d'onde, probabilité"
+      },
       "harmonic": {
         "title": "Oscillateur harmonique",
         "summary": "Niveaux d'énergie quantifiés et énergie de point zéro.",

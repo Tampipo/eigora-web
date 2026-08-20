@@ -1,0 +1,80 @@
+## Fonctions d'onde
+
+La fonction d'onde $\psi(x)$ est souvent la quantité la plus importante en mécanique quantique. Elle contient toute l'information sur l'état d'une particule, et sa norme au carré $|\psi(x)|^2$ est la densité de probabilité de trouver la particule à la position $x$. Comment est-elle proprement définie ?
+
+### Décomposition en états propres d'un opérateur quelconque
+
+Si on prend n'importe quel opérateur $\hat A$ et qu'on le diagonalise, on obtient une base d'états propres $| \psi_n \rangle$ avec des valeurs propres $a_n$. L'état de la particule peut être exprimé comme une superposition de ces états propres :
+$$
+ | \psi \rangle = \sum_n c_n | \psi_n \rangle,
+$$
+où les coefficients $c_n$ sont donnés par le produit scalaire $c_n = \langle \psi_n | \psi \rangle$. Cette décomposition est particulièrement adaptée pour connaitre facilement la probabilité de mesurer la valeur $a_n$ de l'observable $\hat A$ : elle est simplement $|c_n|^2$ (dans le cas non dégénéré).
+
+### Opérateur position
+
+L'idée est alors de construire un opérateur qui mesure la position d'un état et de décomposer l'état de la particule dans sa base d'états propres, en suivant exactement la recette ci-dessus. On ne peut cependant pas prendre directement $\hat A = \hat x$ : on va voir que ses états propres ne sont pas normalisables, donc pas des états physiques au sens usuel. On régularise le problème en découpant l'espace en petits intervalles de taille $\Delta$. On ordonne les intervalles et on les note $I_n(\Delta)$. On définit l'opérateur position $\hat{x}^\Delta$ comme suit : il agit sur un état $\psi$ en projetant la fonction d'onde sur l'intervalle $I_n(\Delta)$ et en multipliant par la position $x_n$. On note ses états propres $| I_n(\Delta) \rangle$ et on a :
+$$
+\hat{x}^\Delta | I_n(\Delta) \rangle = x_n | I_n(\Delta) \rangle.
+$$
+Pour que ces états propres soient physiques, on les prend de norme 1 : $| I_n(\Delta) \rangle$ représente la particule uniformément répartie sur l'intervalle, avec pour fonction associée $1/\sqrt{\Delta}$ sur $I_n(\Delta)$ et $0$ ailleurs — le facteur $1/\sqrt{\Delta}$ est exactement ce qu'il faut pour que $\int_{I_n(\Delta)} \frac{1}{\Delta} \, dx = 1$.
+
+L'état $| \psi \rangle$ peut alors être décomposé dans cette base d'états propres :
+$$
+| \psi \rangle = \sum_n c_n(\Delta) | I_n(\Delta) \rangle,
+$$
+où les coefficients $c_n(\Delta)$ — notés avec un $\Delta$ pour les distinguer des $c_n$ génériques du paragraphe précédent, dont ils ne sont qu'un cas particulier, celui de l'opérateur $\hat x^\Delta$ — valent $c_n(\Delta) = \langle I_n(\Delta) | \psi \rangle$. En écrivant ce produit scalaire comme une intégrale,
+$$
+c_n(\Delta) = \frac{1}{\sqrt{\Delta}} \int_{I_n(\Delta)} \psi(x) \, dx,
+$$
+on voit que diviser une seconde fois par $\sqrt{\Delta}$ revient à prendre la valeur moyenne de $\psi$ sur l'intervalle. Il suffit alors de faire tendre $\Delta$ vers zéro. Par sommes de Riemann, cette limite est bien définie et on obtient la fonction d'onde $\psi(x)$ :
+$$
+\psi(x) = \lim_{\Delta \to 0} \frac{c_n(\Delta)}{\sqrt{\Delta}} \quad \text{pour } x \in I_n(\Delta).
+$$
+
+<PositionBins
+  caption={
+    <>
+      L'espace découpé en intervalles <Tex>{`I_n(\\Delta)`}</Tex> de plus en
+      plus fins. Chaque barre est la moyenne de <Tex>{`\\psi`}</Tex> sur son
+      intervalle, c'est-à-dire <Tex>{`c_n(\\Delta)/\\sqrt{\\Delta}`}</Tex> —
+      quand <Tex>{`\\Delta \\to 0`}</Tex>, l'histogramme se confond avec la
+      courbe. Notez que <Tex>{`\\psi`}</Tex> peut être négative : seule{" "}
+      <Tex>{`|\\psi|^2`}</Tex> est une densité de probabilité.
+    </>
+  }
+/>
+
+Plus simplement, on note la limite quand $\Delta \to 0$ des états par $| x \rangle = \lim_{\Delta \to 0} | I_n(\Delta) \rangle$, et on a alors
+$$
+\psi(x) = \langle x | \psi \rangle.
+$$
+L'état se décompose en une intégrale sur les états propres de l'opérateur position :
+$$
+| \psi \rangle = \int dx \, \psi(x) | x \rangle.
+$$
+
+### Impulsion
+
+La même procédure peut être appliquée à l'impulsion. Au lieu de s'intéresser à l'opérateur position on s'intéresse à la quantité de mouvement $\hat p$ d'un état. La base obtenue est notée $| p \rangle$. L'état $| \psi \rangle$ peut être décomposé dans cette base :
+$$
+| \psi \rangle = \int dp \, \tilde{\psi}(p) | p \rangle,
+$$
+où $\tilde{\psi}(p) = \langle p | \psi \rangle$ est la fonction d'onde dans l'espace des impulsions.
+
+Les états $| p \rangle$ doivent également pouvoir être décomposés dans la base des états propres de l'opérateur position, et on a donc
+$$
+| p \rangle = \int dx \, \langle x | p \rangle | x \rangle.
+$$
+Ces états s'écrivent, dans la base position,
+$$
+\langle x | p \rangle = \frac{1}{\sqrt{2\pi\hbar}} \, e^{ipx/\hbar},
+$$
+des ondes planes, normalisées au sens des distributions : $\langle p | p' \rangle = \delta(p - p')$. En insérant une décomposition sur la base position, $\tilde\psi(p)$ se réécrit
+$$
+\tilde\psi(p) = \langle p | \psi \rangle = \int dx \, \langle p | x \rangle \langle x | \psi \rangle = \frac{1}{\sqrt{2\pi\hbar}} \int dx \, e^{-ipx/\hbar} \, \psi(x) :
+$$
+la fonction d'onde en impulsion est la transformée de Fourier de la fonction d'onde en position.
+
+### Fonction d'onde de n'importe quel opérateur
+
+En réalité, il n'y a pas de raison de se limiter à la position et à l'impulsion. Pour n'importe quel opérateur $\hat A$ au spectre continu, on peut définir une fonction d'onde $\psi_A(a) = \langle a | \psi \rangle$ comme les coefficients de l'état $| \psi \rangle$ dans la base des états propres $| a \rangle$ de $\hat A$. La fonction d'onde est donc un concept général, qui dépend de l'opérateur choisi.

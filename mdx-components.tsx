@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { MDXComponents } from "mdx/types";
+import { AmmoniaInversion } from "@/components/simulations/AmmoniaInversion";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
 import { BarrierScattering } from "@/components/simulations/BarrierScattering";
@@ -10,6 +11,8 @@ import { FiniteWellStates } from "@/components/simulations/FiniteWellStates";
 import { InfiniteLeftWellStates } from "@/components/simulations/InfiniteLeftWellStates";
 import { OrbitalViewer } from "@/components/simulations/OrbitalViewer";
 import { DegeneracyLattice } from "@/components/simulations/DegeneracyLattice";
+import { OperatorMeasurement } from "@/components/simulations/OperatorMeasurement";
+import { PositionBins } from "@/components/simulations/PositionBins";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
 import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
 import { SuperpositionPhases } from "@/components/simulations/SuperpositionPhases";
@@ -20,6 +23,7 @@ import { Video } from "@/components/ui/Video";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
+    AmmoniaInversion,
     EigenstateViewer,
     WavepacketEvolution,
     BarrierScattering,
@@ -28,6 +32,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     InfiniteLeftWellStates,
     OrbitalViewer,
     DegeneracyLattice,
+    OperatorMeasurement,
+    PositionBins,
     SeparableStateViewer,
     SpinMeasurement,
     SuperpositionPhases,
