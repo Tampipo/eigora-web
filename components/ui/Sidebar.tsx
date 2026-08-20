@@ -7,6 +7,7 @@ import { QM_MODULES } from "@/lib/qm-modules";
 import { Wordmark } from "./Wordmark";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
+import { SidebarSubjectGroup } from "./SidebarSubjectGroup";
 import { SearchTrigger } from "./SearchTrigger";
 
 export async function Sidebar() {
@@ -30,22 +31,17 @@ export async function Sidebar() {
           <SidebarNavItem href="/" label={t("home")} />
         </div>
 
-        <div className="space-y-1">
-          <p className="px-2 text-[10px] font-medium uppercase tracking-[0.14em] text-faint">
-            {t("qm")}
-          </p>
-          <div className="space-y-0.5">
-            <SidebarNavItem href="/qm" label="Overview" exact />
-            {QM_MODULES.map((slug) => (
-              <SidebarNavItem
-                key={slug}
-                href={`/qm/${slug}`}
-                label={qm(`${slug}.title`)}
-                indent
-              />
-            ))}
-          </div>
-        </div>
+        {/* One group per subject — quantum mechanics today, more (e.g.
+            statistical physics) to follow below it, same mechanics. */}
+        <SidebarSubjectGroup
+          heading={t("qm")}
+          href="/qm"
+          modules={QM_MODULES.map((slug) => ({
+            slug,
+            label: qm(`${slug}.title`),
+          }))}
+          showMoreLabel={t("showMore")}
+        />
       </nav>
 
       <div className="mt-6 flex items-center justify-between border-t border-border pt-4">

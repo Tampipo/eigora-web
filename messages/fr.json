@@ -7,7 +7,8 @@
     "home": "Accueil",
     "qm": "Mécanique quantique",
     "about": "À propos",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "showMore": "Voir plus"
   },
   "search": {
     "placeholder": "Rechercher dans le contenu…",
