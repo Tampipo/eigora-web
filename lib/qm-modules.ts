@@ -22,8 +22,8 @@
 // so it stands apart.
 export const QM_MODULES = [
   "schrodinger",
-  "wavefunctions",
   "measurement",
+  "wavefunctions",
   "harmonic",
   "well-bound-states",
   "barrier",
