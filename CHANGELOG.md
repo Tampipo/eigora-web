@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.2](https://github.com/Tampipo/eigora-web/compare/v0.1.1...v0.1.2) (2026-08-20)
+
+
+### Features
+
+* add maser animations ([cf1c915](https://github.com/Tampipo/eigora-web/commit/cf1c915a3de010fc456b16867207ca8a1343a58a))
+* adding measurement page ([27c4f6b](https://github.com/Tampipo/eigora-web/commit/27c4f6b8778b2263a9293a636febff937f3d6331))
+* wavefunction page, explain origin of wavefunctin and interpretation ([b1810ba](https://github.com/Tampipo/eigora-web/commit/b1810baf1b5bc7ee22e0c6d58dba5f3b353bd8f6))
+
+
+### Bug Fixes
+
+* Re-order measurement before wavefunctions ([5a6175e](https://github.com/Tampipo/eigora-web/commit/5a6175e11c693bd3270441a5f461ccf4677680e8))
+
 ## [0.1.1](https://github.com/Tampipo/eigora-web/compare/v0.1.0...v0.1.1) (2026-08-18)
 
 
