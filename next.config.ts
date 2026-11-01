@@ -4,6 +4,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -13,7 +14,7 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkGfm, remarkMath],
     rehypePlugins: [
       rehypeKatex,
       [rehypePrettyCode, { theme: "github-dark-dimmed", keepBackground: false }],

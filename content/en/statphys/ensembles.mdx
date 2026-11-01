@@ -77,15 +77,7 @@ $$
 
 Same identity, different variable. And since a variance is never negative, $\langle M \rangle$ is guaranteed to increase with $h$ — which is not a modelling assumption but a theorem about any system of this form.
 
-Try the same with a two-level system and the API refuses:
-
-```
-Magnetic frees ['magnetisation'], but TwoLevel carries nothing;
-a system can only be put in an ensemble that frees variables its
-microstates report
-```
-
-That refusal is the design. A two-level system has energies and nothing else — its microstates have no magnetisation to average — so asking for one would return a number that means nothing. The check happens where the system meets the ensemble, and it is why the magnetic control above is disabled unless a spin is selected.
+A two-level system can't be put in this ensemble. It has energies and nothing else — its microstates have no magnetisation to average — so asking for one would return a number that means nothing. That is why the magnetic control above is disabled unless a spin is selected.
 
 ### What changes when you free something
 
