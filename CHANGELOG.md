@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.4](https://github.com/Tampipo/eigora-web/compare/v0.1.3...v0.1.4) (2026-11-01)
+
+
+### Features
+
+* add time evolution and spin tutorials ([5d16628](https://github.com/Tampipo/eigora-web/commit/5d166286365980f8502960b7c3a7967ebfa6fa0b))
+* add time evolution and spin tutorials ([ae7bf8e](https://github.com/Tampipo/eigora-web/commit/ae7bf8e87f97cbe0bb25d0192d5c2ca389783d35))
+
+
+### Bug Fixes
+
+* render tables and remove API mention from ensembles page ([1ec81bb](https://github.com/Tampipo/eigora-web/commit/1ec81bb2e7b121599ba9b2c47b349864c64e9834))
+* render tables and remove API mention from ensembles page ([24dcf63](https://github.com/Tampipo/eigora-web/commit/24dcf637755218784068da0cba4e7c72dcde2806))
+
 ## [0.1.3](https://github.com/Tampipo/eigora-web/compare/v0.1.2...v0.1.3) (2026-11-01)
 
 
