@@ -1,0 +1,38 @@
+import wavepacketBarrier from "@/content/cells/wavepacket-barrier.py";
+import oscillatorMotion from "@/content/cells/oscillator-motion.py";
+
+## Time evolution
+
+So far, nothing has moved. To make a state evolve, you give the system an initial wavefunction, and `evolve` steps it forward in time using the split-step Fourier method.
+
+### A wavepacket hits a barrier
+
+`GaussianWavepacket` is a localised particle: `x0` says where it starts, `k0` how fast it moves, and `sigma` how wide it is. `evolve` then needs a total time `t_max`, a time step `dt`, and the number of frames to keep.
+
+This cell sends a packet at a barrier, and draws it at four moments:
+
+<CodeCell
+  code={wavepacketBarrier}
+  params={[
+    { name: "height", min: 0.5, max: 3, step: 0.1 },
+    { name: "k0", min: 1, max: 2.5, step: 0.1 },
+  ]}
+/>
+
+The packet splits in two, with one part reflected and one part transmitted. It does so even when most of its energy, $k_0^2/2$, is below the barrier height, which is tunnelling.
+
+### Checking the result
+
+The last two lines of output compare the simulation with `energy_averaged_transmission`, the exact prediction for this barrier and this packet. They agree to about 0.01, with the simulation usually slightly higher.
+
+That gap comes from the grid, not the time stepping. The grid points are about $0.1$ apart, so a barrier with sharp edges can't have a width of exactly $1$, and transmission depends strongly on that width. Refining the grid doesn't steadily help either, because the width it captures jumps around as the points shift. When comparing with an exact result, always ask what the discretisation can represent.
+
+The theory is in the [barrier](/en/qm/barrier) module.
+
+### Your turn: a packet in a well
+
+In a harmonic well, a packet with exactly the right width keeps its shape and follows the classical trajectory. This cell computes the average position $\langle x \rangle$ from `evolution.psi`, which holds the wavefunction at every saved frame. Try changing `omega` or `sigma`:
+
+<CodeCell code={oscillatorMotion} />
+
+Next, we leave the grid behind with [spins and qubits](/en/tutorials/spins-and-qubits).

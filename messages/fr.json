@@ -167,6 +167,16 @@
         "title": "Tracer des états propres",
         "summary": "Dessinez les fonctions d'onde sur leur potentiel, puis essayez votre propre potentiel.",
         "tags": "Graphiques, États propres"
+      },
+      "time-evolution": {
+        "title": "Évolution temporelle",
+        "summary": "Envoyez un paquet d'ondes sur une barrière, mesurez ce qui passe et comparez à la théorie.",
+        "tags": "Dynamique, Graphiques"
+      },
+      "spins-and-qubits": {
+        "title": "Spins et qubits",
+        "summary": "Faites évoluer exactement un système à deux niveaux, simulez des mesures et couplez deux spins.",
+        "tags": "Spin, Dynamique"
       }
     },
     "cell": {
