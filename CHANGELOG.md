@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.3](https://github.com/Tampipo/eigora-web/compare/v0.1.2...v0.1.3) (2026-11-01)
+
+
+### Features
+
+* add tutorials with runnable Python cells ([957fcfd](https://github.com/Tampipo/eigora-web/commit/957fcfdffe8685cc5d6f699f04e48f31bdc910ba))
+* first iteration of staphys pages ([55230cf](https://github.com/Tampipo/eigora-web/commit/55230cfa62a3422542ff770aa2229ee1ce546ae2))
+* regenerate with new api ([a901763](https://github.com/Tampipo/eigora-web/commit/a9017637168a45638157cee1f7569e60ca01b759))
+
 ## [0.1.2](https://github.com/Tampipo/eigora-web/compare/v0.1.1...v0.1.2) (2026-08-20)
 
 
