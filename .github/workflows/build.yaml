@@ -38,6 +38,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Run the tutorial cells
+        run: node scripts/fetch-python-runtime.mjs && npm run test:cells
+
       - name: Build (Next.js)
         env:
           NEXT_TELEMETRY_DISABLED: "1"

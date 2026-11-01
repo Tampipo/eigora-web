@@ -1,0 +1,37 @@
+import firstSpectrum from "@/content/cells/first-spectrum.py";
+
+## Getting started
+
+`eigora` is a small Python package for solving quantum systems. In a few minutes you will compute the energy levels of a harmonic oscillator and compare them with the exact answer.
+
+You can follow along on this page without installing anything: the code cells run in your browser.
+
+### Installing it
+
+To use the package on your own machine, you need Python 3.12 or later:
+
+```bash
+pip install git+https://github.com/Tampipo/eigora
+```
+
+The package needs only NumPy and SciPy. To draw plots as in the next tutorial, install it with matplotlib instead:
+
+```bash
+pip install "eigora[plot] @ git+https://github.com/Tampipo/eigora"
+```
+
+### Units
+
+Everything is in atomic units, with $\hbar = m = 1$. Energies, lengths and times are plain numbers, so there are no conversion factors to carry around.
+
+### Your first spectrum
+
+A system is a **grid** plus a **potential**. The grid is where the wavefunction gets sampled, and `solve` returns the lowest eigenstates of the resulting Hamiltonian.
+
+For a harmonic oscillator, the exact energies are $E_n = \omega\left(n + \tfrac{1}{2}\right)$, so we can check the numerical result against them. Press **Run**, then move the slider to change $\omega$:
+
+<CodeCell code={firstSpectrum} params={[{ name: "omega", min: 0.2, max: 3, step: 0.1 }]} />
+
+The two columns should agree to several decimal places. They drift apart slowly at higher energies, because those states oscillate faster and the grid resolves them less well.
+
+The theory behind these numbers is in the [harmonic oscillator](/en/qm/harmonic) module. Next, let's [plot these eigenstates](/en/tutorials/plotting-eigenstates).

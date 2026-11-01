@@ -8,6 +8,7 @@ import { ModuleCard } from "@/components/ui/ModuleCard";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { QM_MODULES } from "@/lib/qm-modules";
 import { STATPHYS_MODULES } from "@/lib/statphys-modules";
+import { TUTORIALS } from "@/lib/tutorials";
 
 const STEPS = [
   { key: "read", Icon: BookOpen },
@@ -25,6 +26,7 @@ export default async function HomePage({
   const t = await getTranslations("home");
   const qm = await getTranslations("qm.modules");
   const statphys = await getTranslations("statphys.modules");
+  const tutorials = await getTranslations("tutorials.modules");
 
   return (
     <div className="space-y-24">
@@ -138,6 +140,31 @@ export default async function HomePage({
               index={i + 1}
               title={statphys(`${slug}.title`)}
               summary={statphys(`${slug}.summary`)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-faint">
+            {t("modulesKickerTutorials")}
+          </h2>
+          <Link
+            href="/tutorials"
+            className="text-sm text-muted transition-colors hover:text-accent"
+          >
+            {t("exploreTutorials")} →
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {TUTORIALS.map((slug, i) => (
+            <ModuleCard
+              key={slug}
+              href={`/tutorials/${slug}`}
+              index={i + 1}
+              title={tutorials(`${slug}.title`)}
+              summary={tutorials(`${slug}.summary`)}
             />
           ))}
         </div>

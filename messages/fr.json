@@ -9,7 +9,8 @@
     "statphys": "Physique statistique",
     "about": "À propos",
     "search": "Rechercher",
-    "showMore": "Voir plus"
+    "showMore": "Voir plus",
+    "tutorials": "Tutoriels"
   },
   "search": {
     "placeholder": "Rechercher dans le contenu…",
@@ -39,7 +40,9 @@
         "title": "Observer l'évolution",
         "desc": "Diffusez un paquet d'ondes en temps réel et parcourez son évolution image par image."
       }
-    }
+    },
+    "modulesKickerTutorials": "Tutoriels",
+    "exploreTutorials": "Explorer les tutoriels"
   },
   "qm": {
     "index": {
@@ -139,6 +142,51 @@
         "summary": "Les statistiques de Fermi-Dirac et de Bose-Einstein retrouvées à partir d'un seul déplacement et d'une règle d'acceptation.",
         "tags": "Monte-Carlo, fermions, bosons, potentiel chimique"
       }
+    }
+  },
+  "tutorials": {
+    "index": {
+      "eyebrow": "Tutoriels",
+      "heading": "Tutoriels",
+      "intro": "Utilisez vous-même le package eigora : résolvez un système, puis tracez le résultat. Le code s'exécute ici, dans votre navigateur, et vous pouvez le modifier.",
+      "readingOrder": "Les tutoriels sont numérotés dans un ordre de lecture suggéré.",
+      "searchPlaceholder": "Rechercher un tutoriel…",
+      "filterLabel": "Filtrer par tag",
+      "clearFilters": "Effacer",
+      "shownLabel": "affichés",
+      "noResults": "Aucun tutoriel ne correspond.",
+      "matchIn": "Trouvé dans"
+    },
+    "modules": {
+      "getting-started": {
+        "title": "Premiers pas",
+        "summary": "Installez eigora, découvrez ses unités et calculez votre premier spectre d'énergie.",
+        "tags": "Bases, États propres"
+      },
+      "plotting-eigenstates": {
+        "title": "Tracer des états propres",
+        "summary": "Dessinez les fonctions d'onde sur leur potentiel, puis essayez votre propre potentiel.",
+        "tags": "Graphiques, États propres"
+      }
+    },
+    "cell": {
+      "run": "Exécuter",
+      "running": "Exécution…",
+      "loading": "Chargement de Python…",
+      "stop": "Arrêter",
+      "reset": "Réinitialiser",
+      "hint": "S'exécute dans votre navigateur. La première exécution télécharge jusqu'à 40 Mo.",
+      "edit": "Modifiable. Ctrl+Entrée pour exécuter.",
+      "sliders": "Déplacez un curseur pour relancer.",
+      "timeout": "Arrêté : le code a tourné plus de {seconds} secondes.",
+      "crashed": "Python a manqué de ressources et s'est arrêté. Cliquez sur Exécuter pour le relancer.",
+      "failed": "Python n'a pas pu être chargé. Vérifiez votre connexion et réessayez.",
+      "tooLong": "Ce code est trop long pour être exécuté ici (limite : {limit} caractères).",
+      "truncated": "Sortie tronquée.",
+      "copy": "Copier",
+      "copied": "Copié",
+      "editorLabel": "Code Python",
+      "figureAlt": "Figure {number} tracée par ce code"
     }
   },
   "legal": {

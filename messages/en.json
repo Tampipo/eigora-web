@@ -9,7 +9,8 @@
     "statphys": "Statistical physics",
     "about": "About",
     "search": "Search",
-    "showMore": "Show more"
+    "showMore": "Show more",
+    "tutorials": "Tutorials"
   },
   "search": {
     "placeholder": "Search the content…",
@@ -39,7 +40,9 @@
         "title": "Watch it evolve",
         "desc": "Stream a wavepacket in real time and scrub through its evolution frame by frame."
       }
-    }
+    },
+    "modulesKickerTutorials": "Tutorials",
+    "exploreTutorials": "Explore the tutorials"
   },
   "qm": {
     "index": {
@@ -139,6 +142,51 @@
         "summary": "Fermi-Dirac and Bose-Einstein statistics recovered from one move and an acceptance rule.",
         "tags": "Monte Carlo, fermions, bosons, chemical potential"
       }
+    }
+  },
+  "tutorials": {
+    "index": {
+      "eyebrow": "Tutorials",
+      "heading": "Tutorials",
+      "intro": "Use the eigora package yourself: solve a system, then plot the result. The code runs right here in your browser, and you can change it.",
+      "readingOrder": "The tutorials are numbered in a suggested reading order.",
+      "searchPlaceholder": "Search tutorials…",
+      "filterLabel": "Filter by tag",
+      "clearFilters": "Clear",
+      "shownLabel": "shown",
+      "noResults": "No tutorial matches.",
+      "matchIn": "Found in"
+    },
+    "modules": {
+      "getting-started": {
+        "title": "Getting started",
+        "summary": "Install eigora, learn its units, and compute your first energy spectrum.",
+        "tags": "Basics, Eigenstates"
+      },
+      "plotting-eigenstates": {
+        "title": "Plotting eigenstates",
+        "summary": "Draw wavefunctions on top of their potential, then try a potential of your own.",
+        "tags": "Plots, Eigenstates"
+      }
+    },
+    "cell": {
+      "run": "Run",
+      "running": "Running…",
+      "loading": "Loading Python…",
+      "stop": "Stop",
+      "reset": "Reset",
+      "hint": "Runs in your browser. The first run downloads up to 40 MB.",
+      "edit": "Editable. Ctrl+Enter to run.",
+      "sliders": "Move a slider to run again.",
+      "timeout": "Stopped: the code ran for more than {seconds} seconds.",
+      "crashed": "Python ran out of resources and stopped. Press Run to start it again.",
+      "failed": "Python could not be loaded. Check your connection and try again.",
+      "tooLong": "This code is too long to run here (limit: {limit} characters).",
+      "truncated": "Output truncated.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "editorLabel": "Python code",
+      "figureAlt": "Figure {number} drawn by this code"
     }
   },
   "legal": {

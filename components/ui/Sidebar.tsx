@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { QM_MODULES } from "@/lib/qm-modules";
 import { STATPHYS_MODULES } from "@/lib/statphys-modules";
+import { TUTORIALS } from "@/lib/tutorials";
 import { Wordmark } from "./Wordmark";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { SidebarNavItem } from "./SidebarNavItem";
@@ -16,6 +17,7 @@ export async function Sidebar() {
   const site = await getTranslations("site");
   const qm = await getTranslations("qm.modules");
   const statphys = await getTranslations("statphys.modules");
+  const tutorials = await getTranslations("tutorials.modules");
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-surface/40 px-5 py-6 backdrop-blur-sm lg:flex">
@@ -50,6 +52,16 @@ export async function Sidebar() {
           modules={STATPHYS_MODULES.map((slug) => ({
             slug,
             label: statphys(`${slug}.title`),
+          }))}
+          showMoreLabel={t("showMore")}
+        />
+
+        <SidebarSubjectGroup
+          heading={t("tutorials")}
+          href="/tutorials"
+          modules={TUTORIALS.map((slug) => ({
+            slug,
+            label: tutorials(`${slug}.title`),
           }))}
           showMoreLabel={t("showMore")}
         />

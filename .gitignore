@@ -30,3 +30,6 @@ next-env.d.ts
 .next**
 
 tsconfig.tsbuildinfo
+
+# Assembled by scripts/fetch-python-runtime.mjs
+public/pyodide/
