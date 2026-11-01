@@ -78,15 +78,7 @@ $$
 
 Même identité, autre variable. Et comme une variance n'est jamais négative, $\langle M \rangle$ croît nécessairement avec $h$ — ce n'est pas une hypothèse de modélisation mais un théorème sur tout système de cette forme.
 
-Essayez la même chose sur un système à deux niveaux et l'API refuse :
-
-```
-Magnetic frees ['magnetisation'], but TwoLevel carries nothing;
-a system can only be put in an ensemble that frees variables its
-microstates report
-```
-
-Ce refus est voulu. Un système à deux niveaux a des énergies et rien d'autre — ses micro-états n'ont pas d'aimantation à moyenner — donc en demander une renverrait un nombre dépourvu de sens. La vérification a lieu là où le système rencontre l'ensemble, et c'est pourquoi le contrôle magnétique ci-dessus reste désactivé tant qu'un spin n'est pas sélectionné.
+Un système à deux niveaux ne peut pas être placé dans cet ensemble. Il a des énergies et rien d'autre — ses micro-états n'ont pas d'aimantation à moyenner — donc en demander une renverrait un nombre dépourvu de sens. C'est pourquoi le contrôle magnétique ci-dessus reste désactivé tant qu'un spin n'est pas sélectionné.
 
 ### Ce qui change quand on libère
 
