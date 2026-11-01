@@ -167,6 +167,16 @@
         "title": "Plotting eigenstates",
         "summary": "Draw wavefunctions on top of their potential, then try a potential of your own.",
         "tags": "Plots, Eigenstates"
+      },
+      "time-evolution": {
+        "title": "Time evolution",
+        "summary": "Send a wavepacket at a barrier, measure what gets through, and compare with theory.",
+        "tags": "Dynamics, Plots"
+      },
+      "spins-and-qubits": {
+        "title": "Spins and qubits",
+        "summary": "Evolve a two-level system exactly, simulate measurements, and couple two spins.",
+        "tags": "Spin, Dynamics"
       }
     },
     "cell": {

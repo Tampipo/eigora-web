@@ -1,0 +1,38 @@
+import wavepacketBarrier from "@/content/cells/wavepacket-barrier.py";
+import oscillatorMotion from "@/content/cells/oscillator-motion.py";
+
+## Évolution temporelle
+
+Jusqu'ici, rien n'a bougé. Pour faire évoluer un état, vous donnez au système une fonction d'onde initiale, et `evolve` la fait avancer dans le temps avec la méthode de Fourier à pas fractionnés (*split-step*).
+
+### Un paquet d'ondes rencontre une barrière
+
+`GaussianWavepacket` représente une particule localisée : `x0` indique où elle démarre, `k0` à quelle vitesse elle avance et `sigma` sa largeur. `evolve` a ensuite besoin d'un temps total `t_max`, d'un pas de temps `dt` et du nombre d'images à conserver.
+
+Cette cellule envoie un paquet sur une barrière et le dessine à quatre instants :
+
+<CodeCell
+  code={wavepacketBarrier}
+  params={[
+    { name: "height", min: 0.5, max: 3, step: 0.1 },
+    { name: "k0", min: 1, max: 2.5, step: 0.1 },
+  ]}
+/>
+
+Le paquet se sépare en deux : une partie réfléchie et une partie transmise. C'est le cas même lorsque l'essentiel de son énergie, $k_0^2/2$, est sous la hauteur de la barrière : c'est l'effet tunnel.
+
+### Vérifier le résultat
+
+Les deux dernières lignes affichées comparent la simulation à `energy_averaged_transmission`, la prédiction exacte pour cette barrière et ce paquet. Elles coïncident à environ 0,01 près, la simulation étant le plus souvent légèrement au-dessus.
+
+Cet écart vient de la grille, pas du pas de temps. Les points de la grille sont espacés d'environ $0{,}1$ : une barrière à bords nets ne peut donc pas y avoir une largeur d'exactement $1$, et la transmission dépend fortement de cette largeur. Affiner la grille n'aide pas non plus de façon régulière, car la largeur capturée varie selon la position des points. Lorsque vous comparez à un résultat exact, demandez-vous toujours ce que la discrétisation peut représenter.
+
+La théorie se trouve dans le module sur la [barrière](/fr/qm/barrier).
+
+### À vous : un paquet dans un puits
+
+Dans un puits harmonique, un paquet qui a exactement la bonne largeur garde sa forme et suit la trajectoire classique. Cette cellule calcule la position moyenne $\langle x \rangle$ à partir de `evolution.psi`, qui contient la fonction d'onde à chaque image conservée. Essayez de changer `omega` ou `sigma` :
+
+<CodeCell code={oscillatorMotion} />
+
+Quittons maintenant la grille avec les [spins et qubits](/fr/tutorials/spins-and-qubits).

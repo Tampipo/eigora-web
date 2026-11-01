@@ -1,0 +1,43 @@
+import rabiOscillations from "@/content/cells/rabi-oscillations.py";
+import spinMeasurement from "@/content/cells/spin-measurement.py";
+import twoSpins from "@/content/cells/two-spins.py";
+
+## Spins et qubits
+
+Un spin n'a pas de fonction d'onde sur une grille. Son état est un petit vecteur de nombres complexes, et son hamiltonien une petite matrice. Cette matrice peut être diagonalisée directement : l'évolution est donc exacte, sans `dt` à choisir.
+
+Tout ce qui concerne ces systèmes se trouve dans `eigora.qm.discrete`.
+
+### Oscillations de Rabi
+
+Excitez un système à deux niveaux et sa population oscille. `Rabi` construit le hamiltonien à partir du désaccord `detuning` et de la fréquence `rabi_frequency`, et `evolve` prend un état initial et une liste d'instants :
+
+<CodeCell
+  code={rabiOscillations}
+  params={[
+    { name: "detuning", min: 0, max: 3, step: 0.1 },
+    { name: "rabi_frequency", min: 0.2, max: 2, step: 0.1 },
+  ]}
+/>
+
+À désaccord nul, la population est transférée entièrement. Augmentez le désaccord : les oscillations s'accélèrent, mais n'atteignent plus 1. Le maximum est `max_transfer`, la ligne en pointillés.
+
+La physique sous-jacente est présentée dans le module sur le [maser à ammoniac](/fr/qm/maser).
+
+### Simuler des mesures
+
+Une observable comme `SZ` donne les résultats possibles et leurs probabilités, et `measure` en tire un au hasard. Essayez de changer `theta` et `n_shots` :
+
+<CodeCell code={spinMeasurement} />
+
+Chaque exécution donne des comptes légèrement différents, puisqu'il s'agit de tirages aléatoires. Avec plus de mesures, les fractions se rapprochent des probabilités de Born. Les modules sur le [spin](/fr/qm/spin) et la [mesure](/fr/qm/measurement) expliquent pourquoi.
+
+### Deux spins couplés
+
+`HeisenbergChain` couple des spins entre eux, et `embed` place un opérateur à un spin sur un site d'un système plus grand :
+
+<CodeCell code={twoSpins} />
+
+Les énergies sont un singulet à $-3$ et un triplet à $+1$. Notez qu'`embed` additionne les valeurs des deux spins pour donner le spin total, contrairement à un simple produit tensoriel, qui les multiplierait.
+
+La diagonalisation exacte a une limite : la matrice double de taille à chaque spin, si bien que cette approche atteint ses limites vers une douzaine de spins.

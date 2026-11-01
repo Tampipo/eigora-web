@@ -1,0 +1,43 @@
+import rabiOscillations from "@/content/cells/rabi-oscillations.py";
+import spinMeasurement from "@/content/cells/spin-measurement.py";
+import twoSpins from "@/content/cells/two-spins.py";
+
+## Spins and qubits
+
+A spin has no wavefunction on a grid. Its state is a short vector of complex numbers, and its Hamiltonian is a small matrix. That matrix can be diagonalised outright, so the evolution here is exact: there is no `dt` to choose.
+
+Everything for these systems lives in `eigora.qm.discrete`.
+
+### Rabi oscillations
+
+Drive a two-level system and its population swings back and forth. `Rabi` builds the Hamiltonian from the `detuning` and the `rabi_frequency`, and `evolve` takes an initial state and a list of times:
+
+<CodeCell
+  code={rabiOscillations}
+  params={[
+    { name: "detuning", min: 0, max: 3, step: 0.1 },
+    { name: "rabi_frequency", min: 0.2, max: 2, step: 0.1 },
+  ]}
+/>
+
+With zero detuning, the population transfers completely. Increase the detuning and the oscillations get faster but never reach 1. The peak is `max_transfer`, the dashed line.
+
+The physics behind this is in the [ammonia maser](/en/qm/maser) module.
+
+### Simulating measurements
+
+An observable such as `SZ` gives you the possible outcomes and their probabilities, and `measure` draws one at random. Try changing `theta` and `n_shots`:
+
+<CodeCell code={spinMeasurement} />
+
+Each run gives slightly different counts, since these are random draws. With more shots, the fractions settle on the Born probabilities. The [spin](/en/qm/spin) and [measurement](/en/qm/measurement) modules explain why.
+
+### Two coupled spins
+
+`HeisenbergChain` couples spins together, and `embed` places a single-spin operator on one site of a larger system:
+
+<CodeCell code={twoSpins} />
+
+The energies are one singlet at $-3$ and a triplet at $+1$. Note that `embed` adds the two spins' values to give the total spin, unlike a plain tensor product, which would multiply them.
+
+Exact diagonalisation has a limit: the matrix doubles in size with every spin, so this approach runs out of room at around a dozen spins.
