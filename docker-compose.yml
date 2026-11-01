@@ -1,6 +1,11 @@
 # Copyright (C) 2026 Tanguy Marsault - Eigora
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+# `docker compose up` runs the whole suite: this site and the API, from the
+# eigora-api checkout next to this one.
+include:
+  - ../eigora-api/docker-compose.yml
+
 services:
   web:
     build:
@@ -15,12 +20,20 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.eigora.tampipo.fr}
-      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-wss://api.eigora.tampipo.fr}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-ws://localhost:8000}
     volumes:
       - .:/app
       - /app/node_modules
       - /app/.next
+      # Kept in a volume so root in the container leaves no files in the checkout,
+      # and the Python runtime survives restarts.
+      - pyodide:/app/public/pyodide
+    depends_on:
+      - api
     # Reconcile node_modules against package.json on every start, then dev-serve.
     # npm install is a no-op when the lockfile already matches.
     command: sh -c "npm install --prefer-offline --no-audit --no-fund && npm run dev"
+
+volumes:
+  pyodide:
