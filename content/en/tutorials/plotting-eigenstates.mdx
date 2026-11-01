@@ -1,0 +1,28 @@
+import eigenstatesPlot from "@/content/cells/eigenstates-plot.py";
+import customPotential from "@/content/cells/custom-potential.py";
+
+## Plotting eigenstates
+
+Numbers are a good check, but the shape of a wavefunction is easier to read from a picture. The usual picture draws each eigenstate at the height of its own energy, on top of the potential.
+
+### The standard figure
+
+`solve` returns a result holding `energies`, `wavefunctions` and `potential`, and `grid.values()` gives the matching $x$ points. The rest is ordinary matplotlib, so this same code works in a script on your own machine:
+
+<CodeCell
+  code={eigenstatesPlot}
+  params={[
+    { name: "omega", min: 0.4, max: 2, step: 0.1 },
+    { name: "n_states", min: 1, max: 8, step: 1 },
+  ]}
+/>
+
+Each extra state adds one node, and the states spread further into the regions where the potential is high.
+
+### Your own potential
+
+To define a new system, subclass `Potential` and write the formula in `__call__`. This cell is yours to edit, so try changing the formula, or the number of states:
+
+<CodeCell code={customPotential} />
+
+If you break something, **Reset** brings the original code back. Code that runs for more than 10 seconds is stopped, and the page itself stays responsive.

@@ -20,6 +20,8 @@ import { PositionBins } from "@/components/simulations/PositionBins";
 import { SeparableStateViewer } from "@/components/simulations/SeparableStateViewer";
 import { SpinMeasurement } from "@/components/simulations/SpinMeasurement";
 import { SuperpositionPhases } from "@/components/simulations/SuperpositionPhases";
+import { CodeBlock } from "@/components/ui/CodeBlock";
+import { CodeCell } from "@/components/ui/CodeCell";
 import { FormulaBlock } from "@/components/ui/FormulaBlock";
 import { Tex } from "@/components/ui/Tex";
 import { Video } from "@/components/ui/Video";
@@ -27,6 +29,8 @@ import { Video } from "@/components/ui/Video";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
+    pre: CodeBlock,
+    CodeCell,
     AmmoniaInversion,
     EigenstateViewer,
     WavepacketEvolution,

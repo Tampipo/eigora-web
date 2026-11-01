@@ -1,0 +1,37 @@
+import firstSpectrum from "@/content/cells/first-spectrum.py";
+
+## Premiers pas
+
+`eigora` est un petit package Python pour résoudre des systèmes quantiques. En quelques minutes, vous allez calculer les niveaux d'énergie d'un oscillateur harmonique et les comparer à la solution exacte.
+
+Vous pouvez suivre sur cette page sans rien installer : les cellules de code s'exécutent dans votre navigateur.
+
+### Installation
+
+Pour utiliser le package sur votre machine, il vous faut Python 3.12 ou plus récent :
+
+```bash
+pip install git+https://github.com/Tampipo/eigora
+```
+
+Le package n'a besoin que de NumPy et SciPy. Pour tracer des graphiques comme dans le tutoriel suivant, installez-le plutôt avec matplotlib :
+
+```bash
+pip install "eigora[plot] @ git+https://github.com/Tampipo/eigora"
+```
+
+### Unités
+
+Tout est en unités atomiques, avec $\hbar = m = 1$. Les énergies, les longueurs et les temps sont de simples nombres : aucun facteur de conversion à traîner.
+
+### Votre premier spectre
+
+Un système, c'est une **grille** et un **potentiel**. La grille est l'endroit où la fonction d'onde est échantillonnée, et `solve` renvoie les états propres les plus bas du hamiltonien obtenu.
+
+Pour un oscillateur harmonique, les énergies exactes sont $E_n = \omega\left(n + \tfrac{1}{2}\right)$, ce qui permet de vérifier le résultat numérique. Cliquez sur **Exécuter**, puis déplacez le curseur pour changer $\omega$ :
+
+<CodeCell code={firstSpectrum} params={[{ name: "omega", min: 0.2, max: 3, step: 0.1 }]} />
+
+Les deux colonnes doivent coïncider sur plusieurs décimales. Elles s'écartent lentement aux énergies élevées, car ces états oscillent plus vite et la grille les résout moins bien.
+
+La théorie derrière ces nombres se trouve dans le module sur l'[oscillateur harmonique](/fr/qm/harmonic). Passons maintenant au [tracé de ces états propres](/fr/tutorials/plotting-eigenstates).

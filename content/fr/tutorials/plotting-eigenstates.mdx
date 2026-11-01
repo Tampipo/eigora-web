@@ -1,0 +1,28 @@
+import eigenstatesPlot from "@/content/cells/eigenstates-plot.py";
+import customPotential from "@/content/cells/custom-potential.py";
+
+## Tracer des états propres
+
+Les nombres sont une bonne vérification, mais la forme d'une fonction d'onde se lit mieux sur une image. La figure habituelle place chaque état propre à la hauteur de son énergie, par-dessus le potentiel.
+
+### La figure classique
+
+`solve` renvoie un résultat contenant `energies`, `wavefunctions` et `potential`, et `grid.values()` donne les points $x$ correspondants. Le reste est du matplotlib ordinaire : ce même code fonctionne dans un script sur votre machine.
+
+<CodeCell
+  code={eigenstatesPlot}
+  params={[
+    { name: "omega", min: 0.4, max: 2, step: 0.1 },
+    { name: "n_states", min: 1, max: 8, step: 1 },
+  ]}
+/>
+
+Chaque état supplémentaire ajoute un nœud, et les états s'étendent davantage vers les régions où le potentiel est élevé.
+
+### Votre propre potentiel
+
+Pour définir un nouveau système, créez une sous-classe de `Potential` et écrivez la formule dans `__call__`. Cette cellule est à vous : essayez de changer la formule ou le nombre d'états.
+
+<CodeCell code={customPotential} />
+
+Si vous cassez quelque chose, **Réinitialiser** restaure le code d'origine. Un code qui tourne plus de 10 secondes est arrêté, et la page reste réactive.

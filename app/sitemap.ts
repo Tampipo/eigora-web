@@ -4,6 +4,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { QM_MODULES } from "@/lib/qm-modules";
+import { TUTORIALS } from "@/lib/tutorials";
 import { LEGAL_PAGES } from "@/lib/legal-pages";
 import { SITE_URL } from "@/lib/metadata";
 
@@ -19,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/qm",
     ...QM_MODULES.map((slug) => `/qm/${slug}`),
+    "/tutorials",
+    ...TUTORIALS.map((slug) => `/tutorials/${slug}`),
     ...LEGAL_PAGES.map((slug) => `/legal/${slug}`),
   ];
   const lastModified = new Date();
