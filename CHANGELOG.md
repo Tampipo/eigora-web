@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/Tampipo/eigora-web/compare/v0.1.5...v0.1.6) (2026-11-03)
+
+
+### Features
+
+* start the maser page from the double well, with L/R and S/A not… ([d5a03d1](https://github.com/Tampipo/eigora-web/commit/d5a03d1fd759bb3ce4a94152eee1cc128248800a))
+* start the maser page from the double well, with L/R and S/A notation ([b5c517c](https://github.com/Tampipo/eigora-web/commit/b5c517ce0204b6e6a307f316edfd5760b39f0e64))
+
 ## [0.1.5](https://github.com/Tampipo/eigora-web/compare/v0.1.4...v0.1.5) (2026-11-03)
 
 
