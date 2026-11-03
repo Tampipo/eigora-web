@@ -3,6 +3,7 @@
 
 import type { MDXComponents } from "mdx/types";
 import { AmmoniaInversion } from "@/components/simulations/AmmoniaInversion";
+import { DoubleWellStates } from "@/components/simulations/DoubleWellStates";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
 import { WavepacketEvolution } from "@/components/simulations/WavepacketEvolution";
 import { BarrierScattering } from "@/components/simulations/BarrierScattering";
@@ -32,6 +33,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     pre: CodeBlock,
     CodeCell,
     AmmoniaInversion,
+    DoubleWellStates,
     EigenstateViewer,
     WavepacketEvolution,
     BarrierScattering,
