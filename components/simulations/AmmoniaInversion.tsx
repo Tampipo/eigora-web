@@ -9,29 +9,30 @@ import { Tex } from "@/components/ui/Tex";
 import type { DiscreteEvolutionRequest } from "@/lib/api/schemas";
 import { useDiscreteEvolution } from "@/lib/discrete-evolution";
 
-// Two states, one coupling. H = [[0, -A], [-A, 0]] in the {|1>, |2>} basis:
-// E_0 is set to zero, since a common diagonal shifts both levels together and
-// only a global phase comes of it. Eigenvalues are then -A and +A, ascending,
-// so the API's coefficients arrive as (c_+, c_-) in that order, the symmetric
-// combination being the one tunneling pushes *down*.
+// Two states, one coupling. H = [[0, -Delta], [-Delta, 0]] in the {|L>, |R>}
+// basis, index 0 being L. E_0 is set to zero, since a common diagonal shifts
+// both levels together and only a global phase comes of it. Eigenvalues are
+// then -Delta and +Delta, ascending, so the API's coefficients arrive as
+// (c_S, c_A) in that order, the symmetric combination being the one tunneling
+// pushes *down*.
 //
-// A is fixed rather than exposed. It is the only scale in the problem, so it
-// sets the unit of time and nothing else: rescaling A rescales t by the same
-// factor, and since the run spans one full recurrence 2*pi/A, every frame
-// drawn is identical for any A. A control for it would relabel the clock and
-// move not one pixel. Read t below in units of hbar/A.
-const A = 1;
-const T_MAX = (2 * Math.PI) / A;
+// Delta is fixed rather than exposed. It is the only scale in the problem, so
+// it sets the unit of time and nothing else: rescaling Delta rescales t by the
+// same factor, and since the run spans one full recurrence 2*pi/Delta, every
+// frame drawn is identical for any Delta. A control for it would relabel the
+// clock and move not one pixel. Read t below in units of hbar/Delta.
+const DELTA = 1;
+const T_MAX = (2 * Math.PI) / DELTA;
 
 const MS_PER_TIME_UNIT = 200;
 const SPEED_STOPS = [0.25, 0.5, 1, 2] as const;
 
 const RE_COLOR = "rgb(124 160 255)";
 const IM_COLOR = "rgb(170 141 255)";
-const P1_COLOR = "rgb(124 160 255)";
-const P2_COLOR = "rgb(255 160 120)";
-const PLUS_COLOR = "rgb(120 220 180)";
-const MINUS_COLOR = "rgb(232 160 210)";
+const LEFT_COLOR = "rgb(255 160 120)";
+const RIGHT_COLOR = "rgb(124 160 255)";
+const SYM_COLOR = "rgb(120 220 180)";
+const ANTI_COLOR = "rgb(232 160 210)";
 const ARROW_COLOR = "rgb(232 235 242)";
 const GRID_COLOR = "rgb(35 41 54)";
 const AXIS_COLOR = "rgb(52 60 77)";
@@ -41,12 +42,12 @@ const FAINT_COLOR = "rgb(99 108 126)";
 const MONO = "var(--font-geist-mono), ui-monospace, monospace";
 const TAU = 2 * Math.PI;
 
-// psi(0) = |1>, the nitrogen definitely on one side. There is no control for
+// psi(0) = |R>, the nitrogen definitely on one side. There is no control for
 // this: the eigenstates are the only other preparations worth naming, and
 // starting from one of those makes every curve on the figure a flat line, an
 // eigenstate having nothing to do but collect a phase. The point of the module
 // is the state that *does* move.
-const INITIAL_STATE = { re: [1, 0] };
+const INITIAL_STATE = { re: [0, 1] };
 
 export interface AmmoniaInversionProps {
   nFrames?: number;
@@ -59,11 +60,11 @@ export function AmmoniaInversion({
 }: AmmoniaInversionProps) {
   // Fixed, so this resolves to one pair of requests for the life of the page:
   // fetched once, cached, never refetched. psi(t) returns to itself after
-  // T_MAX, and the beat in P_1 has half that period, so the run closes on a
+  // T_MAX, and the beat in P_R has half that period, so the run closes on a
   // whole number of both and loops without a seam.
   const base = useMemo(
     () => ({
-      hamiltonian: { re: [[0, -A], [-A, 0]] },
+      hamiltonian: { re: [[0, -DELTA], [-DELTA, 0]] },
       state: INITIAL_STATE,
       t_max: T_MAX,
       n_frames: nFrames,
@@ -73,30 +74,30 @@ export function AmmoniaInversion({
 
   // The API projects psi(t) onto one reference per run, and the two
   // configurations are two different references, so two runs. Both carry the
-  // same coefficients (c_+, c_-) in the energy eigenbasis; only `overlap`
-  // differs, giving <1|psi(t)> and <2|psi(t)> respectively. Nothing on this
+  // same coefficients (c_S, c_A) in the energy eigenbasis; only `overlap`
+  // differs, giving <L|psi(t)> and <R|psi(t)> respectively. Nothing on this
   // figure is computed here: every amplitude below arrives from the solver.
-  const req1 = useMemo<DiscreteEvolutionRequest>(
+  const reqL = useMemo<DiscreteEvolutionRequest>(
     () => ({ ...base, reference: { re: [1, 0] } }),
     [base],
   );
-  const req2 = useMemo<DiscreteEvolutionRequest>(
+  const reqR = useMemo<DiscreteEvolutionRequest>(
     () => ({ ...base, reference: { re: [0, 1] } }),
     [base],
   );
 
-  const { data, dataKey, error, loading } = useDiscreteEvolution(req1);
+  const { data, dataKey, error, loading } = useDiscreteEvolution(reqL);
   const { data: data2, dataKey: dataKey2, error: error2 } =
-    useDiscreteEvolution(req2);
+    useDiscreteEvolution(reqR);
 
   // Both runs change together on every click, and they land in either order.
   // Their frame counts always match, so length is no help in telling a fresh
   // response from a leftover: only the key each one came back under says
   // whether the two halves describe the same state. Until both agree with what
   // was just asked for, the previous complete pair stays on screen.
-  const pairKey = `${JSON.stringify(req1)}|${JSON.stringify(req2)}`;
+  const pairKey = `${JSON.stringify(reqL)}|${JSON.stringify(reqR)}`;
   const paired =
-    dataKey === JSON.stringify(req1) && dataKey2 === JSON.stringify(req2);
+    dataKey === JSON.stringify(reqL) && dataKey2 === JSON.stringify(reqR);
   const shown = useRef<Series | null>(null);
 
   const fresh = useMemo(() => {
@@ -110,34 +111,34 @@ export function AmmoniaInversion({
 
     const out = {
       times: data.times,
-      // The solver's own eigenvalues, not the E_0 -/+ A this figure assumed
+      // The solver's own eigenvalues, not the E_0 -/+ Delta this figure assumed
       // when it built H. Everything downstream that names an energy or a
       // period reads them from here, so the labels state what came back
       // rather than what was asked for.
       energies: data.energies,
-      // <1|psi(t)> and <2|psi(t)>: the state read in the configuration basis.
-      a1re: Float64Array.from(o1.re),
-      a1im: Float64Array.from(o1.im ?? new Array<number>(n).fill(0)),
-      a2re: Float64Array.from(o2.re),
-      a2im: Float64Array.from(o2.im ?? new Array<number>(n).fill(0)),
-      // |c_+|^2 and |c_-|^2 straight off the eigenbasis coefficients, which
-      // arrive ascending in energy: index 0 is E_0 - A, the symmetric state.
-      pPlus: new Float64Array(n),
-      pMinus: new Float64Array(n),
-      p1: new Float64Array(n),
-      p2: new Float64Array(n),
+      // <L|psi(t)> and <R|psi(t)>: the state read in the configuration basis.
+      aLre: Float64Array.from(o1.re),
+      aLim: Float64Array.from(o1.im ?? new Array<number>(n).fill(0)),
+      aRre: Float64Array.from(o2.re),
+      aRim: Float64Array.from(o2.im ?? new Array<number>(n).fill(0)),
+      // |c_S|^2 and |c_A|^2 straight off the eigenbasis coefficients, which
+      // arrive ascending in energy: index 0 is E_0 - Delta, the symmetric state.
+      pS: new Float64Array(n),
+      pA: new Float64Array(n),
+      pL: new Float64Array(n),
+      pR: new Float64Array(n),
     };
 
     for (let t = 0; t < n; t++) {
       const { re, im } = data.coefficients[t];
-      const plusRe = re[0] ?? 0;
-      const plusIm = im?.[0] ?? 0;
-      const minusRe = re[1] ?? 0;
-      const minusIm = im?.[1] ?? 0;
-      out.pPlus[t] = plusRe * plusRe + plusIm * plusIm;
-      out.pMinus[t] = minusRe * minusRe + minusIm * minusIm;
-      out.p1[t] = out.a1re[t] ** 2 + out.a1im[t] ** 2;
-      out.p2[t] = out.a2re[t] ** 2 + out.a2im[t] ** 2;
+      const symRe = re[0] ?? 0;
+      const symIm = im?.[0] ?? 0;
+      const antiRe = re[1] ?? 0;
+      const antiIm = im?.[1] ?? 0;
+      out.pS[t] = symRe * symRe + symIm * symIm;
+      out.pA[t] = antiRe * antiRe + antiIm * antiIm;
+      out.pL[t] = out.aLre[t] ** 2 + out.aLim[t] ** 2;
+      out.pR[t] = out.aRre[t] ** 2 + out.aRim[t] ** 2;
     }
     return out;
   }, [paired, data, data2]);
@@ -213,25 +214,25 @@ export function AmmoniaInversion({
   const lastFrame = Math.max(0, (series?.times.length ?? 0) - 1);
   const tNow = series?.times[frame] ?? 0;
 
-  // Both read off the solver's eigenvalues rather than the A this figure sent.
-  // The splitting is E_- - E_+, which is 2A for the H above, and P_1 beats at
-  // that difference: one full flip and back takes 2*pi/gap.
+  // Both read off the solver's eigenvalues rather than the Delta this figure
+  // sent. The splitting is E_A - E_S, which is 2*Delta for the H above, and P_R
+  // beats at that difference: one full flip and back takes 2*pi/gap.
   const gap = series ? series.energies[1] - series.energies[0] : 0;
   const flipPeriod = gap > 0 ? TAU / gap : 0;
 
   return (
     <figure className="not-prose my-10 overflow-hidden rounded-xl border border-border bg-surface/40 shadow-card">
-      {/* Nothing to tune: psi(0) is fixed and A only names the clock. What is
+      {/* Nothing to tune: psi(0) is fixed and Delta only names the clock. What is
           worth stating is the setup itself, so it reads as a caption rather
           than as a control panel with the knobs greyed out. */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 border-b border-border px-4 py-2.5 text-[11px] text-muted">
-        <Tex className="normal-case">{`\\hat H = \\begin{pmatrix} 0 & -A \\\\ -A & 0 \\end{pmatrix}`}</Tex>
+        <Tex className="normal-case">{`\\hat H = \\begin{pmatrix} 0 & -\\Delta \\\\ -\\Delta & 0 \\end{pmatrix}`}</Tex>
         <span className="text-border">·</span>
-        <Tex className="normal-case">{`\\psi(0) = |1\\rangle`}</Tex>
+        <Tex className="normal-case">{`\\psi(0) = |R\\rangle`}</Tex>
         <span className="text-border">·</span>
         <span className="text-faint">
           <Tex className="normal-case">{`t`}</Tex> in units of{" "}
-          <Tex className="normal-case">{`\\hbar/A`}</Tex>
+          <Tex className="normal-case">{`\\hbar/\\Delta`}</Tex>
         </span>
       </div>
 
@@ -330,14 +331,14 @@ interface Series {
   times: number[];
   /** Eigenvalues of H, ascending, exactly as the solver returned them. */
   energies: number[];
-  a1re: Float64Array;
-  a1im: Float64Array;
-  a2re: Float64Array;
-  a2im: Float64Array;
-  pPlus: Float64Array;
-  pMinus: Float64Array;
-  p1: Float64Array;
-  p2: Float64Array;
+  aLre: Float64Array;
+  aLim: Float64Array;
+  aRre: Float64Array;
+  aRim: Float64Array;
+  pS: Float64Array;
+  pA: Float64Array;
+  pL: Float64Array;
+  pR: Float64Array;
 }
 
 // ── Canvas ──────────────────────────────────────────────────────────────────
@@ -355,7 +356,7 @@ function sizeCanvas(canvas: HTMLCanvasElement) {
  * The state itself: two complex numbers, nothing more.
  *
  * A two-level system has no wavefunction over space. psi(t) *is* the pair
- * (<1|psi>, <2|psi>), so it is drawn as the pair. Each amplitude is an arrow
+ * (<L|psi>, <R|psi>), so it is drawn as the pair, L on the left. Each amplitude is an arrow
  * in its own complex plane, with the length of that arrow squared written
  * underneath as the probability of finding the nitrogen on that side. Watch
  * one arrow shorten as the other lengthens: that is the molecule flipping.
@@ -375,20 +376,20 @@ function drawState(
 
   const cells = [
     {
-      re: s.a1re[frame],
-      im: s.a1im[frame],
-      p: s.p1[frame],
-      label: "⟨1|ψ(t)⟩",
-      sub: "nitrogen up",
-      color: P1_COLOR,
+      re: s.aLre[frame],
+      im: s.aLim[frame],
+      p: s.pL[frame],
+      label: "⟨L|ψ(t)⟩",
+      sub: "left well",
+      color: LEFT_COLOR,
     },
     {
-      re: s.a2re[frame],
-      im: s.a2im[frame],
-      p: s.p2[frame],
-      label: "⟨2|ψ(t)⟩",
-      sub: "nitrogen down",
-      color: P2_COLOR,
+      re: s.aRre[frame],
+      im: s.aRim[frame],
+      p: s.pR[frame],
+      label: "⟨R|ψ(t)⟩",
+      sub: "right well",
+      color: RIGHT_COLOR,
     },
   ];
 
@@ -455,14 +456,14 @@ function drawState(
 /**
  * The two questions, one above the other.
  *
- * Top, with the room: "which side is the nitrogen on". P_1 and P_2 trade
- * places at 2A/hbar, the molecule inverting. That is the only thing on this
- * figure that moves, so it gets the time axis.
+ * Top, with the room: "which side is the nitrogen on". P_L and P_R trade
+ * places at 2*Delta/hbar, the molecule inverting. That is the only thing on
+ * this figure that moves, so it gets the time axis.
  *
- * Bottom, as a strip: "what energy would a measurement return". |c_+|^2 and
- * |c_-|^2 are constants of the motion, and plotting two flat lines against time
+ * Bottom, as a strip: "what energy would a measurement return". |c_S|^2 and
+ * |c_A|^2 are constants of the motion, and plotting two flat lines against time
  * would spend half the figure saying nothing. They still earn their place,
- * because they change with the *preparation*: a half-and-half pair for |1>,
+ * because they change with the *preparation*: a half-and-half pair for |R>,
  * all-or-nothing for either eigenstate.
  */
 function drawProbabilities(
@@ -489,8 +490,8 @@ function drawProbabilities(
     frame,
     times: s.times,
     curves: [
-      { values: s.p1, color: P1_COLOR, name: "P₁" },
-      { values: s.p2, color: P2_COLOR, name: "P₂" },
+      { values: s.pL, color: LEFT_COLOR, name: { base: "P", sub: "L" } },
+      { values: s.pR, color: RIGHT_COLOR, name: { base: "P", sub: "R" } },
     ],
   });
 
@@ -504,14 +505,14 @@ function drawProbabilities(
   drawEnergyStrip(ctx, {
     y: traceH,
     width: w,
-    pPlus: s.pPlus[frame],
-    pMinus: s.pMinus[frame],
+    pS: s.pS[frame],
+    pA: s.pA[frame],
     energies: s.energies,
   });
 }
 
 /**
- * |c_+|^2 and |c_-|^2 as two horizontal bars sharing one 0-to-1 track.
+ * |c_S|^2 and |c_A|^2 as two horizontal bars sharing one 0-to-1 track.
  *
  * Flat in time by construction, so they are stated rather than plotted, with
  * the energy of each level written alongside, the pair of numbers a photon
@@ -522,8 +523,8 @@ function drawEnergyStrip(
   spec: {
     y: number;
     width: number;
-    pPlus: number;
-    pMinus: number;
+    pS: number;
+    pA: number;
     energies: number[];
   },
 ) {
@@ -541,15 +542,15 @@ function drawEnergyStrip(
 
   const rows = [
     {
-      p: spec.pPlus,
-      color: PLUS_COLOR,
-      name: "|c₊|²",
+      p: spec.pS,
+      color: SYM_COLOR,
+      name: { base: "|c", sub: "S", tail: "|²" },
       energy: `E = ${(energies[0] ?? 0).toFixed(2)}`,
     },
     {
-      p: spec.pMinus,
-      color: MINUS_COLOR,
-      name: "|c₋|²",
+      p: spec.pA,
+      color: ANTI_COLOR,
+      name: { base: "|c", sub: "A", tail: "|²" },
       energy: `E = ${(energies[1] ?? 0).toFixed(2)}`,
     },
   ];
@@ -565,9 +566,8 @@ function drawEnergyStrip(
     const ry = top + i * (rowH + 4);
 
     ctx.font = `10px ${MONO}`;
-    ctx.textAlign = "left";
     ctx.fillStyle = row.color;
-    ctx.fillText(row.name, padL, ry + 11);
+    fillSubscripted(ctx, row.name, padL, ry + 11);
 
     ctx.strokeStyle = GRID_COLOR;
     ctx.lineWidth = 1;
@@ -596,7 +596,7 @@ interface PanelSpec {
   title: string;
   frame: number;
   times: number[];
-  curves: { values: Float64Array; color: string; name: string }[];
+  curves: { values: Float64Array; color: string; name: Subscripted }[];
 }
 
 function drawProbPanel(ctx: CanvasRenderingContext2D, spec: PanelSpec) {
@@ -683,13 +683,44 @@ function drawProbPanel(ctx: CanvasRenderingContext2D, spec: PanelSpec) {
 
     // Name the curve at its own final height, so the two never collide.
     ctx.font = `9px ${MONO}`;
-    ctx.textAlign = "left";
-    ctx.fillText(
+    fillSubscripted(
+      ctx,
       curve.name,
       traceX + traceW + 4,
       atY(curve.values[times.length - 1]) + 3,
     );
   }
+}
+
+/** A canvas label with one subscript, such as P_L or |c_S|². */
+interface Subscripted {
+  base: string;
+  sub: string;
+  tail?: string;
+}
+
+/**
+ * Draw a Subscripted label left-aligned at (x, y) in the current font.
+ *
+ * Unicode has no subscript capitals, so the subscript is drawn by hand: the
+ * same font at four fifths of the size, dropped by a third of the line.
+ */
+function fillSubscripted(
+  ctx: CanvasRenderingContext2D,
+  label: Subscripted,
+  x: number,
+  y: number,
+) {
+  const font = ctx.font;
+  const size = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1] ?? 10);
+  ctx.textAlign = "left";
+  ctx.fillText(label.base, x, y);
+  let cursor = x + ctx.measureText(label.base).width;
+  ctx.font = font.replace(/\d+(?:\.\d+)?px/, `${Math.round(size * 0.8)}px`);
+  ctx.fillText(label.sub, cursor, y + size * 0.3);
+  cursor += ctx.measureText(label.sub).width;
+  ctx.font = font;
+  if (label.tail) ctx.fillText(label.tail, cursor, y);
 }
 
 function drawArrow(

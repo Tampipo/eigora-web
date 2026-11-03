@@ -1,66 +1,94 @@
 ## Le maser à ammoniac
 
-L'ammoniac, NH₃, est une pyramide : trois hydrogènes forment une base triangulaire, et l'azote se trouve soit au-dessus, soit au-dessous de leur plan. Les deux configurations sont images l'une de l'autre dans un miroir, et classiquement toutes deux sont des équilibres aussi valables. Appelons-les $|1\rangle$ et $|2\rangle$. Quantiquement, l'azote peut traverser par effet tunnel d'un côté à l'autre, et ce qui découle de ce seul fait est proche du système non trivial le plus simple de la mécanique quantique : deux états, couplés par un seul nombre. C'est aussi le système qui a donné leur nom aux masers, et peu après aux lasers.
+L'ammoniac, NH₃, est une pyramide : trois hydrogènes forment une base triangulaire, et l'azote se trouve d'un côté ou de l'autre de leur plan. Les deux configurations sont images l'une de l'autre dans un miroir, et classiquement toutes deux sont des équilibres aussi valables. Appelons-les $|L\rangle$ et $|R\rangle$, pour l'azote à gauche ou à droite du plan (de l'anglais *left* et *right*). Quantiquement, l'azote peut traverser par effet tunnel d'un côté à l'autre, et ce qui découle de ce seul fait est proche du système non trivial le plus simple de la mécanique quantique : deux états, couplés par un seul nombre. C'est aussi le système qui a donné leur nom aux masers, et peu après aux lasers.
+
+### Un double puits
+
+Partons de l'azote lui-même. Soit $x$ sa position le long de l'axe de la molécule, le plan des hydrogènes étant en $x = 0$. Son énergie est minimale dans l'une ou l'autre pyramide et maximale dans le plan qui les sépare : un double puits symétrique, modélisé ici par $V(x) = x^4 - 4x^2$, avec deux minima en $x = \pm\sqrt2$ séparés par une barrière de hauteur 4 dans des unités où $\hbar = m = 1$. Résoudre l'équation de Schrödinger dans ce potentiel donne les états stationnaires, et les deux plus bas forment une paire serrée : un $\psi_S$ symétrique et un $\psi_A$ antisymétrique, chacun partagé à parts égales entre les deux puits, d'énergies $E_S < E_A$ séparées d'un petit écart, que les sections suivantes notent $2\Delta$. Aucun ne place l'azote d'un côté. Leur somme et leur différence le font,
+$$
+\psi_R = \frac{1}{\sqrt2}\big(\psi_S + \psi_A\big), \qquad \psi_L = \frac{1}{\sqrt2}\big(\psi_S - \psi_A\big),
+$$
+puisque les deux états propres s'ajoutent dans un puits et se compensent dans l'autre. Ce sont les deux configurations sous forme de fonctions d'onde, $\psi_L = \langle x|L\rangle$ et $\psi_R = \langle x|R\rangle$. Les états dont on partirait naïvement ne sont pas stationnaires : ce sont des superpositions de ceux qui le sont.
+
+Le troisième niveau, $E_3$, est ce qui permet de laisser tout le reste de côté. Il se trouve au-dessus de la barrière et loin de la paire, $E_3 - E_A$ valant plus de vingt fois $E_A - E_S$ : aux énergies proches du doublet, le reste du spectre ne joue aucun rôle. Deux états suffisent, et toute la suite de cette page ne travaille qu'avec eux.
+
+<DoubleWellStates
+  caption={
+    <>
+      Les trois états les plus bas de <Tex>{`V(x) = x^4 - 4x^2`}</Tex>. En
+      haut : le potentiel et ses niveaux. <Tex>{`E_S`}</Tex> et{" "}
+      <Tex>{`E_A`}</Tex> se confondent presque, séparés par l'écart tunnel{" "}
+      <Tex>{`2\\Delta`}</Tex>, tandis que <Tex>{`E_3`}</Tex> passe déjà
+      au-dessus du sommet de la barrière, en <Tex>{`V = 0`}</Tex>. Au milieu :
+      les deux états propres, étalés chacun sur les deux puits. En bas : leur
+      somme et leur différence, chacune confinée dans un puits, à la même
+      échelle. Le signe de <Tex>{`\\psi_A`}</Tex> est une convention, choisie
+      positive dans le puits de droite ; le changer ne fait qu'échanger la
+      combinaison appelée somme.
+    </>
+  }
+/>
 
 ### Deux configurations, un hamiltonien
 
-Restreignons-nous à $|1\rangle$ et $|2\rangle$ et écrivons l'hamiltonien dans cette base. Laissée seule dans l'un ou l'autre puits, la molécule aurait la même énergie $E_0$, puisque les deux configurations sont des images miroir et que rien ne les distingue énergétiquement. Cela fixe la diagonale :
+Restreignons-nous à $|L\rangle$ et $|R\rangle$ et écrivons l'hamiltonien dans cette base. Laissée seule dans l'un ou l'autre puits, la molécule aurait la même énergie $E_0$, puisque les deux configurations sont des images miroir et que rien ne les distingue énergétiquement. Cela fixe la diagonale :
 $$
-\langle 1|\hat H|1\rangle = \langle 2|\hat H|2\rangle = E_0.
+\langle L|\hat H|L\rangle = \langle R|\hat H|R\rangle = E_0.
 $$
-La barrière séparant les deux puits est cependant finie, si bien que l'azote a une amplitude petite mais non nulle de la traverser plutôt que de rester en place. Ce couplage est l'élément hors diagonale, réel par la même symétrie miroir, noté $-A$ :
+La barrière séparant les deux puits est cependant finie, si bien que l'azote a une amplitude petite mais non nulle de la traverser plutôt que de rester en place. Ce couplage est l'élément hors diagonale, réel par la même symétrie miroir, noté $-\Delta$ :
 $$
-\langle 1|\hat H|2\rangle = \langle 2|\hat H|1\rangle = -A, \qquad \hat H = \begin{pmatrix} E_0 & -A \\ -A & E_0 \end{pmatrix}.
+\langle L|\hat H|R\rangle = \langle R|\hat H|L\rangle = -\Delta, \qquad \hat H = \begin{pmatrix} E_0 & -\Delta \\ -\Delta & E_0 \end{pmatrix}.
 $$
-$A > 0$ mesure la facilité avec laquelle la molécule traverse par effet tunnel : une barrière plus haute ou plus large rend $A$ plus petit, et $A = 0$ découple entièrement les deux puits, laissant $|1\rangle$ et $|2\rangle$ chacun stationnaire de son côté.
+$\Delta > 0$ mesure la facilité avec laquelle la molécule traverse par effet tunnel : une barrière plus haute ou plus large rend $\Delta$ plus petit, et $\Delta = 0$ découple entièrement les deux puits, laissant $|L\rangle$ et $|R\rangle$ chacun stationnaire de son côté.
 
 ### États symétrique et antisymétrique
 
-$\hat H$ n'est pas diagonal dans $\{|1\rangle, |2\rangle\}$, ce ne sont donc pas des états d'énergie définie. Le diagonaliser en donne deux :
+$\hat H$ n'est pas diagonal dans $\{|L\rangle, |R\rangle\}$, ce ne sont donc pas des états d'énergie définie. Le diagonaliser en donne deux :
 $$
-|+\rangle = \frac{1}{\sqrt2}\big(|1\rangle + |2\rangle\big), \quad E_+ = E_0 - A;
+|S\rangle = \frac{1}{\sqrt2}\big(|L\rangle + |R\rangle\big), \quad E_S = E_0 - \Delta;
 \qquad
-|-\rangle = \frac{1}{\sqrt2}\big(|1\rangle - |2\rangle\big), \quad E_- = E_0 + A.
+|A\rangle = \frac{1}{\sqrt2}\big(|R\rangle - |L\rangle\big), \quad E_A = E_0 + \Delta.
 $$
-Le signe désigne la combinaison, pas l'énergie : $|+\rangle$ est l'état symétrique et se situe *plus bas*, puisque le couplage entre avec un $-A$. (On les note souvent $|S\rangle$ et $|A\rangle$, mais $A$ désigne déjà le couplage, et $E_A = E_0 + A$ ne demande qu'à semer la confusion.)
+Ce sont les $\psi_S$ et $\psi_A$ du double puits, retrouvés à partir de deux nombres plutôt que d'une équation différentielle. L'état symétrique se situe *plus bas*, puisque le couplage entre avec un $-\Delta$. Le signe global de $|A\rangle$ est une convention, choisie pour correspondre à $\psi_A$, positive dans le puits de droite.
 
-L'effet tunnel, invisible sur la diagonale, a scindé une énergie unique $E_0$ en deux, séparées de $2A$. La combinaison symétrique se place plus bas et l'antisymétrique plus haut, le même schéma qui met une orbitale liante en dessous d'une orbitale antiliante. Pour l'ammoniac réel, $2A/h \approx 23{,}87\ \text{GHz}$, soit une longueur d'onde d'environ $1{,}25\ \text{cm}$ : un photon à cette fréquence relie $|+\rangle$ et $|-\rangle$. Cleeton et Williams ont mesuré cette raie d'absorption en 1934, et c'est exactement cette transition que Gordon, Zeiger et Townes ont mise en oscillation vers 1953-1954 pour construire le premier maser, *Microwave Amplification by Stimulated Emission of Radiation*, l'ancêtre direct du laser.
+L'effet tunnel, invisible sur la diagonale, a scindé une énergie unique $E_0$ en deux, séparées de $2\Delta$. La combinaison symétrique se place plus bas et l'antisymétrique plus haut, le même schéma qui met une orbitale liante en dessous d'une orbitale antiliante. Pour l'ammoniac réel, $2\Delta/h \approx 23{,}87\ \text{GHz}$, soit une longueur d'onde d'environ $1{,}25\ \text{cm}$ : un photon à cette fréquence relie $|S\rangle$ et $|A\rangle$. Cleeton et Williams ont mesuré cette raie d'absorption en 1934, et c'est exactement cette transition que Gordon, Zeiger et Townes ont mise en oscillation vers 1953-1954 pour construire le premier maser, *Microwave Amplification by Stimulated Emission of Radiation*, l'ancêtre direct du laser.
 
 ### La molécule bascule
 
-Préparons la molécule dans une configuration définie, $|\psi(0)\rangle = |1\rangle = \frac{1}{\sqrt2}\big(|+\rangle + |-\rangle\big)$ : une superposition à parts égales, pas un état propre, elle ne reste donc pas immobile. Chaque composante tourne à sa propre vitesse, fixée par $E_+$ et $E_-$,
+Préparons la molécule dans une configuration définie, $|\psi(0)\rangle = |R\rangle = \frac{1}{\sqrt2}\big(|S\rangle + |A\rangle\big)$ : une superposition à parts égales, pas un état propre, elle ne reste donc pas immobile. Chaque composante tourne à sa propre vitesse, fixée par $E_S$ et $E_A$,
 $$
-|\psi(t)\rangle = \frac{1}{\sqrt2}\Big(e^{-iE_+ t/\hbar}|+\rangle + e^{-iE_- t/\hbar}|-\rangle\Big),
+|\psi(t)\rangle = \frac{1}{\sqrt2}\Big(e^{-iE_S t/\hbar}|S\rangle + e^{-iE_A t/\hbar}|A\rangle\Big),
 $$
 et se reprojeter sur la base d'origine donne
 $$
-P_1(t) = |\langle 1|\psi(t)\rangle|^2 = \cos^2\!\Big(\frac{At}{\hbar}\Big),
+P_R(t) = |\langle R|\psi(t)\rangle|^2 = \cos^2\!\Big(\frac{\Delta t}{\hbar}\Big),
 \qquad
-P_2(t) = |\langle 2|\psi(t)\rangle|^2 = \sin^2\!\Big(\frac{At}{\hbar}\Big).
+P_L(t) = |\langle L|\psi(t)\rangle|^2 = \sin^2\!\Big(\frac{\Delta t}{\hbar}\Big).
 $$
-L'azote oscille véritablement d'un côté de la molécule à l'autre, à la fréquence angulaire $2A/\hbar$, exactement l'écart qui sépare $E_+$ de $E_-$. Posons cependant une autre question : non pas *où* se trouve l'azote, mais *quelle énergie donnerait une mesure*. Rien ne bouge alors. $|c_+(t)|^2 = |c_-(t)|^2 = \tfrac12$ à chaque instant $t$, puisque $|+\rangle$ et $|-\rangle$ sont eux-mêmes des états stationnaires dont seule la phase évolue. Le basculement vit entièrement dans la base de configuration $\{|1\rangle, |2\rangle\}$ ; il est invisible à une mesure faite dans la base d'énergie.
+L'azote oscille véritablement d'un côté de la molécule à l'autre, à la fréquence angulaire $2\Delta/\hbar$, exactement l'écart qui sépare $E_S$ de $E_A$. Posons cependant une autre question : non pas *où* se trouve l'azote, mais *quelle énergie donnerait une mesure*. Rien ne bouge alors. $|c_S(t)|^2 = |c_A(t)|^2 = \tfrac12$ à chaque instant $t$, puisque $|S\rangle$ et $|A\rangle$ sont eux-mêmes des états stationnaires dont seule la phase évolue. Le basculement vit entièrement dans la base de configuration $\{|L\rangle, |R\rangle\}$ ; il est invisible à une mesure faite dans la base d'énergie.
 
 <AmmoniaInversion
   caption={
     <>
       L'état est deux nombres complexes, il est donc dessiné comme tel :
       chaque flèche est une amplitude,{" "}
-      <Tex>{`\\langle 1|\\psi(t)\\rangle`}</Tex> et{" "}
-      <Tex>{`\\langle 2|\\psi(t)\\rangle`}</Tex>, son module au carré étant la
+      <Tex>{`\\langle L|\\psi(t)\\rangle`}</Tex> et{" "}
+      <Tex>{`\\langle R|\\psi(t)\\rangle`}</Tex>, son module au carré étant la
       probabilité de trouver l'azote de ce côté. Regardez l'une raccourcir
       pendant que l'autre grandit : c'est l'inversion, à{" "}
-      <Tex>{`2A/\\hbar`}</Tex>. Dessous, le même état lu de deux façons. Les
-      probabilités de configuration oscillent, tandis que{" "}
-      <Tex>{`|c_+|^2`}</Tex> et <Tex>{`|c_-|^2`}</Tex> valent{" "}
+      <Tex>{`2\\Delta/\\hbar`}</Tex>. Dessous, le même état lu de deux façons.
+      Les probabilités de configuration oscillent, tandis que{" "}
+      <Tex>{`|c_S|^2`}</Tex> et <Tex>{`|c_A|^2`}</Tex> valent{" "}
       <Tex>{`1/2`}</Tex> et n'en bougent plus, données comme barres puisqu'
       elles n'ont rien à faire au cours du temps. Le temps est en unités de{" "}
-      <Tex>{`\\hbar/A`}</Tex>, et c'est tout ce que <Tex>{`A`}</Tex> fixe
-      ici : c'est la seule échelle du problème, donc le changer renomme
-      l'horloge et laisse chaque courbe exactement où elle est.
+      <Tex>{`\\hbar/\\Delta`}</Tex>, et c'est tout ce que{" "}
+      <Tex>{`\\Delta`}</Tex> fixe ici : c'est la seule échelle du problème,
+      donc le changer renomme l'horloge et laisse chaque courbe exactement où
+      elle est.
     </>
   }
 />
 
 ### De l'oscillation à l'amplification
 
-Un faisceau d'ammoniac, à lui seul, ne fait que basculer d'avant en arrière. En faire un maser demande un ingrédient de plus, un moyen de séparer $|+\rangle$ de $|-\rangle$ avant qu'ils n'atteignent une cavité. Chaque configuration géométrique porte un moment dipolaire électrique, pointant en sens opposé dans $|1\rangle$ et $|2\rangle$, si bien qu'un champ électrique extérieur écarte les deux niveaux en énergie d'une quantité qui croît avec le champ et de signe opposé pour chacun. Faire passer le faisceau moléculaire à travers un champ fortement inhomogène transforme ce déplacement Stark dépendant de l'état en un tri spatial : l'état supérieur $|-\rangle$ est focalisé dans un faisceau, $|+\rangle$ est écarté. Ce qui entre ensuite dans la cavité est une population presque entièrement dans $|-\rangle$, une inversion de population, à l'envers de l'équilibre thermique, alimentant une cavité résonante à $2A/\hbar$. Un unique photon à cette fréquence, frappant l'une de ces molécules, stimule la transition $|-\rangle \to |+\rangle$ et ressort accompagné d'un second photon identique au premier. Répété sur tout le faisceau, c'est l'amplification par émission stimulée, la physique derrière le nom.
+Un faisceau d'ammoniac, à lui seul, ne fait que basculer d'avant en arrière. En faire un maser demande un ingrédient de plus, un moyen de séparer $|S\rangle$ de $|A\rangle$ avant qu'ils n'atteignent une cavité. Chaque configuration géométrique porte un moment dipolaire électrique, pointant en sens opposé dans $|L\rangle$ et $|R\rangle$, si bien qu'un champ électrique extérieur écarte les deux niveaux en énergie d'une quantité qui croît avec le champ et de signe opposé pour chacun. Faire passer le faisceau moléculaire à travers un champ fortement inhomogène transforme ce déplacement Stark dépendant de l'état en un tri spatial : l'état supérieur $|A\rangle$ est focalisé dans un faisceau, $|S\rangle$ est écarté. Ce qui entre ensuite dans la cavité est une population presque entièrement dans $|A\rangle$, une inversion de population, à l'envers de l'équilibre thermique, alimentant une cavité résonante à $2\Delta/\hbar$. Un unique photon à cette fréquence, frappant l'une de ces molécules, stimule la transition $|A\rangle \to |S\rangle$ et ressort accompagné d'un second photon identique au premier. Répété sur tout le faisceau, c'est l'amplification par émission stimulée, la physique derrière le nom.
