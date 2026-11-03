@@ -2,14 +2,14 @@
 
 This page describes the personal-data processing involved in using `eigora.tampipo.fr`, as required by regulation (EU) 2016/679 (GDPR).
 
-*Last updated: 1 November 2026.*
+*Last updated: 3 November 2026.*
 
 ### What the site does not do
 
 Worth stating first, since it is most of the story:
 
 - no sign-up, no account, no form;
-- no analytics and no advertising trackers — no Analytics, no pixel, no ad network;
+- no advertising trackers and no third-party analytics — no Google Analytics, no pixel, no ad network;
 - no advertising cookies, no profiling, no data ever sold;
 - fonts are served from our own domain, so your browser contacts no third party — Google Fonts included.
 
@@ -25,6 +25,15 @@ Tanguy Marsault — address and contact on the [Legal notice](/en/legal/notice) 
 - *Legal basis*: legitimate interest (GDPR article 6(1)(f)) in the security and correct operation of the service.
 - *Retention*: six months at most, then automatic deletion.
 
+**Audience measurement.** The site uses [Umami](https://umami.is), an open-source analytics tool self-hosted at `analytics.tampipo.fr`, to count visits and see which pages are read. For each page you view, your browser sends the page address and title, the referring page, your screen size and your browser language. From the request itself, the analytics server also derives your browser, operating system, device type and approximate location (country, region, city).
+
+Your IP address is used for that location lookup and to tell visits apart: it is combined with your user-agent into a one-way hash whose secret changes every month. The IP address itself is never stored, and no cookie is set.
+
+- *Purpose*: knowing which pages are read and how visitors arrive, in order to improve the courses.
+- *Legal basis*: legitimate interest (GDPR article 6(1)(f)) in measuring the audience of the site.
+- *Retention*: the statistics are currently kept with no automatic deletion.
+- *Opting out*: any content blocker that blocks `analytics.tampipo.fr` stops the measurement entirely; the site works the same without it.
+
 **Simulation parameters.** When you move a slider, the corresponding physical values (mass, well width, energy…) are sent to the computation API, which returns the result. Those values contain no personal data, are tied to no profile, and are not kept beyond the request that produced them.
 
 **Tutorial code.** The code cells in the tutorials run entirely in your browser, using files served from this site. Neither the code you write nor its results are sent anywhere or kept after you leave the page.
@@ -33,16 +42,16 @@ Tanguy Marsault — address and contact on the [Legal notice](/en/legal/notice) 
 
 The site sets a single cookie, `NEXT_LOCALE`, which remembers the display language you picked. It holds only `en` or `fr`, carries no expiry date — so it is dropped when you close your browser — and is set only when the language shown differs from the one your browser announces.
 
-That cookie is strictly necessary to deliver the service you asked for, which exempts it from prior consent under article 82 of the French Data Protection Act — hence the absence of a cookie banner. No other cookie is used, and the site stores nothing in your browser's local storage.
+That cookie is strictly necessary to deliver the service you asked for, which exempts it from prior consent under article 82 of the French Data Protection Act — hence the absence of a cookie banner. No other cookie is used — the audience-measurement script sets none — and the site stores nothing in your browser's local storage.
 
 ### Recipients
 
-No data is passed to any third party. The site is self-hosted: the technical logs stay on the publisher's own infrastructure, with no processor in between. The servers are located in France; no transfer outside the European Union takes place.
+No data is passed to any third party. The site is self-hosted: the technical logs and audience statistics stay on the publisher's own infrastructure, with no processor in between. The servers are located in France; no transfer outside the European Union takes place.
 
 ### Your rights
 
 You have the right to access, rectify, erase, restrict and object to the processing of data concerning you. These rights can be exercised by email at the address given in the [Legal notice](/en/legal/notice).
 
-Given what is actually held — technical logs indexed by IP address — an access or erasure request needs the IP address and the period concerned, without which the records relating to you cannot physically be found.
+Given what is actually held — technical logs indexed by IP address — an access or erasure request needs the IP address and the period concerned, without which the records relating to you cannot physically be found. Audience statistics contain neither IP addresses nor identifiers that could be traced back to you, so they cannot be retrieved for a given person.
 
 You may also lodge a complaint with the CNIL, 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07, France, or at [cnil.fr](https://www.cnil.fr).

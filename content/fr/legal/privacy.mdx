@@ -2,14 +2,14 @@
 
 Cette page décrit les traitements de données personnelles liés à l'utilisation d'`eigora.tampipo.fr`, conformément au règlement (UE) 2016/679 (RGPD).
 
-*Dernière mise à jour : 1er novembre 2026.*
+*Dernière mise à jour : 3 novembre 2026.*
 
 ### Ce que le site ne fait pas
 
 Autant le dire d'emblée, puisque c'est l'essentiel :
 
 - aucune inscription, aucun compte, aucun formulaire ;
-- aucun outil de mesure d'audience ni de suivi publicitaire — pas d'Analytics, pas de pixel, pas de régie ;
+- aucun suivi publicitaire ni outil de mesure d'audience tiers — pas de Google Analytics, pas de pixel, pas de régie ;
 - aucun cookie publicitaire, aucun profilage, aucune revente de données ;
 - les polices de caractères sont servies depuis notre propre domaine : votre navigateur ne contacte aucun service tiers, notamment pas Google Fonts.
 
@@ -25,6 +25,15 @@ Tanguy Marsault — coordonnées et contact sur la page [Mentions légales](/fr/
 - *Base légale* : intérêt légitime (article 6.1.f du RGPD) à assurer la sécurité et le bon fonctionnement du service.
 - *Durée de conservation* : six mois au plus, puis suppression automatique.
 
+**Mesure d'audience.** Le site utilise [Umami](https://umami.is), un outil de mesure d'audience libre, auto-hébergé sur `analytics.tampipo.fr`, pour compter les visites et savoir quelles pages sont lues. Pour chaque page consultée, votre navigateur transmet l'adresse et le titre de la page, la page de provenance, la taille de votre écran et la langue de votre navigateur. À partir de la requête elle-même, le serveur de mesure en déduit aussi votre navigateur, votre système d'exploitation, le type d'appareil et une localisation approximative (pays, région, ville).
+
+Votre adresse IP sert à cette localisation et à distinguer les visites : elle est combinée à votre *user-agent* dans une empreinte à sens unique dont le secret change chaque mois. L'adresse IP elle-même n'est jamais enregistrée, et aucun cookie n'est déposé.
+
+- *Finalité* : savoir quelles pages sont lues et comment les visiteurs arrivent, afin d'améliorer les cours.
+- *Base légale* : intérêt légitime (article 6.1.f du RGPD) à mesurer l'audience du site.
+- *Durée de conservation* : les statistiques sont à ce jour conservées sans suppression automatique.
+- *Opposition* : tout bloqueur de contenu qui bloque `analytics.tampipo.fr` désactive entièrement la mesure ; le site fonctionne à l'identique sans elle.
+
 **Paramètres de simulation.** Lorsque vous manipulez un curseur, les valeurs physiques correspondantes (masse, largeur de puits, énergie…) sont envoyées à l'API de calcul, qui renvoie le résultat. Ces valeurs ne contiennent aucune donnée personnelle, ne sont associées à aucun profil et ne sont pas conservées au-delà du traitement de la requête.
 
 **Code des tutoriels.** Les cellules de code des tutoriels s'exécutent entièrement dans votre navigateur, à partir de fichiers servis par ce site. Ni le code que vous écrivez ni ses résultats ne sont envoyés où que ce soit ni conservés après votre départ de la page.
@@ -33,16 +42,16 @@ Tanguy Marsault — coordonnées et contact sur la page [Mentions légales](/fr/
 
 Le site dépose un seul cookie, `NEXT_LOCALE`, qui mémorise la langue d'affichage choisie. Il contient uniquement `en` ou `fr`, n'a pas de date d'expiration — il disparaît donc à la fermeture du navigateur — et n'est posé que lorsque la langue affichée diffère de celle annoncée par votre navigateur.
 
-Ce cookie est strictement nécessaire à la fourniture du service que vous demandez : il est à ce titre exempté du consentement préalable prévu à l'article 82 de la loi Informatique et Libertés, ce qui explique l'absence de bandeau. Aucun autre cookie n'est utilisé, et le site ne stocke rien dans la mémoire locale de votre navigateur.
+Ce cookie est strictement nécessaire à la fourniture du service que vous demandez : il est à ce titre exempté du consentement préalable prévu à l'article 82 de la loi Informatique et Libertés, ce qui explique l'absence de bandeau. Aucun autre cookie n'est utilisé — le script de mesure d'audience n'en dépose aucun — et le site ne stocke rien dans la mémoire locale de votre navigateur.
 
 ### Destinataires
 
-Aucune donnée n'est transmise à un tiers. Le site est auto-hébergé : les journaux techniques restent sur l'infrastructure de l'éditeur, sans sous-traitant intermédiaire. Les serveurs sont situés en France ; aucun transfert hors de l'Union européenne n'est réalisé.
+Aucune donnée n'est transmise à un tiers. Le site est auto-hébergé : les journaux techniques et les statistiques d'audience restent sur l'infrastructure de l'éditeur, sans sous-traitant intermédiaire. Les serveurs sont situés en France ; aucun transfert hors de l'Union européenne n'est réalisé.
 
 ### Vos droits
 
 Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition sur les données vous concernant. Ces droits s'exercent par courrier électronique à l'adresse figurant dans les [Mentions légales](/fr/legal/notice).
 
-Compte tenu des données réellement détenues — des journaux techniques indexés par adresse IP — une demande d'accès ou d'effacement suppose que vous indiquiez l'adresse IP et la période concernées, faute de quoi il est matériellement impossible de retrouver les enregistrements vous concernant.
+Compte tenu des données réellement détenues — des journaux techniques indexés par adresse IP — une demande d'accès ou d'effacement suppose que vous indiquiez l'adresse IP et la période concernées, faute de quoi il est matériellement impossible de retrouver les enregistrements vous concernant. Les statistiques d'audience ne contiennent ni adresse IP ni identifiant permettant de remonter jusqu'à vous : elles ne peuvent donc pas être retrouvées pour une personne donnée.
 
 Vous pouvez également introduire une réclamation auprès de la CNIL, 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07, ou sur [cnil.fr](https://www.cnil.fr).
