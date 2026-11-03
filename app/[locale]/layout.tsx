@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { Metadata } from "next";
+import Script from "next/script";
 import { notFound } from "next/navigation";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -84,6 +85,11 @@ export default async function LocaleLayout({
               url: SITE_URL,
             }),
           }}
+        />
+        <Script
+          src="https://analytics.tampipo.fr/script.js"
+          data-website-id="60a477ff-9992-4dbf-a5a7-77fbf5b75e42"
+          strategy="afterInteractive"
         />
         <div className="page-glow" aria-hidden />
         <NextIntlClientProvider>
