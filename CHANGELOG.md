@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.5](https://github.com/Tampipo/eigora-web/compare/v0.1.4...v0.1.5) (2026-11-03)
+
+
+### Features
+
+* add Umami analytics and disclose it in privacy policy ([06e8beb](https://github.com/Tampipo/eigora-web/commit/06e8bebcd2afb2242affd12173cbdee9649ff8a0))
+* add Umami analytics and disclose it in privacy policy ([d1c9f73](https://github.com/Tampipo/eigora-web/commit/d1c9f7387ac031bb0faed65fca96a03c721f84c8))
+
 ## [0.1.4](https://github.com/Tampipo/eigora-web/compare/v0.1.3...v0.1.4) (2026-11-01)
 
 
