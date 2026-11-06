@@ -2,6 +2,20 @@
 
 L'ammoniac, NH₃, est une pyramide : trois hydrogènes forment une base triangulaire, et l'azote se trouve d'un côté ou de l'autre de leur plan. Les deux configurations sont images l'une de l'autre dans un miroir, et classiquement toutes deux sont des équilibres aussi valables. Appelons-les $|L\rangle$ et $|R\rangle$, pour l'azote à gauche ou à droite du plan (de l'anglais *left* et *right*). Quantiquement, l'azote peut traverser par effet tunnel d'un côté à l'autre, et ce qui découle de ce seul fait est proche du système non trivial le plus simple de la mécanique quantique : deux états, couplés par un seul nombre. C'est aussi le système qui a donné leur nom aux masers, et peu après aux lasers.
 
+<AmmoniaConfigurations
+  caption={
+    <>
+      Les deux configurations de NH₃. Les trois hydrogènes définissent le plan{" "}
+      <Tex>{`x = 0`}</Tex>, figuré par le disque en pointillés, et l'azote se
+      trouve d'un côté : <Tex>{`|L\\rangle`}</Tex> à gauche,{" "}
+      <Tex>{`|R\\rangle`}</Tex> à droite. Chacune est le reflet de l'autre à
+      travers ce plan. Le cercle en pointillés marque l'endroit où l'effet
+      tunnel amènerait l'azote. La pyramide est dessinée plus haute qu'elle
+      n'est : l'azote réel ne se trouve qu'à environ 0,38 Å du plan.
+    </>
+  }
+/>
+
 ### Un double puits
 
 Partons de l'azote lui-même. Soit $x$ sa position le long de l'axe de la molécule, le plan des hydrogènes étant en $x = 0$. Son énergie est minimale dans l'une ou l'autre pyramide et maximale dans le plan qui les sépare : un double puits symétrique, modélisé ici par $V(x) = x^4 - 4x^2$, avec deux minima en $x = \pm\sqrt2$ séparés par une barrière de hauteur 4 dans des unités où $\hbar = m = 1$. Résoudre l'équation de Schrödinger dans ce potentiel donne les états stationnaires, et les deux plus bas forment une paire serrée : un $\psi_S$ symétrique et un $\psi_A$ antisymétrique, chacun partagé à parts égales entre les deux puits, d'énergies $E_S < E_A$ séparées d'un petit écart, que les sections suivantes notent $2\Delta$. Aucun ne place l'azote d'un côté. Leur somme et leur différence le font,
