@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { MDXComponents } from "mdx/types";
+import { AmmoniaConfigurations } from "@/components/simulations/AmmoniaConfigurations";
 import { AmmoniaInversion } from "@/components/simulations/AmmoniaInversion";
 import { DoubleWellStates } from "@/components/simulations/DoubleWellStates";
 import { EigenstateViewer } from "@/components/simulations/EigenstateViewer";
@@ -32,6 +33,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ...components,
     pre: CodeBlock,
     CodeCell,
+    AmmoniaConfigurations,
     AmmoniaInversion,
     DoubleWellStates,
     EigenstateViewer,

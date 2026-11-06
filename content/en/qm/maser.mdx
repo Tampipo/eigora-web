@@ -2,6 +2,20 @@
 
 Ammonia, NH₃, is a pyramid: three hydrogens form a triangular base, and the nitrogen sits on one side of their plane or the other. The two arrangements are mirror images of each other, and classically both are equally good equilibria. Call them $|L\rangle$ and $|R\rangle$, for the nitrogen to the left or to the right of the plane. Quantum mechanically the nitrogen can tunnel from one side to the other, and what follows from that one fact is close to the simplest nontrivial system in quantum mechanics: two states, coupled by a single number. It is also the system that gave masers, and shortly after lasers, their name.
 
+<AmmoniaConfigurations
+  caption={
+    <>
+      The two configurations of NH₃. The three hydrogens span the plane{" "}
+      <Tex>{`x = 0`}</Tex>, drawn as the dashed disk, and the nitrogen sits on
+      one side of it: <Tex>{`|L\\rangle`}</Tex> on the left,{" "}
+      <Tex>{`|R\\rangle`}</Tex> on the right. Each is the other reflected
+      through that plane. The dashed circle marks where tunneling would take the
+      nitrogen. The pyramid is drawn taller than it is, the real nitrogen
+      sitting only about 0.38 Å from the plane.
+    </>
+  }
+/>
+
 ### A double well
 
 Start from the nitrogen itself. Let $x$ be its position along the molecule's axis, with the plane of the hydrogens at $x = 0$. Its energy is lowest in either pyramid and highest in the plane between them, a symmetric double well, modelled here as $V(x) = x^4 - 4x^2$: two minima at $x = \pm\sqrt2$, separated by a barrier of height 4 in units where $\hbar = m = 1$. Solving the Schrödinger equation in it gives the stationary states, and the lowest two come as a close pair: a symmetric $\psi_S$ and an antisymmetric $\psi_A$, each shared equally between the wells, at energies $E_S < E_A$ only a small gap apart, a gap the next sections name $2\Delta$. Neither puts the nitrogen on one side. Their sum and difference do,
