@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/Tampipo/eigora-web/compare/v0.1.6...v0.1.7) (2026-11-06)
+
+
+### Features
+
+* draw the ammonia molecule in both configurations on the maser page ([cfce510](https://github.com/Tampipo/eigora-web/commit/cfce510c61a9a37e80122e3f34b6411b080b25cc))
+* draw the ammonia molecule in both configurations on the maser page ([9c03534](https://github.com/Tampipo/eigora-web/commit/9c03534de2f7b1fbf4f41a9e755f1797d0de97a2))
+
 ## [0.1.6](https://github.com/Tampipo/eigora-web/compare/v0.1.5...v0.1.6) (2026-11-03)
 
 
